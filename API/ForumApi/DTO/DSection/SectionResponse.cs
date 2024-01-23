@@ -4,10 +4,10 @@ namespace ForumApi.DTO.DSection
 {
     public class SectionResponse
     {
-        public int Id {get;set;}
-        public string Title {get;set;} = null!; 
-        public bool IsHidden {get;set;}
-        public int OrderPosition {get;set;}
+        public int Id { get; set; }
+        public string Title { get; set; } = null!; 
+        public bool IsHidden { get; set; }
+        public int OrderPosition { get; set; }
 
         public List<ForumResponse> Forums {get;set;} = new();
     }

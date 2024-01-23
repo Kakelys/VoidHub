@@ -4,10 +4,10 @@ namespace ForumApi.DTO.DTopic
 {
     public class TopicLast
     {        
-        public int Id {get;set;}
-        public string Title {get;set;} = null!;
-        public DateTime UpdatedAt {get;set;}
+        public int Id { get; set; }
+        public string Title { get; set; } = null!;
+        public DateTime UpdatedAt { get; set; }
 
-        public User User {get;set;} = null!;
+        public User User { get; set; } = null!;
     }
 }
