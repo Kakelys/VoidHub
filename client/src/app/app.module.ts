@@ -7,7 +7,6 @@ import { HeaderComponent } from './header/header.component';
 import { FormsModule } from '@angular/forms';
 import { AuthModule } from './auth/auth.module';
 import { HomeComponent } from './home/home.component';
-import { ForumModule } from './forum/forum.module';
 import { SharedModule } from 'src/shared/shared.module';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { HttpExceptionInterceptor } from 'src/shared/error/http-exception.interceptor';
@@ -17,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LimitterInterceptor } from 'src/app/limitter/limitter.interceptor';
 import { LimitterService } from './limitter/limitter.service';
 import { SearchBarComponent } from './forum/search/search-bar/search-bar.component';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -39,6 +39,10 @@ import { SearchBarComponent } from './forum/search/search-bar/search-bar.compone
   ],
   providers: [
     LimitterService,
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpExceptionInterceptor,

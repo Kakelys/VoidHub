@@ -103,6 +103,7 @@ export class ReducePost implements PipeTransform {
       result += char;
 
       if (symbolCount >= symbolLimit || tagCount > tagLimit) {
+        result += '...';
         break;
       }
     }

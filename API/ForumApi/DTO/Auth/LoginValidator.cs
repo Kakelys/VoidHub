@@ -4,7 +4,6 @@ namespace ForumApi.DTO.Auth
 {
     public class LoginValidator : AbstractValidator<Login>
     {
-
         public LoginValidator()
         {
             RuleFor(l => l.LoginName)
@@ -14,7 +13,6 @@ namespace ForumApi.DTO.Auth
             RuleFor(l => l.Password)
                 .NotEmpty()
                 .WithMessage("Password must not be empty");
-        }
-        
+        } 
     }
 }

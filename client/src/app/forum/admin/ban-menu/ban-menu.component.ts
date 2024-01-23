@@ -93,7 +93,6 @@ export class BanMenuComponent implements OnInit {
     this.banService.unbanUser(form.value.accountId)
       .subscribe({
         next: _ => {
-          form.reset();
           this.currentDate = new Date();
           this.toastr.success("User unbanned")
         },

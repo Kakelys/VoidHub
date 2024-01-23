@@ -35,6 +35,9 @@
             id="loginName"
             name="loginName"
             class="input-sm bg-neutral mt-2 input input-bordered"
+            [ngClass]="{
+              'input-error': regForm.controls['loginName']?.touched && regForm.controls['loginName']?.invalid
+            }"
             ngModel
             minlength="3"
             maxlength="32"

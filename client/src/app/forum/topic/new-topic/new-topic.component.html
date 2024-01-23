@@ -14,7 +14,8 @@
             name="title"
             placeholder="Title"
             [ngClass]="{
-              'input-error': newTopicForm.controls['title']?.touched && newTopicForm.controls['title'].errors?.['required']
+              'input-error': newTopicForm.controls['title']?.touched &&
+              (newTopicForm.controls['title'].errors?.['required'] || newTopicForm.controls['title'].value.length < 3 || newTopicForm.controls['title'].value.length > 255)
             }"
             ngModel
             required
