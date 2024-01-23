@@ -1,4 +1,4 @@
-namespace ForumApi.Extensions
+namespace ForumApi.Utils.Extensions
 {
     public static class MapperService
     {

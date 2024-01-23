@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using ForumApi.Data.Repository;
-using ForumApi.Extensions;
-using ForumApi.Middlewares;
+using ForumApi.Utils.Extensions;
+using ForumApi.Utils.Middlewares;
 using ForumApi.Options;
 using ForumApi.Services;
 using ForumApi.Services.Interfaces;

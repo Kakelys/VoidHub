@@ -2,7 +2,7 @@ using AutoMapper;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DForum;
-using ForumApi.Exceptions;
+using ForumApi.Utils.Exceptions;
 using ForumApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,5 +1,5 @@
 
-namespace ForumApi.Exceptions
+namespace ForumApi.Utils.Exceptions
 {
     public class NotFoundException : BaseException
     {

@@ -2,7 +2,7 @@ using ForumApi.Data.Models;
 using ForumApi.DTO.DSearch;
 using ForumApi.DTO.DTopic;
 using ForumApi.DTO.Page;
-using ForumApi.Extensions;
+using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;

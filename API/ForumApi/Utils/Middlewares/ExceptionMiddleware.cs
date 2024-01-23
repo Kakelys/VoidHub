@@ -1,7 +1,7 @@
 using System.Text.Json;
-using ForumApi.Exceptions;
+using ForumApi.Utils.Exceptions;
 
-namespace ForumApi.Middlewares
+namespace ForumApi.Utils.Middlewares
 {
     public class ExceptionMiddleware
     {

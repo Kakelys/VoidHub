@@ -1,7 +1,7 @@
 using FluentValidation;
 using ForumApi.Data.Models;
 using ForumApi.DTO.DAccount;
-using ForumApi.Extensions;
+using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Options;
 using ForumApi.Services.Interfaces;

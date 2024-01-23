@@ -5,7 +5,7 @@ using ForumApi.DTO.Auth;
 using ForumApi.DTO.DForum;
 using ForumApi.DTO.DSection;
 using ForumApi.DTO.DTopic;
-using ForumApi.Exceptions;
+using ForumApi.Utils.Exceptions;
 using ForumApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

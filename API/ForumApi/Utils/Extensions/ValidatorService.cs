@@ -4,9 +4,8 @@ using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
 using ForumApi.DTO.DSearch;
 using ForumApi.DTO.Page;
-using Microsoft.AspNetCore.Builder;
 
-namespace ForumApi.Extensions
+namespace ForumApi.Utils.Extensions
 {
     public static class ValidatorService
     {

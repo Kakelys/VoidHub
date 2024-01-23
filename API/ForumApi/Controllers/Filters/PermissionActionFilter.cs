@@ -1,8 +1,8 @@
 using System.Linq.Dynamic.Core;
 using ForumApi.Data;
 using ForumApi.Data.Repository.Extensions;
-using ForumApi.Exceptions;
-using ForumApi.Extensions;
+using ForumApi.Utils.Exceptions;
+using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 

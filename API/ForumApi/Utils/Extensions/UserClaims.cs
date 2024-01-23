@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace ForumApi.Extensions
+namespace ForumApi.Utils.Extensions
 {
     public static class UserClaims
     {

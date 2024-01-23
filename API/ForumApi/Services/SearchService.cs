@@ -6,7 +6,6 @@ using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DSearch;
 using ForumApi.DTO.Page;
 using ForumApi.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services

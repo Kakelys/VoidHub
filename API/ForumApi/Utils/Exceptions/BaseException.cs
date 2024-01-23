@@ -1,4 +1,4 @@
-namespace ForumApi.Exceptions
+namespace ForumApi.Utils.Exceptions
 {
     public class BaseException : Exception
     {

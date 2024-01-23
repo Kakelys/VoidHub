@@ -1,8 +1,8 @@
 using AutoMapper;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DBan;
-using ForumApi.Exceptions;
-using ForumApi.Extensions;
+using ForumApi.Utils.Exceptions;
+using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 

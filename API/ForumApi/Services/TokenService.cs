@@ -5,7 +5,7 @@ using System.Text;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.Auth;
-using ForumApi.Exceptions;
+using ForumApi.Utils.Exceptions;
 using ForumApi.Options;
 using ForumApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;

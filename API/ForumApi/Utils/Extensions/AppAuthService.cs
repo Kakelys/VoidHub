@@ -3,7 +3,7 @@ using ForumApi.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ForumApi.Extensions
+namespace ForumApi.Utils.Extensions
 {
     public static class AppAuthService
     {

@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ForumApi.Extensions
+namespace ForumApi.Utils.Extensions
 {
     public class PasswordHelper
     {

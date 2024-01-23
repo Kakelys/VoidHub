@@ -1,4 +1,3 @@
-
 using ForumApi.Options;
 using ForumApi.Services.Interfaces;
 using Microsoft.Extensions.Options;

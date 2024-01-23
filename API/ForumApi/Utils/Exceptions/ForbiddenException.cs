@@ -1,7 +1,6 @@
-
 using System.Text.Json;
 
-namespace ForumApi.Exceptions
+namespace ForumApi.Utils.Exceptions
 {
     public class ForbiddenException : BaseException
     {
