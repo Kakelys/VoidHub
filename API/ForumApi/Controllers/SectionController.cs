@@ -4,6 +4,7 @@ using ForumApi.Controllers.Filters;
 using ForumApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ForumApi.Utils.Extensions;
 
 namespace ForumApi.Controllers
 {
@@ -20,9 +21,21 @@ namespace ForumApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
-            return Ok(await _sectionService.GetSections());
+            List<SectionResponse> res = null;
+            if(User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                if(User.IsInRole(Role.Admin))
+                    res = await _sectionService.GetSections(true);
+            }
+            
+            if(res == null)
+                res = await _sectionService.GetSections();
+            
+            return Ok(res);
         }
 
         [HttpPost]

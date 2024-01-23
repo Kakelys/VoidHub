@@ -11,6 +11,6 @@ namespace ForumApi.Utils.Extensions
                 throw new ArgumentNullException("User claims does not contain Id");
 
             return int.Parse(sub.Value);
-        }        
+        }
     }
 }

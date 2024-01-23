@@ -24,11 +24,16 @@ namespace ForumApi.Services
             _rep = repositoryManager;
             _mapper = mapper;
         }
-        public async Task<List<SectionResponse>> GetSections()
+        public async Task<List<SectionResponse>> GetSections(bool includeHidden = false)
         {
-            var sections = await _rep.Section.Value
-                .FindByCondition(s => s.IsHidden == false)
-                .OrderBy(s => s.OrderPosition)
+            var sections = _rep.Section.Value;
+            IQueryable<Section> query;
+            if(!includeHidden)
+                query = sections.FindByCondition(s => s.IsHidden == includeHidden);
+            else 
+                query = sections.FindAll();
+
+            return await query.OrderBy(s => s.OrderPosition)
                 .Select(s => new SectionResponse {
                     Id = s.Id,
                     Title = s.Title,
@@ -65,8 +70,6 @@ namespace ForumApi.Services
                                 }).FirstOrDefault()
                         }).ToList()
                 }).ToListAsync();
-
-            return sections;
         }
 
         public async Task<Section> Create(SectionDto sectionDto)
