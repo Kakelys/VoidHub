@@ -13,7 +13,7 @@
       </app-post>
     </div>
 
-    <div *ngIf="posts.length < commentsCount">
+    <div *ngIf="canLoadMore && posts.length < commentsCount">
       <app-limit-loader class="flex flex-col" [limit]="1">
         <div class="btn btn-accent min-h-min h-8 self-center" (click)="loadNexPosts()">
           Load more

@@ -12,7 +12,7 @@ namespace ForumApi.Data.Repository
             _context = context;
         }
 
-        public T Create(T entity) =>
+        public virtual T Create(T entity) =>
             _context.Set<T>().Add(entity).Entity;
 
         public virtual void Delete(T entity) =>

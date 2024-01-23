@@ -135,6 +135,9 @@ namespace ForumApi.Data
                 p.Property(p => p.AncestorId)
                     .HasDefaultValue(null);
 
+                p.Property(p => p.CommentsCount)
+                    .HasDefaultValue(0);
+
                 p.Property(p => p.Content)
                     .IsRequired();
 

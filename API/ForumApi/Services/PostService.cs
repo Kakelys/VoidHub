@@ -36,8 +36,22 @@ namespace ForumApi.Services
             var post = _mapper.Map<Post>(postDto);
             post.AccountId = accountId;
 
-            _rep.Post.Value.Create(post);
-            await _rep.Save();
+            await _rep.BeginTransaction();
+            try
+            {
+                var entity = _rep.Post.Value.Create(post);
+                await _rep.Save();
+            
+                await _rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, 1);
+
+                await _rep.Save();
+                await _rep.Commit();
+            }
+            catch
+            {
+                await _rep.Rollback();
+                throw;
+            }
 
             return post;
         }
@@ -54,10 +68,24 @@ namespace ForumApi.Services
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("Post not found");
 
             if (entity.Id == topicFirstPost.Id)
-                throw new BadRequestException("You can't delete main post");            
+                throw new BadRequestException("You can't delete main post"); 
 
-            _rep.Post.Value.Delete(entity);
-            await _rep.Save();
+            await _rep.BeginTransaction();
+            try
+            {
+                var deleted = _rep.Post.Value.Delete(entity);
+                await _rep.Save();
+
+                await _rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, -deleted);
+
+                await _rep.Save();
+                await _rep.Commit();
+            }
+            catch
+            {
+                await _rep.Rollback();
+                throw;
+            }
         }
 
         public async Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page)
@@ -74,7 +102,7 @@ namespace ForumApi.Services
                     Author = _mapper.Map<User>(p.Author),
                     Content = p.Content,
                     CreatedAt = p.CreatedAt,
-                    CommentsCount = p.Comments.Where(c => c.DeletedAt == null).Count()
+                    CommentsCount = p.CommentsCount
                 })
                 .ToListAsync();
 

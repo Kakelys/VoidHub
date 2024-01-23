@@ -1,5 +1,6 @@
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Data.Repository.Implements
 {
@@ -9,17 +10,31 @@ namespace ForumApi.Data.Repository.Implements
         {
         }
 
-        public override void Delete(Post entity)
+        public new int Delete(Post entity)
         {
+            var deleted = 1;
             entity.DeletedAt = DateTime.UtcNow;
-            DeleteMany(entity.Comments);
+            deleted += DeleteMany(entity.Comments.Where(c => c.DeletedAt == null));
+            return deleted;
         }
 
-        public override void DeleteMany(IEnumerable<Post> entities)
+        public new int DeleteMany(IEnumerable<Post> entities)
         {
+            var deleted = 0;
             foreach (var entity in entities)
             {
-                Delete(entity);
+                deleted += Delete(entity);
+            }
+            return deleted;
+        }
+
+        public async Task IncreaseAllAncestorsCommentsCount(int? ancestorId, int value)
+        {
+            while(ancestorId != null)
+            {
+                var ancestor = await _context.Posts.FirstAsync(p => p.Id == ancestorId);
+                ancestor.CommentsCount += value;
+                ancestorId = ancestor.AncestorId;
             }
         }
     }

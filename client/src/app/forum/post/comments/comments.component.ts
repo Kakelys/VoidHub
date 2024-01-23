@@ -38,6 +38,7 @@ export class CommentsComponent implements OnInit {
 
   posts:any = [];
   postOnPage = 5;
+  canLoadMore = true;
 
   editorContent = '';
 
@@ -48,9 +49,7 @@ export class CommentsComponent implements OnInit {
   }
 
   loadNexPosts() {
-    console.log('count ', this.commentsCount)
-    console.log('count p', this.posts.length)
-    if(this.posts.length >= this.commentsCount) {
+    if(this.canLoadMore && this.posts.length >= this.commentsCount) {
       return;
     }
 
@@ -61,6 +60,8 @@ export class CommentsComponent implements OnInit {
     this.postService.getComments(this.postId, offset).subscribe({
       next: (posts: any) => {
         this.posts.push(...posts);
+        if(posts.length == 0 || posts.length < this.postOnPage)
+          this.canLoadMore = false;
       }
     });
   }

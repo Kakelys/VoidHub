@@ -48,7 +48,7 @@ namespace ForumApi.Services
                         Author = _mapper.Map<User>(firstPost.Author)
                     },
                     PostsCount = p.Posts.Where(pp => pp.DeletedAt == null && pp.AncestorId == firstPost.Id).Count(),
-                    CommentsCount = p.Posts.Where(pp => pp.DeletedAt == null && pp.AncestorId != firstPost.Id).Count()
+                    CommentsCount = firstPost.CommentsCount
                 })
                 .FirstOrDefaultAsync();
         }
