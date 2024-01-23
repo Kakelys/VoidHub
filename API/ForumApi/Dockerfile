@@ -13,7 +13,7 @@ WORKDIR /App
 COPY --from=build /App/out .
 COPY ./appsettings.Docker.json ./appsettings.json
 
-EXPOSE 5000
+EXPOSE 80
 
 CMD ["dotnet", "ForumApi.dll"]
 
