@@ -6,7 +6,7 @@ using ForumApi.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 
-namespace ForumApi.Filters
+namespace ForumApi.Controllers.Filters
 {
     public class BanFilter : ActionFilterAttribute
     {
