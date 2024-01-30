@@ -99,7 +99,10 @@ namespace ForumApi.Services
             if(await _rep.Account.Value.FindByLogin(auth.LoginName).AnyAsync())
                 throw new BadRequestException("User with such login already exists");
 
-            if(await _rep.Account.Value.FindByCondition(a=>a.Email == auth.Email).AnyAsync())
+            if(await _rep.Account.Value.FindByUsername(auth.Username).AnyAsync())
+                throw new BadRequestException("User with such username already exists");
+
+            if(await _rep.Account.Value.FindByEmail(auth.Email).AnyAsync())
                 throw new BadRequestException("User with such email already exists");
 
             var account = new Account()

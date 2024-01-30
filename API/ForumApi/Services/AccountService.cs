@@ -61,11 +61,21 @@ namespace ForumApi.Services
             var user = await _rep.Account.Value.FindById(targetId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("User with such id doesn't exist");
 
-            if(!string.IsNullOrEmpty(accountDto.Username))
-                user.Username = accountDto.Username;
+            if(!string.IsNullOrEmpty(accountDto.Username) && accountDto.Username != user.Username)
+            {
+                if(await _rep.Account.Value.FindByUsername(accountDto.Username).AnyAsync())
+                    throw new BadRequestException("User with such username already exists");
 
-            if(!string.IsNullOrEmpty(accountDto.Email))
+                user.Username = accountDto.Username;
+            }
+
+            if(!string.IsNullOrEmpty(accountDto.Email) && accountDto.Email != user.Email)
+            {
+                if(await _rep.Account.Value.FindByEmail(accountDto.Email).AnyAsync())
+                    throw new BadRequestException("User with such email already exists");
+
                 user.Email = accountDto.Email;
+            }
             
             if(accountDto.Role != Data.Models.RoleEnum.None)
             {
