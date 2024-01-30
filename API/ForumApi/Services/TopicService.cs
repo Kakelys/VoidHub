@@ -61,7 +61,7 @@ namespace ForumApi.Services
                 .TakeOffset(offset)
                 .Select(t => new {
                     Topic = t,
-                    Post = t.Posts
+                    FirstPost = t.Posts
                         .Where(p => p.AncestorId == null)
                         .OrderBy(p => p.CreatedAt)
                         .FirstOrDefault()
@@ -76,11 +76,11 @@ namespace ForumApi.Services
                     IsPinned = t.Topic.IsPinned,
                     Post = new PostResponse
                     {
-                        Content = t.Post == null ? "" : t.Post.Content,
-                        CreatedAt = t.Post == null ? default : t.Post.CreatedAt,
-                        Author = t.Post.Author == null ? default : _mapper.Map<User>(t.Post.Author)
+                        Content = t.FirstPost == null ? "" : t.FirstPost.Content,
+                        CreatedAt = t.FirstPost == null ? default : t.FirstPost.CreatedAt,
+                        Author = _mapper.Map<User>(t.FirstPost.Author)
                     },
-                    PostsCount = t.Topic.Posts.Where(pp => pp.DeletedAt == null && pp.AncestorId != null).Count(),
+                    PostsCount = t.FirstPost.CommentsCount,
                     CommentsCount = 0
                 })
                 .ToListAsync();
