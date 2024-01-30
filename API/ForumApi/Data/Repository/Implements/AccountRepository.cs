@@ -9,12 +9,18 @@ namespace ForumApi.Data.Repository.Implements
         public AccountRepository(ForumDbContext context) : base(context)
         {
         }
-        
+
         public IQueryable<Account> FindById(int id, bool asTracking = false) => 
             FindByCondition(a => a.Id == id, asTracking);
 
+        public IQueryable<Account> FindByEmail(string email, bool asTracking = false) =>
+            FindByCondition(a => EF.Functions.ILike(a.Email, email), asTracking);
+
+        public IQueryable<Account> FindByUsername(string username, bool asTracking = false) =>
+            FindByCondition(a => EF.Functions.ILike(a.Username, username), asTracking);
+
         public IQueryable<Account> FindByLogin(string login, bool asTracking = false) =>
-            FindByCondition(a => a.LoginName == login, asTracking);
+            FindByCondition(a => EF.Functions.ILike(a.LoginName, login), asTracking);
 
         public IQueryable<Account> FindByLoginWithTokens(string login, bool asTracking = false) => 
             FindByLogin(login, asTracking).Include(a => a.Tokens);
@@ -31,6 +37,6 @@ namespace ForumApi.Data.Repository.Implements
             {
                 Delete(entity);
             }
-        } 
+        }
     }
 }

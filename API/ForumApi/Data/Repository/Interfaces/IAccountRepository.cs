@@ -5,6 +5,17 @@ namespace ForumApi.Data.Repository.Interfaces
     public interface IAccountRepository : IRepositoryBase<Account>
     {
         IQueryable<Account> FindById(int id, bool asTracking = false);
+        /// <summary>
+        /// Searching with ignoring case
+        /// </summary>
+        IQueryable<Account> FindByEmail(string email, bool asTracking = false);
+        /// <summary>
+        /// Searching with ignoring case
+        /// </summary>
+        IQueryable<Account> FindByUsername(string username, bool asTracking = false);
+        /// <summary>
+        /// Searching with ignoring case
+        /// </summary>
         IQueryable<Account> FindByLogin(string login, bool asTracking = false);
         IQueryable<Account> FindByLoginWithTokens(string login, bool asTracking = false);
         /// <summary>
