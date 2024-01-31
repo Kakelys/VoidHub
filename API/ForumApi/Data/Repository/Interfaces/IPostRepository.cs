@@ -10,10 +10,12 @@ namespace ForumApi.Data.Repository.Interfaces
         /// Return count inner comments
         /// </summary>
         new int Delete(Post entity);
+        int Delete(Post entity, DateTime? deleteTime);
 
         /// <summary>
         /// Return count inner comments (same as delete)
         /// </summary>
         new int DeleteMany(IEnumerable<Post> entities);
+        int DeleteMany(IEnumerable<Post> entities, DateTime? deleteTime);
     }
 }

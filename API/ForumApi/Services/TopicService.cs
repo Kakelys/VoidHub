@@ -154,11 +154,16 @@ namespace ForumApi.Services
 
         public async Task Delete(int topicId)
         {
-            var entity = await _rep.Topic.Value
+            var topicEntity = await _rep.Topic.Value
                 .FindByCondition(t => t.Id == topicId && t.DeletedAt == null, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
 
-            _rep.Topic.Value.Delete(entity);
+            _rep.Topic.Value.Delete(topicEntity);
+
+            // also delete posts
+            // use same time as in topic, so it can be easy recover after
+            _rep.Post.Value.DeleteMany(_rep.Post.Value.FindByCondition(p => p.TopicId == topicEntity.Id, true).ToList(), topicEntity.DeletedAt);
+
             await _rep.Save();
         }
     }
