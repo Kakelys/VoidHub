@@ -106,8 +106,29 @@ namespace ForumApi.Services
             var user = await _rep.Account.Value.FindById(accountId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
 
-            user.AvatarPath = newPath;
-            await _rep.Save();
+            await _rep.BeginTransaction();
+            try
+            {
+                // store old file path
+                var oldPath = user.AvatarPath;
+
+                user.AvatarPath = newPath;
+                await _rep.Save();
+
+                // delete if changed to default
+                if(user.AvatarPath == _imageOptions.AvatarDefault
+                   && File.Exists($"{_imageOptions.Folder}/{oldPath}"))
+                {
+                    File.Delete($"{_imageOptions.Folder}/{oldPath}");
+                }
+
+                await _rep.Commit();
+            }
+            catch
+            {
+                await _rep.Rollback();
+                throw;
+            }
 
             return _mapper.Map<AuthUser>(user);
         }

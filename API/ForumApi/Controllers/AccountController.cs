@@ -49,11 +49,7 @@ namespace ForumApi.Controllers
             var image = _imageService.PrepareImage(accountDto.Img);
             await _imageService.SaveImage(image, fullPath);
 
-            // avatar path always id.format (except default), so we can not to update it every time
-            if(string.IsNullOrEmpty(currentPath) || currentPath != avatarPath)
-                return Ok(await _accountService.UpdateImg(User.GetId(), avatarPath));
-            
-            return Ok();
+            return Ok(await _accountService.UpdateImg(User.GetId(), avatarPath));
         }
 
         [HttpPatch("{id}")]
