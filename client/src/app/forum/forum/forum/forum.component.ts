@@ -10,6 +10,8 @@ import { Roles } from 'src/shared/roles.enum';
 import { Page } from 'src/shared/page.model';
 import { ToastrService } from 'ngx-toastr';
 import { ToastrExtension } from 'src/shared/toastr.extension';
+import { Name } from '../../models/names.model';
+import { NameService } from '../../services/name.service';
 
 
 @Component({
@@ -31,13 +33,15 @@ export class ForumComponent implements OnDestroy {
   showNewTopic: boolean = false;
 
   roles = Roles;
+  names: Name[] = null;
 
   constructor(
     private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
     private forumService: ForumService,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private nameService: NameService) {
 
     authService.user$.pipe(takeUntil(this.destroy$))
       .subscribe(user => {this.user = user;})
@@ -104,6 +108,21 @@ export class ForumComponent implements OnDestroy {
         }
 
       })
+  }
+
+  onEditToggle(state: boolean)
+  {
+    if(!state)
+      return;
+
+    this.nameService.getSections().subscribe({
+      next: (names: Name[]) => {
+        this.names = names
+      },
+      error: errs => {
+        ToastrExtension.handleErrors(this.toastr, errs);
+      }
+    })
   }
 
   onDelete() {

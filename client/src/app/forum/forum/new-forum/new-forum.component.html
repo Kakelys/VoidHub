@@ -36,9 +36,24 @@
           </label>
         </div>
 
-        <div class="form-control hidden">
-          <input type="number" name="sectionId" [ngModel]="sectionId">
-        </div>
+        <label class="form-control w-full max-w-xs mb-2">
+          <div class="label">
+            <span class="label-text">Choosing section</span>
+          </div>
+          <select
+            class="select select-bordered bg-neutral h-8 min-h-min"
+            id="sectionId"
+            name="sectionId"
+            [ngModel]="sectionId"
+          >
+            <option *ngFor="let name of names" [value]="name.id"
+              [disabled]="!name.isSelectable"
+              [selected]="name.id == sectionId"
+            >
+              {{name.isSelectable ? '-- ' + name.title : name.title}}
+            </option>
+          </select>
+        </label>
         <button
           class="my-3 btn btn-accent text-base-100 min-h-fit h-8">
           Create
