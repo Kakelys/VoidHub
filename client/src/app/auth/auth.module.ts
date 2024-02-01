@@ -13,6 +13,7 @@ function onAppLoad(authService: AuthService): () => Promise<any> {
       try {
         const parsedUser = JSON.parse(user);
         authService.setUser(parsedUser);
+        authService.setRefreshTimeout();
       } catch(err) {
         console.log('Error while trying to auto-login user', err)
       }

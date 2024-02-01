@@ -6,6 +6,7 @@ import { Register } from "./models/register.model";
 import { AuthResponse } from "./models/auth-response.model";
 import { Login } from "./models/login.model";
 import { environment as env } from "src/environments/environment";
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +60,33 @@ export class AuthService
       .pipe(tap(data => this.handleAuth(data)))
   }
 
+  public setRefreshTimeout()
+  {
+    const access = localStorage.getItem('access-token');
+    if(!access)
+      return;
+
+    const jwtPayload = jwtDecode(access);
+
+    // milliseconds until force refresh token
+    let ms = jwtPayload.exp * 1000 - new Date().valueOf();
+    //console.log('set refresh timer ', ms / 1000 / 60, ' min')
+    setTimeout(_ => {
+      const tmpAccess = localStorage.getItem('access-token');
+      if(!tmpAccess)
+        return;
+
+      const newJwtPayload = jwtDecode(tmpAccess);
+      // if already updated
+      if(newJwtPayload.exp * 1000 - new Date().valueOf() > 0)
+        return;
+
+      this.refreshAndAuth().subscribe();
+    }, ms)
+  }
+
   private handleAuth(authResponse:AuthResponse) {
+    console.log('handle auth')
     if(!authResponse || !authResponse.user || !authResponse.tokens)
       return;
 
@@ -69,5 +96,8 @@ export class AuthService
     localStorage.setItem('user', JSON.stringify(authResponse.user));
 
     this.user.next(authResponse.user);
+
+    // set timer to next force refresh
+    this.setRefreshTimeout();
   }
 }
