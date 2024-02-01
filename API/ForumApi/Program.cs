@@ -43,6 +43,8 @@ builder.Services.AddScoped<IBanService, BanService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
+builder.Services.AddScoped<INamesService, NamesService>();
+
 builder.Services.AddControllers()
   .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 

@@ -32,6 +32,7 @@ import { AccountService } from "./services/account.service";
 import { RecentComponent } from "./recent/recent.component";
 import { ReducePost } from "./recent/reduce-post.pipe";
 import { TruncatePipe } from "src/shared/truncate.pipe";
+import { NameService } from "./services/name.service";
 
 @NgModule({
   providers: [
@@ -41,7 +42,8 @@ import { TruncatePipe } from "src/shared/truncate.pipe";
     PostService,
     BanService,
     AdminService,
-    AccountService
+    AccountService,
+    NameService
   ],
   declarations: [
     SectionListComponent,
