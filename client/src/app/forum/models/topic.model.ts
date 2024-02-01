@@ -1,6 +1,10 @@
-export class Topic {
-  public id: number;
-  public title: string;
-  public createdAt: Date;
-  public isClosed: boolean;
+export interface Topic {
+  id: number;
+  forumId: number;
+  title: string;
+  createdAt: Date;
+  isClosed: boolean;
+  isPinned: boolean;
+  postsCount: number;
+  commentsCount: number;
 }
