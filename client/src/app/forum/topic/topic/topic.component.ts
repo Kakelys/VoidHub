@@ -1,7 +1,5 @@
-import { Topic } from './../../models/topic.model';
 import { TopicService } from './../../services/topic.service';
 import { Component, OnDestroy } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/shared/models/user.model';
@@ -9,6 +7,11 @@ import { PostService } from '../../services/post.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Roles } from 'src/shared/roles.enum';
 import { Page } from 'src/shared/page.model';
+import { TopicDetail } from '../../models/topic-detail.model';
+import { ToastrService } from 'ngx-toastr';
+import { ToastrExtension } from 'src/shared/toastr.extension';
+import { NameService } from '../../services/name.service';
+import { Name } from '../../models/names.model';
 
 
 @Component({
@@ -18,8 +21,13 @@ import { Page } from 'src/shared/page.model';
 })
 export class TopicComponent implements OnDestroy {
 
-  topic = null;
+  topic: TopicDetail = null;
   posts: any[] = [];
+  names: {
+    title,
+    id,
+    isSelectable
+  }[];
 
   user: User = null;
   roles = Roles;
@@ -38,7 +46,9 @@ export class TopicComponent implements OnDestroy {
     private topicService: TopicService,
     private postService: PostService,
     private router: Router,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private toastr: ToastrService,
+    private nameService: NameService) {
 
     authService.user$.pipe(takeUntil(this.destroy$))
       .subscribe(user => {this.user = user;})
@@ -100,7 +110,7 @@ export class TopicComponent implements OnDestroy {
     this.loadNewPostsPage();
   }
 
-  onPostCreate(data) {;
+  onPostCreate(data) {
     this.postService.createPost(data).subscribe({
       next: data => {
         this.topic.postsCount++;
@@ -119,8 +129,8 @@ export class TopicComponent implements OnDestroy {
   }
 
   //topic methods
-
   onTopicEdit(data) {
+    console.log(data);
     this.topicService
       .updateTopic(this.topic.id, data)
       .subscribe({
@@ -130,8 +140,26 @@ export class TopicComponent implements OnDestroy {
             ...this.topic,
             ...topicResponse
           }
+        },
+        error: errs => {
+          ToastrExtension.handleErrors(this.toastr, errs);
         }
       })
+  }
+
+  onTopicEditChanged(state: boolean)
+  {
+    if(!state)
+      return;
+
+    this.nameService.getForums().subscribe({
+      next: (names: Name[]) => {
+        this.names = names;
+      },
+      error: errs => {
+        ToastrExtension.handleErrors(this.toastr, errs);
+      }
+    })
   }
 
   onTopicDelete() {

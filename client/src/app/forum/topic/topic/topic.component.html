@@ -22,16 +22,27 @@
             <app-title-editor
               [title]="topic.title"
               (onSave)="onTopicEdit($event)"
+              (onToggle)="onTopicEditChanged($event)"
               *ngIf="topic"
             >
-              <div class="hidden">
-                <input
-                  type="number"
+              <label class="form-control w-full max-w-xs">
+                <div class="label">
+                  <span class="label-text">Changing forum</span>
+                </div>
+                <select
+                  class="select select-bordered"
                   id="forumId"
                   name="forumId"
-                  [(ngModel)]="topic.forumId"
+                  [ngModel]="topic.forumId"
                 >
-              </div>
+                  <option *ngFor="let name of names" [value]="name.id"
+                    [disabled]="!name.isSelectable"
+                    [selected]="name.id == topic.forumId && name.isSelectable"
+                  >
+                    {{name.isSelectable ? '-- ' + name.title : name.title}}
+                  </option>
+                </select>
+              </label>
 
               <div class="flex flex-row">
                 <input

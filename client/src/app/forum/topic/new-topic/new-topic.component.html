@@ -37,6 +37,24 @@
           </label>
         </div>
 
+        <label class="form-control w-full max-w-xs mb-4">
+          <div class="label">
+            <span class="label-text">Choosing forum</span>
+          </div>
+          <select
+            class="select select-bordered bg-neutral h-8 min-h-min"
+            id="forumId"
+            name="forumId"
+            [ngModel]="forumId"
+          >
+            <option *ngFor="let name of names" [value]="name.id"
+              [disabled]="!name.isSelectable"
+            >
+              {{name.isSelectable ? '-- ' + name.title : name.title}}
+            </option>
+          </select>
+        </label>
+
         <div class="form-control w-full">
           <ckeditor
             class="bg-neutral"
@@ -59,11 +77,6 @@
             </span>
           </label>
         </div>
-
-        <div class="form-control hidden">
-          <input type="number" name="forumId" [ngModel]="forumId">
-        </div>
-
         <div class="my-3">
           <app-limit-loader [limit]="1" [containerClasses]="'flex flex-row'">
             <button

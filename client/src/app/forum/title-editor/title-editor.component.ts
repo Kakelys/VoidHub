@@ -22,6 +22,8 @@ export class TitleEditorComponent {
   onSave = new EventEmitter<any>();
   @Output()
   onCancel = new EventEmitter();
+  @Output()
+  onToggle = new EventEmitter<boolean>();
 
   @Input()
   svgClasses: string = 'stroke-base-content';
@@ -66,6 +68,7 @@ export class TitleEditorComponent {
 
   setEditMode(value: boolean) {
     this.editMode = value;
+    this.onToggle.emit(value);
   }
 
   cancelClick() {
