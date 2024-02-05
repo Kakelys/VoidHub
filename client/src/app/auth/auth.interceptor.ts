@@ -50,7 +50,7 @@ export class AuthInterceptor {
               return next.handle(modifiedReq);
             }),
             catchError((err) => {
-              if(err instanceof HttpErrorResponse && err.status == 401) {
+              if(err instanceof HttpErrorResponse && (err.status == 401 || err.status == 404)) {
                 this.handleLogout();
               }
 
