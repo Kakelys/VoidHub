@@ -35,21 +35,10 @@ namespace ForumApi.Services
             return await _rep.Topic.Value
                 .FindByCondition(t => t.Id == id)
                 .AllowDeleted(allowDeleted)
-                .Select(t => new TopicResponse
+                .Select(t => new TopicResponse(t)
                 {
-                    Id = t.Id,
-                    ForumId = t.ForumId,
-                    Title = t.Title,
-                    CreatedAt = t.CreatedAt,
-                    DeletedAt = t.DeletedAt,
-                    IsClosed = t.IsClosed,
-                    IsPinned = t.IsPinned,
-                    Post = new PostResponse
+                    Post = new PostResponse(firstPost)
                     {
-                        Id = firstPost.Id,
-                        Content = firstPost.Content ?? "",
-                        CreatedAt = firstPost.CreatedAt,
-                        DeletedAt = firstPost.DeletedAt,
                         Author = _mapper.Map<User>(firstPost.Author)
                     },
                     PostsCount = t.Posts
@@ -72,20 +61,12 @@ namespace ForumApi.Services
                     FirstPost = t.Posts
                         .Where(p => p.AncestorId == null)
                         .OrderBy(p => p.CreatedAt)
-                        .FirstOrDefault()
+                        .First()
                 })
-                .Select(t => new TopicResponse
+                .Select(t => new TopicResponse(t.Topic)
                 {
-                    Id = t.Topic.Id,
-                    ForumId = t.Topic.ForumId,
-                    Title = t.Topic.Title,
-                    CreatedAt = t.Topic.CreatedAt,
-                    IsClosed = t.Topic.IsClosed,
-                    IsPinned = t.Topic.IsPinned,
-                    Post = new PostResponse
+                    Post = new PostResponse(t.FirstPost)
                     {
-                        Content = t.FirstPost == null ? "" : t.FirstPost.Content,
-                        CreatedAt = t.FirstPost == null ? default : t.FirstPost.CreatedAt,
                         Author = _mapper.Map<User>(t.FirstPost.Author)
                     },
                     PostsCount = t.FirstPost.CommentsCount,
@@ -101,16 +82,11 @@ namespace ForumApi.Services
                 .AllowDeleted()
                 .OrderByDescending(t => t.IsPinned)
                 .ThenByDescending(t => t.CreatedAt)
-                .Select(p => new TopicElement
+                .Select(t => new TopicElement(t)
                 {
-                    Id = p.Id,
-                    Title = p.Title,
-                    CreatedAt = p.CreatedAt,
-                    IsClosed = p.IsClosed,
-                    IsPinned = p.IsPinned,
-                    PostsCount = p.Posts.Where(p => p.DeletedAt == null).Count(),
-                    Author = _mapper.Map<User>(p.Author),
-                    LastPost = p.Posts
+                    PostsCount = t.Posts.Where(p => p.DeletedAt == null).Count(),
+                    Author = _mapper.Map<User>(t.Author),
+                    LastPost = t.Posts
                         .Where(p => p.DeletedAt == null)
                         .OrderByDescending(p => p.CreatedAt)
                         .Select(p => new LastPost

@@ -96,15 +96,9 @@ namespace ForumApi.Services
                 .OrderBy(p => p.CreatedAt)
                 .Include(p => p.Author)
                 .TakeOffset(page)
-                .Select(p => new PostResponse
+                .Select(p => new PostResponse(p)
                 {
-                    Id = p.Id,
-                    TopicId = p.TopicId,
-                    Author = _mapper.Map<User>(p.Author),
-                    Content = p.Content,
-                    CreatedAt = p.CreatedAt,
-                    DeletedAt = p.DeletedAt,
-                    CommentsCount = p.CommentsCount
+                    Author = _mapper.Map<User>(p.Author)
                 })
                 .ToListAsync();
 

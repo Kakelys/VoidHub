@@ -1,21 +1,27 @@
+using ForumApi.Data.Models;
 using ForumApi.DTO.DPost;
 
 namespace ForumApi.DTO.DTopic
 {
-    public class TopicResponse
+    public class TopicResponse : Topic
     {
-        public int Id { get; set; }
-        public int ForumId { get; set; }
-        public string Title { get; set; } = null!;
-        public bool IsClosed { get; set; }
-        public bool IsPinned { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? DeletedAt { get; set; }
-
         public int PostsCount { get; set; }        
         public int CommentsCount { get; set; }
 
         public PostResponse Post { get; set; } = null!;
-        public List<PostResponse> Posts { get; set; } = null!;
+        public new List<PostResponse> Posts { get; set; } = null!;
+
+        public TopicResponse() {}
+
+        public TopicResponse(Topic topic)
+        {
+            Id = topic.Id;
+            ForumId = topic.ForumId;
+            Title = topic.Title;
+            CreatedAt = topic.CreatedAt;
+            DeletedAt = topic.DeletedAt;
+            IsClosed = topic.IsClosed;
+            IsPinned = topic.IsPinned;
+        }
     }
 }
