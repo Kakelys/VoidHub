@@ -10,6 +10,7 @@ namespace ForumApi.DTO.DTopic
         public bool IsClosed { get; set; }
         public bool IsPinned { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
         public int PostsCount { get; set; }        
         public int CommentsCount { get; set; }

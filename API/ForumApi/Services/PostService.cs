@@ -88,10 +88,11 @@ namespace ForumApi.Services
             }
         }
 
-        public async Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page)
+        public async Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page, bool allowDeleted = false)
         {
             var posts = await _rep.Post.Value
-                .FindByCondition(p => p.DeletedAt == null && p.AncestorId == ancestorId)
+                .FindByCondition(p => p.AncestorId == ancestorId)
+                .AllowDeletedWithTopic(allowDeleted)
                 .OrderBy(p => p.CreatedAt)
                 .Include(p => p.Author)
                 .TakeOffset(page)
@@ -102,6 +103,7 @@ namespace ForumApi.Services
                     Author = _mapper.Map<User>(p.Author),
                     Content = p.Content,
                     CreatedAt = p.CreatedAt,
+                    DeletedAt = p.DeletedAt,
                     CommentsCount = p.CommentsCount
                 })
                 .ToListAsync();

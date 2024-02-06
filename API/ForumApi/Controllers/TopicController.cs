@@ -34,14 +34,23 @@ namespace ForumApi.Controllers
             return Ok(await _topicService.GetTopics(offset, time));
         }
 
+        [Authorize]
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTopic(int id, [FromQuery] Offset offset)
         {
-            var topic = await _topicService.GetTopic(id);
+            var allowDeleted = false;
+            if(User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
+                    allowDeleted = true;
+            }
+
+            var topic = await _topicService.GetTopic(id, allowDeleted);
             if(topic == null)
                 return NotFound();
 
-            topic.Posts = await _postService.GetPostComments(topic.Post.Id, offset);
+            topic.Posts = await _postService.GetPostComments(topic.Post.Id, offset, allowDeleted);
             return Ok(topic);
         }
 

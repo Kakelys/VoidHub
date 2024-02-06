@@ -23,31 +23,39 @@ namespace ForumApi.Services
             _rep = rep;
         }
 
-        public async Task<TopicResponse?> GetTopic(int id)
+        public async Task<TopicResponse?> GetTopic(int id, bool allowDeleted = false)
         {
             var firstPost = await _rep.Post.Value
-                .FindByCondition(p => p.TopicId == id && p.DeletedAt == null && p.AncestorId == null)
+                .FindByCondition(p => p.TopicId == id)
+                .AllowDeletedWithTopic(allowDeleted)
                 .Include(p => p.Author)
+                .OrderBy(p => p.CreatedAt)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
 
             return await _rep.Topic.Value
-                .FindByCondition(t => t.Id == id && t.DeletedAt == null)
-                .Select(p => new TopicResponse
+                .FindByCondition(t => t.Id == id)
+                .AllowDeleted(allowDeleted)
+                .Select(t => new TopicResponse
                 {
-                    Id = p.Id,
-                    ForumId = p.ForumId,
-                    Title = p.Title,
-                    CreatedAt = p.CreatedAt,
-                    IsClosed = p.IsClosed,
-                    IsPinned = p.IsPinned,
+                    Id = t.Id,
+                    ForumId = t.ForumId,
+                    Title = t.Title,
+                    CreatedAt = t.CreatedAt,
+                    DeletedAt = t.DeletedAt,
+                    IsClosed = t.IsClosed,
+                    IsPinned = t.IsPinned,
                     Post = new PostResponse
                     {
                         Id = firstPost.Id,
                         Content = firstPost.Content ?? "",
                         CreatedAt = firstPost.CreatedAt,
+                        DeletedAt = firstPost.DeletedAt,
                         Author = _mapper.Map<User>(firstPost.Author)
                     },
-                    PostsCount = p.Posts.Where(pp => pp.DeletedAt == null && pp.AncestorId == firstPost.Id).Count(),
+                    PostsCount = t.Posts
+                        .Where(p => p.AncestorId == firstPost.Id)
+                        .AllowDeletedWithTopic(t, allowDeleted)
+                        .Count(),
                     CommentsCount = firstPost.CommentsCount
                 })
                 .FirstOrDefaultAsync();
@@ -89,7 +97,8 @@ namespace ForumApi.Services
         public async Task<List<TopicElement>> GetTopics(int forumId, Page page)
         {
             return await _rep.Topic.Value
-                .FindByCondition(t => t.DeletedAt == null && t.ForumId == forumId)
+                .FindByCondition(t => t.ForumId == forumId)
+                .AllowDeleted()
                 .OrderByDescending(t => t.IsPinned)
                 .ThenByDescending(t => t.CreatedAt)
                 .Select(p => new TopicElement
@@ -162,7 +171,12 @@ namespace ForumApi.Services
 
             // also delete posts
             // use same time as in topic, so it can be easy recover after
-            _rep.Post.Value.DeleteMany(_rep.Post.Value.FindByCondition(p => p.TopicId == topicEntity.Id, true).ToList(), topicEntity.DeletedAt);
+            _rep.Post.Value.DeleteMany(
+                _rep.Post.Value
+                    .FindByCondition(p => p.TopicId == topicEntity.Id && p.DeletedAt == null, true)
+                    .ToList(), 
+                topicEntity.DeletedAt
+            );
 
             await _rep.Save();
         }
