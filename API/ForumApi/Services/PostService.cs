@@ -88,21 +88,17 @@ namespace ForumApi.Services
             }
         }
 
-        public async Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page)
+        public async Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page, bool allowDeleted = false)
         {
             var posts = await _rep.Post.Value
-                .FindByCondition(p => p.DeletedAt == null && p.AncestorId == ancestorId)
+                .FindByCondition(p => p.AncestorId == ancestorId)
+                .AllowDeletedWithTopic(allowDeleted)
                 .OrderBy(p => p.CreatedAt)
                 .Include(p => p.Author)
                 .TakeOffset(page)
-                .Select(p => new PostResponse
+                .Select(p => new PostResponse(p)
                 {
-                    Id = p.Id,
-                    TopicId = p.TopicId,
-                    Author = _mapper.Map<User>(p.Author),
-                    Content = p.Content,
-                    CreatedAt = p.CreatedAt,
-                    CommentsCount = p.CommentsCount
+                    Author = _mapper.Map<User>(p.Author)
                 })
                 .ToListAsync();
 

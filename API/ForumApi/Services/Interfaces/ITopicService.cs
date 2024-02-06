@@ -9,7 +9,7 @@ namespace ForumApi.Services.Interfaces
         /// <summary>
         /// Get topic info, first post and first comments
         /// </summary>
-        Task<TopicResponse?> GetTopic(int id);
+        Task<TopicResponse?> GetTopic(int id, bool allowDeleted = false);
         /// <summary>
         /// Load topics on forum
         /// </summary>

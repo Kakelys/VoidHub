@@ -3,6 +3,7 @@ export interface Topic {
   forumId: number;
   title: string;
   createdAt: Date;
+  deletedAt: Date | null;
   isClosed: boolean;
   isPinned: boolean;
   postsCount: number;
