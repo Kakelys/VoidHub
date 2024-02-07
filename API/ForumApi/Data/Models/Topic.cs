@@ -13,6 +13,7 @@ namespace ForumApi.Data.Models
         public DateTime? DeletedAt { get; set; }
         public bool IsPinned { get; set; }
         public bool IsClosed { get; set; }
+        public int PostsCount { get; set; }
 
         [JsonIgnore]
         public NpgsqlTsVector SearchVector { get; set; } = null!;
