@@ -36,6 +36,12 @@ import {
 	TableToolbar
 } from '@ckeditor/ckeditor5-table';
 
+// custom styles
+import '../src/custom.css';
+
+// fast build and start
+// cd ./ckeditor5 && npm run build && cd .. && ng serve
+
 // You can read more about extending the build with additional plugins in the "Installing plugins" guide.
 // See https://ckeditor.com/docs/ckeditor5/latest/installation/plugins/installing-plugins.html for details.
 
@@ -99,6 +105,7 @@ class Editor extends ClassicEditor {
 				'codeBlock',
 				'blockQuote',
 				'mediaEmbed',
+        'insertImage',
 				'insertTable'
 			],
 			shouldNotGroupWhenFull: true
@@ -111,7 +118,10 @@ class Editor extends ClassicEditor {
 				'imageStyle:inline',
 				'imageStyle:block',
 				'imageStyle:side'
-			]
+			],
+      insert: {
+        integrations: [ 'upload', 'url' ]
+      }
 		},
 		table: {
 			contentToolbar: [

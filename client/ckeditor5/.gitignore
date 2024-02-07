@@ -11,6 +11,9 @@
 npm-debug.log
 yarn-error.log
 
+## my custom theme
+edited_theme/node_modules
+
 # IDEs and editors
 .idea/
 .project
