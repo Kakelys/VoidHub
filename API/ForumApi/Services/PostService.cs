@@ -27,11 +27,14 @@ namespace ForumApi.Services
         public async Task<Post> Create(int accountId, PostDto postDto)
         {
             var topicEntity = await _rep.Topic.Value
-                .FindByCondition(t => t.Id == postDto.TopicId)
+                .FindByCondition(t => t.Id == postDto.TopicId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
 
             if(topicEntity.IsClosed)
                 throw new BadRequestException("Topic is closed");
+
+            if(topicEntity.DeletedAt != null)
+                throw new BadRequestException("Topic currently deleted; creating new posts unavailable");
 
             var post = _mapper.Map<Post>(postDto);
             post.AccountId = accountId;
@@ -42,7 +45,12 @@ namespace ForumApi.Services
                 var entity = _rep.Post.Value.Create(post);
                 await _rep.Save();
             
+                // update ancestors comments counter
                 await _rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, 1);
+
+                // upd topic posts counter, if it not comment
+                if(postDto.AncestorId != null && entity.Ancestor.AncestorId == null)
+                    topicEntity.PostsCount++;
 
                 await _rep.Save();
                 await _rep.Commit();
@@ -67,8 +75,13 @@ namespace ForumApi.Services
                 .OrderBy(p => p.CreatedAt)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("Post not found");
 
+            var topic = entity.Topic;
+
             if (entity.Id == topicFirstPost.Id)
-                throw new BadRequestException("You can't delete main post"); 
+                throw new BadRequestException("You can't delete main post");
+
+            if(topic.DeletedAt != null)
+                throw new BadRequestException("Topic currently deleted; deleting posts unavailable");
 
             await _rep.BeginTransaction();
             try
@@ -76,7 +89,14 @@ namespace ForumApi.Services
                 var deleted = _rep.Post.Value.Delete(entity);
                 await _rep.Save();
 
+                // update ancestors comments counter
                 await _rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, -deleted);
+
+                // upd topic posts counter, if it not comment
+                if(entity.AncestorId == topicFirstPost.Id)
+                {
+                    topic.PostsCount--;
+                }
 
                 await _rep.Save();
                 await _rep.Commit();
@@ -110,6 +130,9 @@ namespace ForumApi.Services
             var entity = await _rep.Post.Value
                 .FindByCondition(p => p.Id == postId && p.DeletedAt == null, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("Post not found");
+
+            if(entity.Topic.DeletedAt != null)
+                throw new BadRequestException("Topic currently deleted; updating posts unavailable");
 
             entity.Content = postDto.Content;
             await _rep.Save();

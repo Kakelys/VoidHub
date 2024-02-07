@@ -41,10 +41,6 @@ namespace ForumApi.Services
                     {
                         Author = _mapper.Map<User>(firstPost.Author)
                     },
-                    PostsCount = t.Posts
-                        .Where(p => p.AncestorId == firstPost.Id)
-                        .AllowDeletedWithTopic(t, allowDeleted)
-                        .Count(),
                     CommentsCount = firstPost.CommentsCount
                 })
                 .FirstOrDefaultAsync();
@@ -69,8 +65,7 @@ namespace ForumApi.Services
                     {
                         Author = _mapper.Map<User>(t.FirstPost.Author)
                     },
-                    PostsCount = t.FirstPost.CommentsCount,
-                    CommentsCount = 0
+                    CommentsCount = t.FirstPost.CommentsCount
                 })
                 .ToListAsync();
         }
@@ -84,7 +79,6 @@ namespace ForumApi.Services
                 .ThenByDescending(t => t.CreatedAt)
                 .Select(t => new TopicElement(t)
                 {
-                    PostsCount = t.Posts.Where(p => p.DeletedAt == null).Count(),
                     Author = _mapper.Map<User>(t.Author),
                     LastPost = t.Posts
                         .Where(p => p.DeletedAt == null)

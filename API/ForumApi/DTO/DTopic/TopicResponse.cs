@@ -4,8 +4,7 @@ using ForumApi.DTO.DPost;
 namespace ForumApi.DTO.DTopic
 {
     public class TopicResponse : Topic
-    {
-        public int PostsCount { get; set; }        
+    { 
         public int CommentsCount { get; set; }
 
         public PostResponse Post { get; set; } = null!;
@@ -22,6 +21,7 @@ namespace ForumApi.DTO.DTopic
             DeletedAt = topic.DeletedAt;
             IsClosed = topic.IsClosed;
             IsPinned = topic.IsPinned;
+            PostsCount = topic.PostsCount;
         }
     }
 }
