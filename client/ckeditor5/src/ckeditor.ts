@@ -17,6 +17,7 @@ import {
 	AutoImage,
 	Image,
 	ImageCaption,
+	ImageInsertViaUrl,
 	ImageResize,
 	ImageStyle,
 	ImageToolbar
@@ -65,6 +66,7 @@ class Editor extends ClassicEditor {
 		ImageResize,
 		ImageStyle,
 		ImageToolbar,
+    ImageInsertViaUrl,
 		Indent,
 		IndentBlock,
 		Italic,
@@ -118,10 +120,7 @@ class Editor extends ClassicEditor {
 				'imageStyle:inline',
 				'imageStyle:block',
 				'imageStyle:side'
-			],
-      insert: {
-        integrations: [ 'upload', 'url' ]
-      }
+			]
 		},
 		table: {
 			contentToolbar: [
