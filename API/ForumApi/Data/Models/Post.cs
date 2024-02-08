@@ -26,5 +26,8 @@ namespace ForumApi.Data.Models
         public virtual List<Post> Comments { get; set; } = new();
         [JsonIgnore]
         public virtual Post? Ancestor { get; set; } = null!;
+
+        [JsonIgnore]
+        public virtual List<File> Files { get; set; } = new();
     }
 }

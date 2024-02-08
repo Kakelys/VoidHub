@@ -13,6 +13,7 @@ namespace ForumApi.Data
         public virtual DbSet<Topic> Topics { get; set; } = null!;
         public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<Ban> Bans { get; set; } = null!;
+        public virtual DbSet<Models.File> Files { get; set; } = null!;
 
         public ForumDbContext(DbContextOptions<ForumDbContext> options) 
             : base(options)
@@ -27,6 +28,7 @@ namespace ForumApi.Data
             new ForumConfig(builder.Entity<Forum>());
             new PostConfig(builder.Entity<Post>());
             new BanConfig(builder.Entity<Ban>()) ;
+            new FileConfig(builder.Entity<Models.File>()) ;
 
             base.OnModelCreating(builder);
         }
