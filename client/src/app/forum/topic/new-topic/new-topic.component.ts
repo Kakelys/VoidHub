@@ -8,6 +8,7 @@ import { NameService } from '../../services/name.service';
 import { Name } from '../../models/names.model';
 import { ToastrExtension } from 'src/shared/toastr.extension';
 import { ToastrService } from 'ngx-toastr';
+import { PostEditorData } from '../../models/post-editor-data.model';
 
 @Component({
   selector: 'app-new-topic',
@@ -51,13 +52,15 @@ export class NewTopicComponent implements OnInit {
     })
   }
 
-  onSubmit(form: NgForm) {
+  onSubmit(form: NgForm, postData: PostEditorData) {
     this.errorMessages = [];
 
     if(form.invalid) {
       NgFormExtension.markAllAsTouched(form);
       return;
     }
+
+    form.value.content = postData.content;
 
     this.topicService.createTopic(form.value).subscribe({
       next: _ => {
