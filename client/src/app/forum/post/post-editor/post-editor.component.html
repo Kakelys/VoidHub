@@ -7,7 +7,7 @@
           classes="rounded-b bg-neutral min-h-24"
           id="content"
           name="content"
-          [config]="{placeholder: 'Topic message'}"
+          [config]="{placeholder: inputPlaceholder}"
           [editor]="editor"
           [(ngModel)]="content">
         </ckeditor>
@@ -52,7 +52,11 @@
           {{submitPlaceholder}}
         </button>
       </app-limit-loader>
-      <button type="button" class="btn btn-info ms-5 min-h-fit h-8" (click)="onCancelClick()">
+      <button
+        type="button"
+        [class]="cancelClassesReplacement ? cancelClassesReplacement : 'btn btn-info ms-5 min-h-fit h-8'"
+        (click)="onCancelClick()"
+      >
         {{cancelPlaceholder}}
       </button>
     </div>

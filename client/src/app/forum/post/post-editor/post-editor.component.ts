@@ -1,3 +1,4 @@
+import { PostEditorData } from './../../models/post-editor-data.model';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
@@ -14,7 +15,7 @@ export class NewPostComponent {
   };
 
   @Output()
-  onCreate = new EventEmitter<any>();
+  onCreate = new EventEmitter<PostEditorData>();
 
   @Output()
   onCancel = new EventEmitter<any>();
@@ -23,10 +24,13 @@ export class NewPostComponent {
   content = '';
 
   @Input()
-  submitPlaceholder = 'Create';
-
+  submitPlaceholder: string = 'Create';
   @Input()
-  cancelPlaceholder = 'Cancel';
+  cancelPlaceholder: string = 'Cancel';
+  @Input()
+  inputPlaceholder: string = 'Topic message';
+  @Input()
+  cancelClassesReplacement: string | null;
 
   @Input()
   ancestorId: number | null = null;
@@ -41,7 +45,8 @@ export class NewPostComponent {
       return;
     }
 
-    this.onCreate.emit(form.value);
+    const data: PostEditorData = form.value;
+    this.onCreate.emit(data);
   }
 
   onCancelClick() {
