@@ -26,6 +26,8 @@ namespace ForumApi.Data.Repository
                 .AddScoped(provider => new Lazy<IForumRepository>(() => provider.GetRequiredService<IForumRepository>()));
             services.AddScoped<IBanRepository, BanRepository>()
                 .AddScoped(provider => new Lazy<IBanRepository>(() => provider.GetRequiredService<IBanRepository>()));
+            services.AddScoped<IFileRepository, FileRepository>()
+                .AddScoped(provider => new Lazy<IFileRepository>(() => provider.GetRequiredService<IFileRepository>()));
 
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
