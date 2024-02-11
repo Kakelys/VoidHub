@@ -73,3 +73,7 @@
 .ck-labeled-field-view_focused label {
   @apply font-bold text-base-content p-1 outline rounded bg-neutral;
 }
+
+.ck-viewer .ck-editor__top {
+  display: none;
+}
