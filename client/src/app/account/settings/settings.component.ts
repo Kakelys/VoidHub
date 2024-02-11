@@ -90,8 +90,8 @@ export class SettingsComponent implements OnDestroy {
       return;
     }
 
-    if(this.fileToUpload.size > 524288) {
-      this.errorMessages.push("File size must be less than 512 KB");
+    if(this.fileToUpload.size > env.maxAvatarSize) {
+      this.errorMessages.push(`File size must be less than ${env.maxAvatarSize / 1024} KB`);
       return;
     }
 
