@@ -6,20 +6,18 @@ using ForumApi.Controllers.Filters;
 using ForumApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ForumApi.Data.Repository.Interfaces;
 
 namespace ForumApi.Controllers
 {
     [ApiController]
     [Route("api/v1/posts")]
-    public class PostController : ControllerBase
+    public class PostController(
+        IPostService _postService,
+        IRepositoryManager _rep,
+        IFileService _fileService
+    ) : ControllerBase
     {
-        private readonly IPostService _postService;
-
-        public PostController(IPostService postService)
-        {
-            _postService = postService;
-        }
-
         [HttpGet("{id}/comments")]
         public async Task<IActionResult> GetPage(int id, [FromQuery] Offset page)
         {
@@ -32,8 +30,21 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> Create(PostDto postDto)
         {
-            var post = await _postService.Create(User.GetId(), postDto);
-            return Ok(post);
+            try
+            {
+                var post = await _postService.Create(User.GetId(), postDto);
+                await _fileService.Update(postDto.FileIds.ToArray(), post.Id);
+                
+                await _rep.Save();
+                await _rep.Commit();
+
+                return Ok(post);
+            }
+            catch
+            {
+                await _rep.Rollback();
+                throw;
+            }
         }
 
         [HttpPut("{id}")]
