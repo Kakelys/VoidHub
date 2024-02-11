@@ -40,13 +40,14 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> UpdateImageSelf(AccountDto accountDto, [FromQuery] string currentPath)
         {
-            var validator = new AccountDtoImageValidator();
+            var validator = new AccountDtoImageValidator(options);
             await validator.ValidateAndThrowAsync(accountDto);
 
             var avatarPath = $"{_imageOptions.AvatarFolder}/{User.GetId()}.png";
             var fullPath = Path.Combine(_imageOptions.Folder, avatarPath);
 
-            var image = _imageService.PrepareImage(accountDto.Img);
+            var image = _imageService.Load(accountDto.Img);
+            _imageService.Resize(image);
             await _imageService.SaveImage(image, fullPath);
 
             return Ok(await _accountService.UpdateImg(User.GetId(), avatarPath));
