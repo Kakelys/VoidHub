@@ -75,5 +75,6 @@
 }
 
 .ck-viewer .ck-editor__top {
-  display: none;
+  visibility: collapse;
+  height: 0px !important;
 }

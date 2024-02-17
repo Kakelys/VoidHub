@@ -114,13 +114,41 @@ class Editor extends ClassicEditor {
 		},
 		language: 'en',
 		image: {
-			toolbar: [
-				'imageTextAlternative',
-				'toggleImageCaption',
-				'imageStyle:inline',
-				'imageStyle:block',
-				'imageStyle:side'
-			]
+      //resize
+      resizeUnit: "px" as "px",
+      resizeOptions: [
+          {
+              name: 'imageResize:original',
+              value: null,
+              icon: 'original'
+          },
+          {
+              name: 'imageResize:50',
+              value: '50',
+              icon: 'small'
+          },
+          {
+            name: 'imageResize:75',
+            value: '75',
+            icon: 'medium'
+          },
+          {
+              name: 'imageResize:100',
+              value: '100',
+              icon: 'large'
+          }
+      ],
+
+      //
+      toolbar: [
+        'imageTextAlternative',
+        'toggleImageCaption',
+        '|',
+        'imageStyle:breakText',
+        'imageStyle:wrapText',
+        '|',
+        'imageResize',
+      ]
 		},
 		table: {
 			contentToolbar: [
@@ -167,7 +195,7 @@ class Editor extends ClassicEditor {
             const id = match[ 2 ];
 
             return (
-            '<div> ' +
+            '<div class="twitter-container"> ' +
               '<iframe ' +
                 `src="https://twitframe.com/show?url=https://twitter.com/${user}/status/${id}"` +
                 'style="height:400px" csp frameborder="0" allowtransparency="true" allow="encrypted-media" loading="lazy"' +
