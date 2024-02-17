@@ -99,6 +99,13 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
     })
   }
 
+  copyToClipBoard(url: string) {
+    navigator.clipboard.writeText(url)
+    .then(_ => {
+      this.toastr.success("Copied!")
+    })
+  }
+
   onDelete(id: number) {
     this.uploadService.delete(id).subscribe({
       next: _ => {
