@@ -3,4 +3,5 @@ export interface PostEditorData {
   ancestorId: number | null;
   topicId: number | null;
   postId: number | null;
+  fileIds: number[];
 }
