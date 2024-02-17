@@ -2,7 +2,7 @@ using FluentValidation;
 using ForumApi.Controllers.Filters;
 using ForumApi.DTO.DFile;
 using ForumApi.Options;
-using ForumApi.Services;
+using ForumApi.Services.Interfaces;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -12,17 +12,18 @@ using Microsoft.Extensions.Options;
 namespace ForumApi.Controllers
 {
     [ApiController]
-    [Route("api/v1/uploads")]
+    [Route("api/v1/uploads/images")]
     public class UploadImageController(
-        UploadService uploadService,
-        FileService fileService,
+        IUploadService uploadService,
+        IFileService fileService,
         IOptions<ImageOptions> options
     ) : ControllerBase
     {
         private ImageOptions _imageOptions = options.Value;
 
-        [HttpPost("images")]
+        [HttpPost]
         [Authorize]
+        [BanFilter]
         public async Task<IActionResult> UploadImage(NewFileDto newFileDto)
         {
             var validator = new NewImageValidator(options);
@@ -33,17 +34,22 @@ namespace ForumApi.Controllers
             {
                 PostId = newFileDto.PostId,
                 AccountId = accountId,
-                Path = $"{_imageOptions.Folder}/{_imageOptions.PostImageFolder}/{accountId}{Guid.NewGuid()}",
+                Path = $"{_imageOptions.PostImageFolder}/{accountId}{Guid.NewGuid()}{_imageOptions.FileType}",
             };
 
             return Ok(await uploadService.UploadImage(newFileDto.File, fileDto));
         }
 
-        [HttpDelete("images")]
+        [HttpDelete()]
         [Authorize]
-        public async Task<IActionResult> DeteleImages(int[] ids)
+        public async Task<IActionResult> DeteleImages([FromQuery] int[] ids)
         {
+            if(ids.Length == 0)
+                throw new BadRequestException("File ids not provided");
+
             var accountId = User.GetId();
+
+            // check permission for delition
             var files = await fileService.Get(ids);
             if(files.Count(f => f.AccountId == accountId) != files.Count)
                 throw new ForbiddenException("You don't have permission to do this action");
@@ -53,7 +59,7 @@ namespace ForumApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("images/{id}")]
+        [HttpDelete("{id}")]
         [Authorize]
         [PermissionActionFilter<Data.Models.File>]
         public async Task<IActionResult> DeleteImage(int id)

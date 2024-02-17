@@ -12,6 +12,10 @@ namespace ForumApi.DTO.DFile
         {
             var imgOptions = imageOptions.Value;
 
+            RuleFor(r => r.PostId)
+                .Must(id => id == null || id > 0)
+                .WithMessage("PostId must be greated than 0 or null");
+
             RuleFor(r => r.File)
                 .Configure(c => c.CascadeMode = CascadeMode.Stop)
                 .Must(i => i != null)

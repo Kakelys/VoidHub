@@ -26,6 +26,9 @@ namespace ForumApi.Services
 
         public async Task<Post> Create(int accountId, PostDto postDto)
         {
+            if(!_rep.IsInTransaction)
+                throw new DatabaseException("Function runs outside the transaction");
+
             var topicEntity = await _rep.Topic.Value
                 .FindByCondition(t => t.Id == postDto.TopicId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
@@ -39,27 +42,17 @@ namespace ForumApi.Services
             var post = _mapper.Map<Post>(postDto);
             post.AccountId = accountId;
 
-            await _rep.BeginTransaction();
-            try
-            {
-                var entity = _rep.Post.Value.Create(post);
-                await _rep.Save();
-            
-                // update ancestors comments counter
-                await _rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, 1);
+            var entity = _rep.Post.Value.Create(post);
+            await _rep.Save();
+        
+            // update ancestors comments counter
+            await _rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, 1);
 
-                // upd topic posts counter, if it not comment
-                if(postDto.AncestorId != null && entity.Ancestor.AncestorId == null)
-                    topicEntity.PostsCount++;
+            // upd topic posts counter, if it not comment
+            if(postDto.AncestorId != null && entity.Ancestor.AncestorId == null)
+                topicEntity.PostsCount++;
 
-                await _rep.Save();
-                await _rep.Commit();
-            }
-            catch
-            {
-                await _rep.Rollback();
-                throw;
-            }
+            await _rep.Save();
 
             return post;
         }

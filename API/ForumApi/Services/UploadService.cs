@@ -1,13 +1,16 @@
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DFile;
+using ForumApi.Options;
 using ForumApi.Services.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace ForumApi.Services
 {
     public class UploadService(
             IRepositoryManager rep,
             IFileService fileService,
-            IImageService imageService
+            IImageService imageService,
+            IOptions<ImageOptions> imageOptions
         ) : IUploadService
     {
         public async Task<FileDto> UploadImage(IFormFile img, FileDto fileDto)
@@ -19,7 +22,8 @@ namespace ForumApi.Services
                 await rep.Save();
 
                 var image = imageService.Load(img);
-                await imageService.SaveImage(image, fileDto.Path);
+                imageService.ResizeWithAspect(image, imageOptions.Value.ResizePostWidth, imageOptions.Value.ResizePostHeight);
+                await imageService.SaveImage(image, $"{imageOptions.Value.Folder}/{fileDto.Path}");
 
                 await rep.Commit();
                 return file;
@@ -36,17 +40,23 @@ namespace ForumApi.Services
             await rep.BeginTransaction();
             try 
             {
-                var files = await fileService.Delete(ids);
-                await rep.Save();
+                var files = new List<FileDto>();
+                if(ids.Length > 1)
+                    files.AddRange(await fileService.Delete(ids));
+                else
+                    files.Add(await fileService.Delete(ids[0]));
+                
                 
                 foreach(var file in files)
                 {
-                    if(File.Exists(file.Path))
+                    var pathToFile = $"{imageOptions.Value.Folder}/{file.Path}";
+                    if(File.Exists(pathToFile))
                     {
-                        File.Delete(file.Path);
+                        File.Delete(pathToFile);
                     }
+                    // TODO: Log when not deleted
                 }
-
+                
                 await rep.Commit();
                 return files;
             } 

@@ -37,7 +37,18 @@ namespace ForumApi.Services
             var newFile = rep.File.Value.Create(mapper.Map<Data.Models.File>(file));
             await rep.Save();
 
-            return new FileDto(file);
+            return mapper.Map<FileDto>(newFile);
+        }
+
+        public async Task<FileDto> Delete(int id)
+        {
+            var entity = await rep.File.Value.FindByCondition(f => f.Id == id)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException("File not found");
+
+            rep.File.Value.Delete(entity);
+            await rep.Save();
+
+            return new FileDto(entity);
         }
 
         public async Task<List<FileDto>> Delete(int[] ids)
@@ -51,7 +62,7 @@ namespace ForumApi.Services
             rep.File.Value.DeleteMany(entities);
             await rep.Save();
 
-            return mapper.Map<List<FileDto>>(entities);
+            return entities.Select(f => new FileDto(f)).ToList();
         }
 
         public async Task Update(int[] ids, int? postId)

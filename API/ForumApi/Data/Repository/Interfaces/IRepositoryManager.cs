@@ -11,6 +11,8 @@ namespace ForumApi.Data.Repository.Interfaces
         Lazy<IBanRepository> Ban { get; }
         Lazy<IFileRepository> File { get; }
 
+        bool IsInTransaction { get; }
+
         Task BeginTransaction();
         Task Commit();
         Task Rollback();

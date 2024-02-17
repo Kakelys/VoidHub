@@ -16,6 +16,9 @@ namespace ForumApi.Data.Repository
         public Lazy<IBanRepository> Ban { get; }
         public Lazy<IFileRepository> File { get; }
 
+        public bool IsInTransaction =>
+            _context.Database.CurrentTransaction != null;
+
         public RepositoryManager(
             ForumDbContext context,
             Lazy<IAccountRepository> account, 

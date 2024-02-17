@@ -19,6 +19,12 @@ namespace ForumApi.Options
         [Required]
         public int ResizeHeight { get;set; } = 0;
         [Required]
+        public int ResizePostWidth { get;set; } = 0;
+        [Required]
+        public int ResizePostHeight { get;set; } = 0;
+        [Required]
         public int ImageMaxSize { get;set; } = 0;
+        [Required]
+        public string FileType { get;set; } = "";
     }
 }

@@ -16,11 +16,30 @@ namespace ForumApi.Services
             return Image.Load(file.OpenReadStream());
         }
 
-        public void Resize(Image image)
+        public void Resize(Image image, int width, int height)
+        {
+            var newWidth = image.Width < width ? image.Width : width;
+            var newHeight = image.Height < height ? image.Height : height;
+
+            image.Mutate(x => x.Resize(newWidth, newHeight));
+        }
+        
+        public void ResizeWithAspect(Image image, int width, int height)
+        {       
+            var newWidth = image.Width < width ? image.Width : width;
+            var newHeight = image.Height < height ? image.Height : height;
+            
+            image.Mutate(x => x.Resize(new ResizeOptions
+            {
+                Size = new Size(newWidth, newHeight),
+                Mode = ResizeMode.Max
+            }));
+        }
+
+        public void Crop(Image image)
         {
             var minSize = Math.Min(image.Width, image.Height);
             image.Mutate(x => x.Crop(new SixLabors.ImageSharp.Rectangle((image.Width - minSize) / 2, (image.Height - minSize) / 2, minSize, minSize)));
-            image.Mutate(x => x.Resize(_imageOptions.ResizeWidth, _imageOptions.ResizeHeight));
         }
 
         public async Task SaveImage(Image image, string path)
@@ -29,6 +48,7 @@ namespace ForumApi.Services
             {
                 CompressionLevel = PngCompressionLevel.DefaultCompression,
                 TransparentColorMode = PngTransparentColorMode.Preserve,
+                ColorType = PngColorType.Palette,
                 SkipMetadata = true,
             };
             

@@ -43,11 +43,12 @@ namespace ForumApi.Controllers
             var validator = new AccountDtoImageValidator(options);
             await validator.ValidateAndThrowAsync(accountDto);
 
-            var avatarPath = $"{_imageOptions.AvatarFolder}/{User.GetId()}.png";
+            var avatarPath = $"{_imageOptions.AvatarFolder}/{User.GetId()}{_imageOptions.FileType}";
             var fullPath = Path.Combine(_imageOptions.Folder, avatarPath);
 
             var image = _imageService.Load(accountDto.Img);
-            _imageService.Resize(image);
+            _imageService.Resize(image, _imageOptions.ResizeWidth, _imageOptions.ResizePostHeight);
+            _imageService.Crop(image);
             await _imageService.SaveImage(image, fullPath);
 
             return Ok(await _accountService.UpdateImg(User.GetId(), avatarPath));

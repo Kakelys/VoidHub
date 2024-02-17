@@ -13,5 +13,6 @@ namespace ForumApi.Services.Interfaces
         Task<FileDto> Create(FileDto file);
         Task Update(int[] ids, int? postId);
         Task<List<FileDto>> Delete(int[] ids);
+        Task<FileDto> Delete(int id);
     }
 }
