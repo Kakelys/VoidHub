@@ -25,15 +25,25 @@ namespace ForumApi.Controllers
             return Ok(posts);
         }
 
+        [HttpGet("{id}/images")]
+        [Authorize]
+        public async Task<IActionResult> GetPostImages(int id)
+        {
+            return Ok(await _fileService.Get(id));
+        }
+
         [HttpPost]
         [Authorize]
         [BanFilter]
         public async Task<IActionResult> Create(PostDto postDto)
         {
+            await _rep.BeginTransaction();
             try
             {
                 var post = await _postService.Create(User.GetId(), postDto);
-                await _fileService.Update(postDto.FileIds.ToArray(), post.Id);
+                // update files post ids
+                if(postDto.FileIds.Count > 0)
+                    await _fileService.Update(postDto.FileIds.ToArray(), post.Id);
                 
                 await _rep.Save();
                 await _rep.Commit();
