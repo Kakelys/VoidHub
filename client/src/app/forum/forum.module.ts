@@ -33,6 +33,8 @@ import { RecentComponent } from "./recent/recent.component";
 import { ReducePost } from "./recent/reduce-post.pipe";
 import { TruncatePipe } from "src/shared/truncate.pipe";
 import { NameService } from "./services/name.service";
+import { UploadImagesComponent } from './post/upload-images/upload-images.component';
+import { UploadService } from "./services/upload.service";
 
 @NgModule({
   providers: [
@@ -43,7 +45,8 @@ import { NameService } from "./services/name.service";
     BanService,
     AdminService,
     AccountService,
-    NameService
+    NameService,
+    UploadService
   ],
   declarations: [
     SectionListComponent,
@@ -61,7 +64,8 @@ import { NameService } from "./services/name.service";
     ForumComponent,
     ForumElementComponent,
     CommentsComponent,
-    RecentComponent
+    RecentComponent,
+    UploadImagesComponent
   ],
   imports: [
     SharedModule,
