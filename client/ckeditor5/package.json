@@ -30,7 +30,7 @@
   "devDependencies": {
     "@ckeditor/ckeditor5-dev-translations": "^32.1.2",
     "@ckeditor/ckeditor5-dev-utils": "^32.1.2",
-    "@ckeditor/ckeditor5-theme-lark": "^40.0.0",
+    "@ckeditor/ckeditor5-theme-lark": "^40.2.0",
     "ckeditor5-youtube-embed": "^1.1.2",
     "css-loader": "^5.2.7",
     "postcss": "^8.4.31",

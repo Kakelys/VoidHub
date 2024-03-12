@@ -14,6 +14,10 @@ namespace ForumApi.Data.Repository
         public Lazy<ITopicRepository> Topic { get; }
         public Lazy<IPostRepository> Post { get; }
         public Lazy<IBanRepository> Ban { get; }
+        public Lazy<IFileRepository> File { get; }
+
+        public bool IsInTransaction =>
+            _context.Database.CurrentTransaction != null;
 
         public RepositoryManager(
             ForumDbContext context,
@@ -23,7 +27,8 @@ namespace ForumApi.Data.Repository
             Lazy<IForumRepository> forum,
             Lazy<ITopicRepository> topic,
             Lazy<IPostRepository> post,
-            Lazy<IBanRepository> ban)
+            Lazy<IBanRepository> ban,
+            Lazy<IFileRepository> file)
         {
             _context = context;
             Account = account;
@@ -34,6 +39,7 @@ namespace ForumApi.Data.Repository
             Topic = topic;
             Post = post;
             Ban = ban;
+            File = file;
         }
 
         public async Task BeginTransaction() => 

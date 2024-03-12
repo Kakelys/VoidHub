@@ -65,3 +65,16 @@
 .min-h-32 {
   min-height: 8rem;
 }
+
+.ck.ck-link-form, .ck.ck-input:focus {
+  @apply bg-neutral;
+}
+
+.ck-labeled-field-view_focused label {
+  @apply font-bold text-base-content p-1 outline rounded bg-neutral;
+}
+
+.ck-viewer .ck-editor__top {
+  visibility: collapse;
+  height: 0px !important;
+}

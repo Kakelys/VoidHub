@@ -29,6 +29,11 @@ if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.AvatarFolder}"))
   Directory.CreateDirectory($"{imageSettings.Folder}/{imageSettings.AvatarFolder}");
 }
 
+if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.PostImageFolder}"))
+{
+  Directory.CreateDirectory($"{imageSettings.Folder}/{imageSettings.PostImageFolder}");
+}
+
 builder.Services.AddRepository(builder.Configuration);
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -44,6 +49,9 @@ builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
 builder.Services.AddScoped<INamesService, NamesService>();
+
+builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IUploadService, UploadService>();
 
 builder.Services.AddControllers()
   .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));

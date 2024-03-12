@@ -63,8 +63,15 @@ export class AuthService
   public setRefreshTimeout()
   {
     const access = localStorage.getItem('access-token');
-    if(!access)
+    const refresh = localStorage.getItem('refresh-token');
+
+    if(!access && !refresh)
       return;
+
+    if(!access && refresh) {
+      this.refreshAndAuth().subscribe();
+      return;
+    }
 
     const jwtPayload = jwtDecode(access);
 

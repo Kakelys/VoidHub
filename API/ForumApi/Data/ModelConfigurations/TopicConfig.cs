@@ -24,7 +24,10 @@ namespace ForumApi.Data.ModelConfigurations
                 .HasDefaultValue(false);
 
             builder.Property(t => t.DeletedAt)
-                .HasDefaultValue(null); 
+                .HasDefaultValue(null);
+
+            builder.Property(t => t.PostsCount)
+                .HasDefaultValue(0);
 
             builder.HasGeneratedTsVectorColumn(
                     t => t.SearchVector,

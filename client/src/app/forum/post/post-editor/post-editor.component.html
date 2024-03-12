@@ -3,11 +3,12 @@
     <div class="form-control">
       <div class="form-control w-full">
         <ckeditor
+          (ready)="onEditorReady($event)"
           class="bg-neutral"
           classes="rounded-b bg-neutral min-h-24"
           id="content"
           name="content"
-          [config]="{placeholder: 'Topic message'}"
+          [config]="{placeholder: inputPlaceholder}"
           [editor]="editor"
           [(ngModel)]="content">
         </ckeditor>
@@ -24,6 +25,12 @@
         </label>
       </div>
     </div>
+
+    <app-upload-images
+      [postId]="postId"
+      (onPaste)="addImage($event)"
+      (onFilesUpdates)="onFilesUpdated($event)"
+    ></app-upload-images>
 
     <div class="form-control hidden">
       <input
@@ -52,7 +59,11 @@
           {{submitPlaceholder}}
         </button>
       </app-limit-loader>
-      <button type="button" class="btn btn-info ms-5 min-h-fit h-8" (click)="onCancelClick()">
+      <button
+        type="button"
+        [class]="cancelClassesReplacement ? cancelClassesReplacement : 'btn btn-info ms-5 min-h-fit h-8'"
+        (click)="onCancelClick()"
+      >
         {{cancelPlaceholder}}
       </button>
     </div>

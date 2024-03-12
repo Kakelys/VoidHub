@@ -1,0 +1,61 @@
+<div class="flex flex-col">
+  <div>
+    Uploading images
+  </div>
+  <div class="my-2">
+    <label for="image-upload2" class="btn btn-neutral cursor-pointer min-h-fit h-8 w-min p-1 tooltip tooltip-bottom" data-tip="Upload from file">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-6 h-6">
+        <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5"
+          class="stroke-base-content"
+          stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+        />
+        <path d="M8 22.0002H16C18.8284 22.0002 20.2426 22.0002 21.1213 21.1215C22 20.2429 22 18.8286 22 16.0002V15.0002C22 12.1718 22 10.7576 21.1213 9.8789C20.3529 9.11051 19.175 9.01406 17 9.00195M7 9.00195C4.82497 9.01406 3.64706 9.11051 2.87868 9.87889C2 10.7576 2 12.1718 2 15.0002L2 16.0002C2 18.8286 2 20.2429 2.87868 21.1215C3.17848 21.4213 3.54062 21.6188 4 21.749"
+          class="stroke-base-content"
+          stroke-width="1.5" stroke-linecap="round"
+        />
+      </svg>
+    </label>
+    <input id="image-upload2" type="file" class="hidden" (change)="handleFileInput($event.target)" />
+  </div>
+  <div class="flex flex-row flex-wrap">
+    <div *ngFor="let file of uploadedFiles">
+      <div class="avatar my-2 mx-1">
+        <div class="w-32 rounded">
+            <img src="{{resourceUrl}}/{{file.path}}" class="rounded opacity-30 relative -z-10" loading="lazy"/>
+            <div class="w-full flex justify-end absolute top-0">
+              <app-delete
+                (onConfirm)="onDelete(file.id)"
+              >
+              </app-delete>
+            </div>
+            <div class="flex justify-center absolute bottom-0 w-full mb-2">
+
+              <button
+                type="button"
+                class="btn btn-neutral min-h-min h-8 p-0 mr-2 tooltip tooltip-bottom"
+                data-tip="Paste to editor"
+                (click)="emitPaste(resourceUrl + '/' + file.path)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 px-1" viewBox="0 0 24 24" fill="none">
+                  <path class="fill-base-content" fill-rule="evenodd" clip-rule="evenodd" d="M12 0C11.2347 0 10.6293 0.125708 10.1567 0.359214C9.9845 0.44429 9.82065 0.544674 9.68861 0.62717L9.59036 0.688808C9.49144 0.751003 9.4082 0.803334 9.32081 0.853848C9.09464 0.984584 9.00895 0.998492 9.00053 0.999859C8.99983 0.999973 9.00019 0.999859 9.00053 0.999859C7.89596 0.999859 7 1.89543 7 3H6C4.34315 3 3 4.34315 3 6V20C3 21.6569 4.34315 23 6 23H18C19.6569 23 21 21.6569 21 20V6C21 4.34315 19.6569 3 18 3H17C17 1.89543 16.1046 1 15 1C15.0003 1 15.0007 1.00011 15 1C14.9916 0.998633 14.9054 0.984584 14.6792 0.853848C14.5918 0.80333 14.5086 0.751004 14.4096 0.688804L14.3114 0.62717C14.1793 0.544674 14.0155 0.44429 13.8433 0.359214C13.3707 0.125708 12.7653 0 12 0ZM16.7324 5C16.3866 5.5978 15.7403 6 15 6H9C8.25972 6 7.61337 5.5978 7.26756 5H6C5.44772 5 5 5.44772 5 6V20C5 20.5523 5.44772 21 6 21H18C18.5523 21 19 20.5523 19 20V6C19 5.44772 18.5523 5 18 5H16.7324ZM11.0426 2.15229C11.1626 2.09301 11.4425 2 12 2C12.5575 2 12.8374 2.09301 12.9574 2.15229C13.0328 2.18953 13.1236 2.24334 13.2516 2.32333L13.3261 2.37008C13.43 2.43542 13.5553 2.51428 13.6783 2.58539C13.9712 2.75469 14.4433 3 15 3V4H9V3C9.55666 3 10.0288 2.75469 10.3217 2.58539C10.4447 2.51428 10.57 2.43543 10.6739 2.37008L10.7484 2.32333C10.8764 2.24334 10.9672 2.18953 11.0426 2.15229Z"/>
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-neutral min-h-min h-8 p-0 tooltip tooltip-bottom"
+                data-tip="Copy link to clipboard"
+                (click)="copyToClipBoard(resourceUrl + '/' + file.path)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 px-1" viewBox="0 0 24 24" fill="none">
+                  <path d="M16 16V18.8C16 19.9201 16 20.4802 15.782 20.908C15.5903 21.2843 15.2843 21.5903 14.908 21.782C14.4802 22 13.9201 22 12.8 22H5.2C4.0799 22 3.51984 22 3.09202 21.782C2.71569 21.5903 2.40973 21.2843 2.21799 20.908C2 20.4802 2 19.9201 2 18.8V11.2C2 10.0799 2 9.51984 2.21799 9.09202C2.40973 8.71569 2.71569 8.40973 3.09202 8.21799C3.51984 8 4.0799 8 5.2 8H8M11.2 16H18.8C19.9201 16 20.4802 16 20.908 15.782C21.2843 15.5903 21.5903 15.2843 21.782 14.908C22 14.4802 22 13.9201 22 12.8V5.2C22 4.0799 22 3.51984 21.782 3.09202C21.5903 2.71569 21.2843 2.40973 20.908 2.21799C20.4802 2 19.9201 2 18.8 2H11.2C10.0799 2 9.51984 2 9.09202 2.21799C8.71569 2.40973 8.40973 2.71569 8.21799 3.09202C8 3.51984 8 4.07989 8 5.2V12.8C8 13.9201 8 14.4802 8.21799 14.908C8.40973 15.2843 8.71569 15.5903 9.09202 15.782C9.51984 16 10.0799 16 11.2 16Z"
+                    class="stroke-base-content stroke-2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+              </button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,5 @@
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DAccount;
-using SixLabors.ImageSharp;
 
 namespace ForumApi.Services.Interfaces
 {

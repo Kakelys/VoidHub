@@ -129,6 +129,33 @@ namespace ForumApi.Migrations
                     b.ToTable("Bans");
                 });
 
+            modelBuilder.Entity("ForumApi.Data.Models.File", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Files");
+                });
+
             modelBuilder.Entity("ForumApi.Data.Models.Forum", b =>
                 {
                     b.Property<int>("Id")
@@ -300,6 +327,11 @@ namespace ForumApi.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<int>("PostsCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.Property<NpgsqlTsVector>("SearchVector")
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
@@ -349,6 +381,23 @@ namespace ForumApi.Migrations
                     b.Navigation("Moderator");
 
                     b.Navigation("UpdatedBy");
+                });
+
+            modelBuilder.Entity("ForumApi.Data.Models.File", b =>
+                {
+                    b.HasOne("ForumApi.Data.Models.Account", "Account")
+                        .WithMany("UploadedFiles")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ForumApi.Data.Models.Post", "Post")
+                        .WithMany("Files")
+                        .HasForeignKey("PostId");
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("ForumApi.Data.Models.Forum", b =>
@@ -430,6 +479,8 @@ namespace ForumApi.Migrations
                     b.Navigation("Topics");
 
                     b.Navigation("UpdatedBans");
+
+                    b.Navigation("UploadedFiles");
                 });
 
             modelBuilder.Entity("ForumApi.Data.Models.Forum", b =>
@@ -440,6 +491,8 @@ namespace ForumApi.Migrations
             modelBuilder.Entity("ForumApi.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Files");
                 });
 
             modelBuilder.Entity("ForumApi.Data.Models.Section", b =>

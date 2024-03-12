@@ -9,6 +9,9 @@ namespace ForumApi.Data.Repository.Interfaces
         Lazy<ITopicRepository> Topic { get; }
         Lazy<IPostRepository> Post { get; }
         Lazy<IBanRepository> Ban { get; }
+        Lazy<IFileRepository> File { get; }
+
+        bool IsInTransaction { get; }
 
         Task BeginTransaction();
         Task Commit();

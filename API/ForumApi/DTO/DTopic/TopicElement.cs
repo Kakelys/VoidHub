@@ -6,8 +6,6 @@ namespace ForumApi.DTO.DTopic
 {
     public class TopicElement : Topic
     {
-        public int PostsCount { get; set; }
-
         public new User Author { get; set; } = null!;
         public LastPost? LastPost { get; set; }
 
@@ -22,6 +20,7 @@ namespace ForumApi.DTO.DTopic
             DeletedAt = topic.DeletedAt;
             IsClosed = topic.IsClosed;
             IsPinned = topic.IsPinned;
+            PostsCount = topic.PostsCount;
         }
     }
 }

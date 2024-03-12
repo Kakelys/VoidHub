@@ -5,6 +5,8 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/shared/models/user.model';
 import { SectionService } from '../../services/section.service';
 import { Roles } from 'src/shared/roles.enum';
+import { ToastrService } from 'ngx-toastr';
+import { ToastrExtension } from 'src/shared/toastr.extension';
 
 @Component({
   selector: 'app-section-list',
@@ -21,7 +23,8 @@ export class SectionListComponent implements OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private sectionService: SectionService
+    private sectionService: SectionService,
+    private toastr: ToastrService
     )
   {
     authService.user$.pipe(takeUntil(this.destroy$))
@@ -31,6 +34,9 @@ export class SectionListComponent implements OnDestroy {
     .subscribe({
       next: (sections: Section[]) => {
         this.sections = sections;
+      },
+      error: errs => {
+        ToastrExtension.handleErrors(this.toastr, errs)
       }
     })
   }

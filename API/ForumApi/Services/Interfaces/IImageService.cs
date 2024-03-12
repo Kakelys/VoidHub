@@ -4,8 +4,10 @@ namespace ForumApi.Services.Interfaces
 {
     public interface IImageService
     {
-        Image PrepareImage(IFormFile file);
-        Image PrepareImage(Image image);
+        Image Load(IFormFile file);
+        void Resize(Image image, int width, int height);
+        void ResizeWithAspect(Image image, int width, int height);
+        void Crop(Image image);
         Task SaveImage(Image image, string path);
     }
 }
