@@ -51,7 +51,7 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
               errors.push("Access denied");
               break;
             case 404:
-              errors.push(err.error)
+              errors.push(err.error ?? "Failed to send request")
               break;
             case 500:
               errors.push("Internal server error");
