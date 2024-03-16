@@ -11,7 +11,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /App
 
 COPY --from=build /App/out .
-COPY ./appsettings.Docker.json ./appsettings.json
 
 EXPOSE 80
 
