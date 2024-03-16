@@ -48,7 +48,6 @@ namespace ForumApi.Services
             {
                 CompressionLevel = PngCompressionLevel.DefaultCompression,
                 TransparentColorMode = PngTransparentColorMode.Preserve,
-                ColorType = PngColorType.Palette,
                 SkipMetadata = true,
             };
             
