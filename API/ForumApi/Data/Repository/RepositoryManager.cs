@@ -16,6 +16,10 @@ namespace ForumApi.Data.Repository
         public Lazy<IBanRepository> Ban { get; }
         public Lazy<IFileRepository> File { get; }
 
+        public Lazy<IChatRepository> Chat { get; }
+        public Lazy<IChatMemberRepository> ChatMember { get; }
+        public Lazy<IChatMessageRepository> ChatMessage { get; }
+
         public bool IsInTransaction =>
             _context.Database.CurrentTransaction != null;
 
@@ -28,7 +32,11 @@ namespace ForumApi.Data.Repository
             Lazy<ITopicRepository> topic,
             Lazy<IPostRepository> post,
             Lazy<IBanRepository> ban,
-            Lazy<IFileRepository> file)
+            Lazy<IFileRepository> file,
+            Lazy<IChatRepository> chat,
+            Lazy<IChatMemberRepository> chatMember,
+            Lazy<IChatMessageRepository> chatMessage
+            )
         {
             _context = context;
             Account = account;
@@ -40,6 +48,9 @@ namespace ForumApi.Data.Repository
             Post = post;
             Ban = ban;
             File = file;
+            Chat = chat;
+            ChatMember = chatMember;
+            ChatMessage = chatMessage;
         }
 
         public async Task BeginTransaction() => 

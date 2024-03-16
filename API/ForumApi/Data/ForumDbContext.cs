@@ -15,6 +15,10 @@ namespace ForumApi.Data
         public virtual DbSet<Ban> Bans { get; set; } = null!;
         public virtual DbSet<Models.File> Files { get; set; } = null!;
 
+        public virtual DbSet<Chat> Chats { get; set; } = null!;
+        public virtual DbSet<ChatMember> ChatMembers { get; set; } = null!;
+        public virtual DbSet<ChatMessage> ChatMessages { get; set; } = null!;
+
         public ForumDbContext(DbContextOptions<ForumDbContext> options) 
             : base(options)
         {}
