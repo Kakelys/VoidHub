@@ -6,16 +6,19 @@ using ForumApi.Options;
 using ForumApi.Services;
 using ForumApi.Services.Interfaces;
 using Microsoft.OpenApi.Models;
+using ForumApi.Hubs;
+using SignalR.Modules;
 
 //need to be checked before create builder
-if(!Directory.Exists("wwwroot"))
+if (!Directory.Exists("wwwroot"))
 {
   Directory.CreateDirectory("wwwroot");
 }
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.AddConsole();
+builder.Services.AddLogging();
+//builder.Logging.AddConsole();
 
 builder.Services.AddAppOptions(builder.Configuration);
 
@@ -36,10 +39,12 @@ if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.PostImageFolder}"))
 
 builder.Services.AddRepository(builder.Configuration);
 
+//auth services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+// forum services
 builder.Services.AddScoped<ISectionService, SectionService>();
 builder.Services.AddScoped<IForumService, ForumService>();
 builder.Services.AddScoped<ITopicService, TopicService>();
@@ -47,9 +52,9 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IBanService, BanService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<IImageService, ImageService>();
-
 builder.Services.AddScoped<INamesService, NamesService>();
 
+// work with files services
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IUploadService, UploadService>();
 
@@ -93,6 +98,9 @@ builder.Services.ConfigureAutoMapper();
 builder.Services.AddValidators();
 builder.Services.AddJwtAuth(builder.Configuration);
 
+builder.Services.AddSignalR();
+builder.Services.AddSignalRModules<MainHub>();
+
 var frontCorsPolicy = "frontCorsPolicy";
 builder.Services.AddCors(options => 
 {
@@ -111,7 +119,8 @@ builder.Services.AddCors(options =>
       policy.WithOrigins("http://localhost:4200")
             .WithOrigins("https://localhost:4200")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -140,5 +149,6 @@ app.UseSwaggerUI( options => {
 });
 
 app.MapControllers();
+app.MapHub<MainHub>("/signalR");
 
 app.Run();
