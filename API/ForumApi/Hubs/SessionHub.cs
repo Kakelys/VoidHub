@@ -1,4 +1,4 @@
-using ForumApi.Services.Socket.Interfaces;
+using ForumApi.Services.Utils.Interfaces;
 using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using SignalR.Modules;

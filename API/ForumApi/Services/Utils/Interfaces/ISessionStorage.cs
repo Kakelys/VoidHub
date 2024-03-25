@@ -1,4 +1,4 @@
-namespace ForumApi.Services.Socket.Interfaces
+namespace ForumApi.Services.Utils.Interfaces
 {
     public interface ISessionStorage
     {

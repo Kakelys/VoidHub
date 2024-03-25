@@ -1,6 +1,6 @@
-using ForumApi.Services.Socket.Interfaces;
+using ForumApi.Services.Utils.Interfaces;
 
-namespace ForumApi.Services.Socket
+namespace ForumApi.Services.Utils
 {
     public class SessionStorage : ISessionStorage
     {
