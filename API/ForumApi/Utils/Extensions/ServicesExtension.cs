@@ -4,6 +4,8 @@ using ForumApi.Services.FileS;
 using ForumApi.Services.FileS.Interfaces;
 using ForumApi.Services.ForumS;
 using ForumApi.Services.ForumS.Interfaces;
+using ForumApi.Services.Socket;
+using ForumApi.Services.Socket.Interfaces;
 using ForumApi.Services.Utils;
 using ForumApi.Services.Utils.Interfaces;
 
@@ -31,6 +33,8 @@ namespace ForumApi.Utils.Extensions
             // work with files services
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IUploadService, UploadService>();
+
+            services.AddSingleton<ISessionStorage, SessionStorage>();
 
             return services;
         }

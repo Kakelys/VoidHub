@@ -108,6 +108,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<QueryTokenMiddleware>();
 
 //check for default avatar
 if(!File.Exists($"{imageSettings.Folder}/{imageSettings.AvatarDefault}"))
