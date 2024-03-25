@@ -1,6 +1,6 @@
 using SixLabors.ImageSharp;
 
-namespace ForumApi.Services.Interfaces
+namespace ForumApi.Services.Utils.Interfaces
 {
     public interface IImageService
     {

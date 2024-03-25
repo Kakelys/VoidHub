@@ -2,7 +2,7 @@ using ForumApi.Data.Models;
 using ForumApi.DTO.DForum;
 using ForumApi.DTO.Page;
 using ForumApi.Controllers.Filters;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,7 +1,7 @@
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DAccount;
 
-namespace ForumApi.Services.Interfaces
+namespace ForumApi.Services.ForumS.Interfaces
 {
     public interface IAccountService
     {

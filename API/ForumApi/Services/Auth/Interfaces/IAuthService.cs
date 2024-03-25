@@ -1,6 +1,6 @@
 using ForumApi.DTO.Auth;
 
-namespace ForumApi.Services.Interfaces
+namespace ForumApi.Services.Auth.Interfaces
 {
     public interface IAuthService
     {

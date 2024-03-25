@@ -5,10 +5,10 @@ using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DBan;
 using ForumApi.DTO.Page;
 using ForumApi.Utils.Exceptions;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.Auth.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.Auth
 {
     public class BanService : IBanService
     {

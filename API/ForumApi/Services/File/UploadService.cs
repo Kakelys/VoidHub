@@ -1,10 +1,11 @@
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DFile;
 using ForumApi.Options;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.FileS.Interfaces;
+using ForumApi.Services.Utils.Interfaces;
 using Microsoft.Extensions.Options;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.FileS
 {
     public class UploadService(
             IRepositoryManager rep,

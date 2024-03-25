@@ -1,6 +1,6 @@
 using ForumApi.DTO.DName;
 
-namespace ForumApi.Services.Interfaces
+namespace ForumApi.Services.ForumS.Interfaces
 {
     public interface INamesService
     {

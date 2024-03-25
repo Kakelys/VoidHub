@@ -3,10 +3,10 @@ using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DForum;
 using ForumApi.Utils.Exceptions;
-using ForumApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using ForumApi.Services.ForumS.Interfaces;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.ForumS
 {
     public class ForumService : IForumService
     {

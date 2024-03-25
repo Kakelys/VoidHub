@@ -3,8 +3,6 @@ using ForumApi.Data.Repository;
 using ForumApi.Utils.Extensions;
 using ForumApi.Utils.Middlewares;
 using ForumApi.Options;
-using ForumApi.Services;
-using ForumApi.Services.Interfaces;
 using Microsoft.OpenApi.Models;
 using ForumApi.Hubs;
 using SignalR.Modules;
@@ -39,24 +37,7 @@ if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.PostImageFolder}"))
 
 builder.Services.AddRepository(builder.Configuration);
 
-//auth services
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-
-// forum services
-builder.Services.AddScoped<ISectionService, SectionService>();
-builder.Services.AddScoped<IForumService, ForumService>();
-builder.Services.AddScoped<ITopicService, TopicService>();
-builder.Services.AddScoped<IPostService, PostService>();
-builder.Services.AddScoped<IBanService, BanService>();
-builder.Services.AddScoped<ISearchService, SearchService>();
-builder.Services.AddScoped<IImageService, ImageService>();
-builder.Services.AddScoped<INamesService, NamesService>();
-
-// work with files services
-builder.Services.AddScoped<IFileService, FileService>();
-builder.Services.AddScoped<IUploadService, UploadService>();
+builder.Services.AddAppServices();
 
 builder.Services.AddControllers()
   .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));

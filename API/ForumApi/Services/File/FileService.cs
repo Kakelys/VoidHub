@@ -1,11 +1,11 @@
 using AutoMapper;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DFile;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.FileS.Interfaces;
 using ForumApi.Utils.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.FileS
 {
     public class FileService(IRepositoryManager rep, IMapper mapper) : IFileService
     {

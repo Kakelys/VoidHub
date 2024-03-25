@@ -2,7 +2,7 @@ using ForumApi.Data.Models;
 using ForumApi.DTO.DSearch;
 using ForumApi.DTO.Page;
 
-namespace ForumApi.Services.Interfaces
+namespace ForumApi.Services.Utils.Interfaces
 {
     public interface ISearchService
     {

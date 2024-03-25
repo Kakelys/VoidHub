@@ -1,6 +1,6 @@
 using ForumApi.Data.Models;
 using ForumApi.DTO.DName;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

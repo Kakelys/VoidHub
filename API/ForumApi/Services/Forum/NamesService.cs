@@ -1,10 +1,10 @@
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DName;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.ForumS
 {
     public class NamesService(IRepositoryManager rep) : INamesService
     {

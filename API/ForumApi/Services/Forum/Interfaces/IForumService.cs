@@ -1,7 +1,7 @@
 using ForumApi.Data.Models;
 using ForumApi.DTO.DForum;
 
-namespace ForumApi.Services.Interfaces
+namespace ForumApi.Services.ForumS.Interfaces
 {
     public interface IForumService
     {

@@ -2,7 +2,7 @@ using System.Security.Claims;
 using ForumApi.Data.Models;
 using ForumApi.DTO.Auth;
 
-namespace ForumApi.Services.Interfaces
+namespace ForumApi.Services.Auth.Interfaces
 {
     public interface ITokenService
     {

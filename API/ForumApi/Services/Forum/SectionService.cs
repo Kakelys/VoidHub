@@ -6,10 +6,10 @@ using ForumApi.DTO.DForum;
 using ForumApi.DTO.DSection;
 using ForumApi.DTO.DTopic;
 using ForumApi.Utils.Exceptions;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.ForumS
 {
     public class SectionService : ISectionService
     {

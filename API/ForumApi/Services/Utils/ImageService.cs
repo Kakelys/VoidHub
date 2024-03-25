@@ -1,11 +1,11 @@
 using ForumApi.Options;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.Utils.Interfaces;
 using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.Utils
 {
     public class ImageService(IOptions<ImageOptions> imageOptions) : IImageService
     {

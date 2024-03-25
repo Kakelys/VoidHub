@@ -5,11 +5,11 @@ using ForumApi.DTO.Auth;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Utils.Extensions;
 using ForumApi.Options;
-using ForumApi.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ForumApi.Services.Auth.Interfaces;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.Auth
 {
     public class AuthService : IAuthService
     {

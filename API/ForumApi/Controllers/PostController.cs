@@ -3,10 +3,11 @@ using ForumApi.DTO.DPost;
 using ForumApi.DTO.Page;
 using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ForumApi.Data.Repository.Interfaces;
+using ForumApi.Services.FileS.Interfaces;
 
 namespace ForumApi.Controllers
 {

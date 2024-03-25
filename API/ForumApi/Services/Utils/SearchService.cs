@@ -5,10 +5,10 @@ using ForumApi.Data.Repository.Extensions;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DSearch;
 using ForumApi.DTO.Page;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.Utils.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.Utils
 {
     public class SearchService : ISearchService
     {

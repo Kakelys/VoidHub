@@ -7,12 +7,12 @@ using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.Auth;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Options;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.Auth.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.Auth
 {
     public class TokenService : ITokenService
     {

@@ -1,6 +1,6 @@
 using ForumApi.DTO.DFile;
 
-namespace ForumApi.Services.Interfaces
+namespace ForumApi.Services.FileS.Interfaces
 {
     public interface IFileService
     {

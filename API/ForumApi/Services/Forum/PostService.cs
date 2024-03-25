@@ -6,10 +6,10 @@ using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
 using ForumApi.DTO.Page;
 using ForumApi.Utils.Exceptions;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.ForumS
 {
     public class PostService : IPostService
     {

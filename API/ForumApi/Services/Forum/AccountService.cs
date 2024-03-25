@@ -6,12 +6,12 @@ using ForumApi.DTO.DBan;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Utils.Extensions;
 using ForumApi.Options;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;
 
-namespace ForumApi.Services
+namespace ForumApi.Services.ForumS
 {
     public class AccountService 
         (

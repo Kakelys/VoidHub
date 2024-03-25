@@ -2,7 +2,7 @@ using ForumApi.Data.Models;
 using ForumApi.DTO.DPost;
 using ForumApi.DTO.Page;
 
-namespace ForumApi.Services.Interfaces
+namespace ForumApi.Services.ForumS.Interfaces
 {
     public interface IPostService
     {

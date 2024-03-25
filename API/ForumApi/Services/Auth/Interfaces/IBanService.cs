@@ -2,7 +2,7 @@ using ForumApi.Data.Models;
 using ForumApi.DTO.DBan;
 using ForumApi.DTO.Page;
 
-namespace ForumApi.Services.Interfaces
+namespace ForumApi.Services.Auth.Interfaces
 {
     public interface IBanService
     {
