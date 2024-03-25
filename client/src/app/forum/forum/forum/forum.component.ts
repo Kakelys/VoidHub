@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ToastrExtension } from 'src/shared/toastr.extension';
 import { Name } from '../../models/names.model';
 import { NameService } from '../../services/name.service';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 
 @Component({
@@ -103,8 +104,8 @@ export class ForumComponent implements OnDestroy {
           this.forum.title = forum.title;
           this.toastr.success('Forum updated');
         },
-        error: errs => {
-          ToastrExtension.handleErrors(this.toastr, errs);
+        error: (err:HttpException) => {
+          ToastrExtension.handleErrors(this.toastr, err.errors);
         }
 
       })
@@ -119,8 +120,8 @@ export class ForumComponent implements OnDestroy {
       next: (names: Name[]) => {
         this.names = names
       },
-      error: errs => {
-        ToastrExtension.handleErrors(this.toastr, errs);
+      error: (err:HttpException) => {
+        ToastrExtension.handleErrors(this.toastr, err.errors);
       }
     })
   }

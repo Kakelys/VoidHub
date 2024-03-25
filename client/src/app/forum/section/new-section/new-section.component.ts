@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { SectionService } from '../../services/section.service';
 import { Router } from '@angular/router';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-new-section',
@@ -30,8 +31,8 @@ export class NewSectionComponent {
       next: _ => {
         this.router.navigate(['/forum/sections']);
       },
-      error: errs => {
-        this.errorMessages = errs;
+      error: (err:HttpException) => {
+        this.errorMessages = err.errors;
       }
     });
   }

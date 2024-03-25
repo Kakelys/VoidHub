@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 import { Injectable } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { Observable, catchError, throwError } from "rxjs";
+import { HttpException } from "../models/http-exception.model";
 
 @Injectable()
 export class HttpExceptionInterceptor implements HttpInterceptor {
@@ -29,16 +30,18 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
                   });
                 }
 
-                return throwError(errors);
+                break;
               }
 
               if (err.error) {
                 errors.push(err.error)
-                return throwError(errors);
+                break;
               }
+
               break;
             case 401:
               errors.push(err.statusText)
+
               break;
             case 403:
               if(err.error?.ExpiresAt && err.error?.Reason)
@@ -49,21 +52,26 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
                 this.toastr.error(msg);
               }
               errors.push("Access denied");
+
               break;
             case 404:
               errors.push(err.error ?? "Failed to send request")
+
               break;
             case 500:
               errors.push("Internal server error");
+
               break;
             default:
               // connection refused or timeout
               if(err.status == 0) {
                 errors.push("Connection refused");
+
                 break;
               }
 
               errors.push("Something went wrong");
+
               break;
           }
         }
@@ -72,7 +80,13 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
           errors.push(err.message);
         }
 
-        return throwError(errors);
+        const httpException: HttpException = {
+          statusCode: err.status,
+          errors: errors,
+          error: err
+        }
+
+        return throwError(httpException);
       })
     );
   }

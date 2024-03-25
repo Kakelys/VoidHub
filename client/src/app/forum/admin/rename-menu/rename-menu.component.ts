@@ -4,6 +4,7 @@ import { AccountService } from '../../services/account.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgForm } from '@angular/forms';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-rename-menu',
@@ -46,8 +47,8 @@ export class RenameMenuComponent implements OnInit {
         next: () => {
           this.toastr.success('Name updated successfully');
         },
-        error: errs => {
-          this.errorMessages = errs;
+        error: (err: HttpException) => {
+          this.errorMessages = err.errors;
         }
       })
     }

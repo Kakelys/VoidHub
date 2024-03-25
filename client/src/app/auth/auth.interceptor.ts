@@ -3,6 +3,7 @@ import { AuthService } from "./auth.service";
 import { HttpErrorResponse, HttpHandler, HttpRequest } from "@angular/common/http";
 import { catchError, switchMap, throwError } from "rxjs";
 import { ToastrService } from "ngx-toastr";
+import { HttpException } from "src/shared/models/http-exception.model";
 
 @Injectable()
 export class AuthInterceptor {
@@ -49,8 +50,9 @@ export class AuthInterceptor {
 
               return next.handle(modifiedReq);
             }),
-            catchError((err) => {
-              if(err instanceof HttpErrorResponse && (err.status == 401 || err.status == 404)) {
+            catchError((err: HttpException) => {
+              console.log('error while updating', err);
+              if(err.error instanceof HttpErrorResponse && (err.statusCode == 401 || err.statusCode == 404)) {
                 this.handleLogout();
               }
 

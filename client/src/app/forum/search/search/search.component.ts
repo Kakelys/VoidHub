@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SearchParams } from '../../models/search-params.model';
 import { Page } from 'src/shared/page.model';
 import { SearchService } from '../../services/search.service';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-search',
@@ -77,8 +78,8 @@ export class SearchComponent {
         //console.log(data)
         this.searchResult = data;
       },
-      error: errs => {
-        this.errorMessages = errs;
+      error: (err:HttpException) => {
+        this.errorMessages = err.errors;
       }
     })
   }
