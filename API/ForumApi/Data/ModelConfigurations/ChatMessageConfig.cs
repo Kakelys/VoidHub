@@ -11,6 +11,7 @@ namespace ForumApi.Data.ModelConfigurations
             builder.HasKey(c => c.Id);
 
             builder.Property(c => c.CreatedAt)
+                .IsRequired()
                 .HasDefaultValueSql("timezone('utc', now())");
             
             builder.Property(c => c.DeletetAt)

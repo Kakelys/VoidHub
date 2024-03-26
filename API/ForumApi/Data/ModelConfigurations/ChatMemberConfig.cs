@@ -11,10 +11,11 @@ namespace ForumApi.Data.ModelConfigurations
 
             builder.HasOne(c => c.Chat)
                 .WithMany(c => c.Members)
-                .HasForeignKey(c => c.AccountId);
+                .HasForeignKey(c => c.ChatId);
 
             builder.HasOne(c => c.Account)
-                .WithMany(c => c.ChatMembers);
+                .WithMany(c => c.ChatMembers)
+                .HasForeignKey(c => c.AccountId);
         }
     }
 }

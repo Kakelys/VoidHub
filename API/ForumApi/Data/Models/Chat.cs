@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ForumApi.Data.Models
 {
     public class Chat
@@ -6,7 +8,9 @@ namespace ForumApi.Data.Models
         public string? Title { get; set; }
         public bool IsGroup { get; set; }
 
+        [JsonIgnore]
         public virtual List<ChatMember> Members { get; set; } = new();
+        [JsonIgnore]
         public virtual List<ChatMessage> Messages { get; set; } = new();
     }
 }

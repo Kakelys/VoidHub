@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ForumApi.Data.Models
 {
     public class ChatMessage
@@ -10,7 +12,9 @@ namespace ForumApi.Data.Models
         public DateTime? DeletetAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
 
+        [JsonIgnore]
         public virtual ChatMember Member { get; set; } = null!;
+        [JsonIgnore]
         public virtual Chat Chat { get; set; } = null!;
     }
 }

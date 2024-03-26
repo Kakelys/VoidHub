@@ -3,6 +3,7 @@ using System;
 using ForumApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using NpgsqlTypes;
@@ -12,9 +13,11 @@ using NpgsqlTypes;
 namespace ForumApi.Migrations
 {
     [DbContext(typeof(ForumDbContext))]
-    partial class ForumDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240325150633_fix_chatmessages__createdat")]
+    partial class fix_chatmessages__createdat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,9 +144,7 @@ namespace ForumApi.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Title")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -195,9 +196,7 @@ namespace ForumApi.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("timezone('utc', now())");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DeletetAt")
                         .HasColumnType("timestamp with time zone");

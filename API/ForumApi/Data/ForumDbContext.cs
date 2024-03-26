@@ -32,7 +32,11 @@ namespace ForumApi.Data
             new ForumConfig(builder.Entity<Forum>());
             new PostConfig(builder.Entity<Post>());
             new BanConfig(builder.Entity<Ban>()) ;
-            new FileConfig(builder.Entity<Models.File>()) ;
+            new FileConfig(builder.Entity<Models.File>());
+
+            new ChatConfig(builder.Entity<Chat>());
+            new ChatMemberConfig(builder.Entity<ChatMember>());
+            new ChatMessageConfig(builder.Entity<ChatMessage>());
 
             base.OnModelCreating(builder);
         }
