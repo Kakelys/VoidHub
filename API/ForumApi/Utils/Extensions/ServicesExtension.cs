@@ -1,5 +1,7 @@
 using ForumApi.Services.Auth;
 using ForumApi.Services.Auth.Interfaces;
+using ForumApi.Services.ChatS;
+using ForumApi.Services.ChatS.Interfaces;
 using ForumApi.Services.FileS;
 using ForumApi.Services.FileS.Interfaces;
 using ForumApi.Services.ForumS;
@@ -33,6 +35,10 @@ namespace ForumApi.Utils.Extensions
             services.AddScoped<IUploadService, UploadService>();
 
             services.AddSingleton<ISessionStorage, SessionStorage>();
+
+            // chat
+            services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IMessageService, MessageService>();
 
             return services;
         }
