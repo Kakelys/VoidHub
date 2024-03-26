@@ -1,0 +1,13 @@
+using FluentValidation;
+
+namespace ForumApi.DTO.DChat
+{
+    public class MessageValidator : AbstractValidator<Message>
+    {
+        public MessageValidator()
+        {
+            RuleFor(x => x.Content)
+            .MaximumLength(3000).WithMessage("Too much characters");
+        }
+    }
+}
