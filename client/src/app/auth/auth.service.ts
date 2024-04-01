@@ -93,7 +93,7 @@ export class AuthService
         return;
 
       this.refreshAndAuth().subscribe();
-    }, ms)
+    }, ms - 100000)
   }
 
   private handleAuth(authResponse:AuthResponse) {
