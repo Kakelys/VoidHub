@@ -1,7 +1,8 @@
 import { HttpHandler, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, finalize, tap, throwError } from "rxjs";
+import { finalize} from "rxjs";
 import { LimitterService } from "./limitter.service";
+import { environment as env } from "src/environments/environment";
 
 @Injectable()
 export class LimitterInterceptor {
@@ -12,25 +13,31 @@ export class LimitterInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ) {
-    let isSkip = req.headers.get('X-Limit-Skip') ?? false;
+    let isSkip = req.headers.get(env.limitNames.skipParam) ?? false;
     if(isSkip)
     {
-      const reqMod = req.clone({ headers: req.headers.delete('X-Limit-Skip') });
+      const reqMod = req.clone({ headers: req.headers.delete(env.limitNames.skipParam) });
       return next.handle(reqMod);
     }
 
-    let limitParam = req.headers.get('X-Limit-Param') ?? this.limitter.defaultLimit;
-    if(this.limitter.isOutOfLimit(this.limitter.defaultLimit + +limitParam)) {
+    let reqName = req.headers.get(env.limitNames.nameParam) ?? this.limitter.defaultName;
+    let limitParam = req.headers.get(env.limitNames.limitParam) ?? this.limitter.defaultLimit;
+    if(this.limitter.isOutOfLimit(reqName, this.limitter.defaultLimit + +limitParam)) {
       throw new Error('Too much requests')
     }
 
-    this.limitter.plus();
-    const reqMod = req.clone({ headers: req.headers.delete('X-Limit-Param') });
+    this.limitter.plus(reqName);
+
+    // modify req, removing all params
+    let headers = req.headers;
+    headers.delete(env.limitNames.limitParam);
+    headers.delete(env.limitNames.nameParam);
+    const reqMod = req.clone({ headers: headers});
 
     return next.handle(reqMod)
     .pipe(finalize(
       () => {
-        this.limitter.minus();
+        this.limitter.minus(reqName);
       },
     ));
   }

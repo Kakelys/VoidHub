@@ -18,6 +18,9 @@ export class LimitLoaderComponent implements OnDestroy, OnInit {
   containerClasses: string = null;
 
   @Input()
+  reqName: string;
+
+  @Input()
   ignore:boolean = false;
 
   private readonly destroy$ = new ReplaySubject<boolean>(1);
@@ -26,7 +29,13 @@ export class LimitLoaderComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.limitter.activeReq$
+    if(!this.reqName)
+      this.reqName = this.limitter.defaultName;
+
+    // avoiding errors and log if forgot to add name
+    this.limitter.addEmptyIfNotExist(this.reqName);
+
+    this.limitter.nameMap.get(this.reqName)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: activeReqs => {
