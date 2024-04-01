@@ -40,6 +40,8 @@ namespace ForumApi.Utils.Extensions
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IMessageService, MessageService>();
 
+            services.AddScoped<INotifyService, NotifyService>();
+
             return services;
         }
     }
