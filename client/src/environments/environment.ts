@@ -12,5 +12,6 @@ export const environment = {
     topicLoad: 'topic-load',
     sectionsLoad: 'sections-load',
     chatInfoLoad: 'chat-info-load',
+    chatLoads: 'chatsLoad'
   },
 }

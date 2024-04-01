@@ -17,12 +17,17 @@ import { LimitterInterceptor } from 'src/app/limitter/limitter.interceptor';
 import { LimitterService } from './limitter/limitter.service';
 import { SearchBarComponent } from './forum/search/search-bar/search-bar.component';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { SignalrService } from 'src/shared/signalr.service';
+import { NotifyService } from './notify/notify.service';
+import { NewMessageListener } from './notify/new-message.listener';
+import { NewMessageComponent } from './notify/new-message/new-message.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    HomeComponent
+    HomeComponent,
+    NewMessageComponent,
   ],
   imports: [
     SharedModule,
@@ -32,13 +37,19 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     AuthModule,
     SearchBarComponent,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      preventDuplicates: true,
+      countDuplicates: true,
+    }),
     RouterModule.forChild([
       {path: '**', component: HomeComponent, pathMatch: 'full'},
     ])
   ],
   providers: [
     LimitterService,
+    SignalrService,
+    NotifyService,
+    NewMessageListener,
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy

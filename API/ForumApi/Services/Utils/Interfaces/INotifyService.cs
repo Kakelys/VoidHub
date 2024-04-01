@@ -1,5 +1,4 @@
 using ForumApi.DTO.DNotification;
-using ForumApi.DTO.Utils;
 
 namespace ForumApi.Services.Utils.Interfaces
 {
