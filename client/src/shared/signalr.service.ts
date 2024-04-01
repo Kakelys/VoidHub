@@ -1,16 +1,33 @@
 import { HashLocationStrategy } from '@angular/common';
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { HubConnection, HubConnectionBuilder, HubConnectionState, Subject } from "@microsoft/signalr";
+import { ReplaySubject, takeUntil } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { environment as env } from "src/environments/environment";
 
 
 @Injectable()
-export class SignalrService {
+export class SignalrService implements OnDestroy {
 
   methods: Map<string, {(hub: HubConnection): void}> = new Map();
-
   hub: HubConnection;
-  constructor() {}
+
+  private destroy$ = new ReplaySubject(1);
+
+  constructor(private auth: AuthService) {
+    this.auth.user$.pipe(takeUntil(this.destroy$))
+    .subscribe(user => {
+      if(user)
+        this.start();
+      else
+        this.stop();
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
 
   public async start() {
     await this.stop();
