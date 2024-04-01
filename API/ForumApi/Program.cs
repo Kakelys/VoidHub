@@ -80,7 +80,6 @@ builder.Services.AddValidators();
 builder.Services.AddJwtAuth(builder.Configuration);
 
 builder.Services.AddSignalR();
-builder.Services.AddSignalRModules<MainHub>();
 
 var frontCorsPolicy = "frontCorsPolicy";
 builder.Services.AddCors(options => 
@@ -129,6 +128,6 @@ app.UseSwaggerUI( options => {
 });
 
 app.MapControllers();
-app.MapHub<MainHub>("/signalR");
+app.MapHub<MainHub>("/api/v1/signalr");
 
 app.Run();
