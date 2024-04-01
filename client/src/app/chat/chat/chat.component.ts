@@ -13,6 +13,8 @@ import { environment as env} from 'src/environments/environment';
 import { ReplaySubject, debounceTime, fromEvent, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/shared/models/user.model';
+import { NotifyService } from 'src/app/notify/notify.service';
+import { NewMessageNotification } from 'src/app/notify/new-message-notification.model';
 
 @Component({
   selector: 'app-chat',
@@ -31,6 +33,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   profileId: number;
 
   loadTime: Date = new Date();
+  firstLoad: Date = new Date();
   canLoadMore = true;
   loading = false;;
   messageLimit = 50;
@@ -50,7 +53,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private chatService: ChatService,
     private auth: AuthService,
-    private renderer: Renderer2) {
+    private notifyService: NotifyService) {
   }
 
   ngOnInit(): void {
@@ -68,6 +71,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     .subscribe((e:any) => {
       if((e.target.scrollTop - e.target.clientHeight - 500) * -1 > e.target.scrollHeight)
         this.loadMessages();
+    })
+
+    this.notifyService.subscribe("newMessage", {
+      timestamp: this.firstLoad,
+      callback: this.onNewMessage.bind(this)
     })
   }
 
@@ -151,12 +159,21 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.sendMessage(this.chatId, form.value.content)
     .subscribe({
       next: (msg: MessageResponse) => {
-        this.messages.unshift(msg)
+        //this.messages.unshift(msg)
         form.reset();
       },
       error: (err: HttpException) =>
         ToastrExtension.handleErrors(this.toastr, err.errors)
     });
+  }
+
+  onNewMessage(notify: NewMessageNotification) {
+    const msg:MessageResponse = {
+      message: notify.message,
+      sender: notify.sender
+    };
+
+    this.messages.unshift(msg);
   }
 
   onKeyDown(event: KeyboardEvent, form: NgForm) {
