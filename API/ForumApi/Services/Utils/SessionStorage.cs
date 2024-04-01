@@ -10,9 +10,10 @@ namespace ForumApi.Services.Utils
         public void Add(string context, int id)
         {
             _contextIdToId.TryAdd(context, id);
-            _idToContextId.TryAdd(id, [context]);
-
-            Console.WriteLine(_idToContextId.Count());
+            if(_idToContextId.ContainsKey(id))
+                _idToContextId[id].Add(context);
+            else
+                _idToContextId.Add(id, [context]);
         }
 
         public List<string> Get(int id)
