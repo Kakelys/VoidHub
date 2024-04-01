@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -53,6 +53,12 @@ import { NewMessageComponent } from './notify/new-message/new-message.component'
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (ns: NotifyService, nml: NewMessageListener) => () => {},
+      deps: [NotifyService, NewMessageListener],
+      multi: true
     },
     {
       provide: HTTP_INTERCEPTORS,
