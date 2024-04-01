@@ -13,6 +13,7 @@ import { ToastrExtension } from 'src/shared/toastr.extension';
 import { NameService } from '../../services/name.service';
 import { Name } from '../../models/names.model';
 import { HttpException } from 'src/shared/models/http-exception.model';
+import { environment as env } from 'src/environments/environment';
 
 
 @Component({
@@ -38,6 +39,8 @@ export class TopicComponent implements OnDestroy {
   topicId;
 
   newPostContent = '';
+
+  limitNames = env.limitNames;
 
   private destroy$ = new ReplaySubject<boolean>();
   private firstTopicLoad = true;
@@ -173,6 +176,6 @@ export class TopicComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+    this.destroy$.complete();
   }
 }
