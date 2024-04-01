@@ -1,5 +1,5 @@
 import { NgForm } from '@angular/forms';
-import { Component, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ChatService } from '../services/chat.service';
@@ -9,8 +9,8 @@ import { ToastrExtension } from 'src/shared/toastr.extension';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
 import { ChatInfo } from '../models/chat-info.model';
-import { environment as env } from 'src/environments/environment';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { environment as env} from 'src/environments/environment';
+import { ReplaySubject, debounceTime, fromEvent, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/shared/models/user.model';
 
@@ -32,6 +32,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   loadTime: Date = new Date();
   canLoadMore = true;
+  loading = false;;
   messageLimit = 50;
 
   limitNames = env.limitNames;
@@ -40,12 +41,16 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private destroy$ = new ReplaySubject<boolean>(1);
 
+  @ViewChild('messagesContainer', {static: true})
+  messagesContainer:ElementRef;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
     private chatService: ChatService,
-    private auth: AuthService) {
+    private auth: AuthService,
+    private renderer: Renderer2) {
   }
 
   ngOnInit(): void {
@@ -56,6 +61,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.auth.user$.pipe(takeUntil(this.destroy$))
     .subscribe((user: User) => {
       this.user = user;
+    })
+
+    fromEvent(this.messagesContainer.nativeElement, 'scroll')
+    .pipe(takeUntil(this.destroy$),debounceTime(300))
+    .subscribe((e:any) => {
+      if((e.target.scrollTop - e.target.clientHeight - 500) * -1 > e.target.scrollHeight)
+        this.loadMessages();
     })
   }
 
@@ -79,9 +91,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.loadChatInfo();
   }
 
-  loadMessages() {
-    if(!this.canLoadMore)
+  async loadMessages() {
+    if(!this.canLoadMore || this.loading)
       return;
+    this.loading = true;
 
     const additionalOffset = this.messages.filter(c => c.message.createdAt > this.loadTime).length;
     const offset = new Offset(this.messages.length + additionalOffset, this.messageLimit);
@@ -89,14 +102,23 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.getMessages(this.chatId, offset, this.loadTime)
     .subscribe({
       next: (msgs: MessageResponse[]) => {
-        if(!msgs || msgs.length < this.messageLimit)
-        {
+        if(!msgs || msgs.length < this.messageLimit) {
           this.canLoadMore = false;
         }
-        this.messages.push(...msgs);
+        let isFirst = this.messages.length == 0;
+
+        if(isFirst) {
+          this.messages = msgs;
+          setTimeout(_ => {this.messagesContainer.nativeElement.scrollTop = 0;}, 100)
+        }
+        else
+          this.messages.push(...msgs);
       },
       error: (err: HttpException) =>
-        ToastrExtension.handleErrors(this.toastr, err.errors)
+        ToastrExtension.handleErrors(this.toastr, err.errors),
+      complete: () => {
+        this.loading = false;
+      }
     })
   }
 
@@ -104,12 +126,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.getChat(this.chatId).subscribe({
       next: (chat: ChatInfo) => {
         this.chat = chat;
-        if(chat.chat.isGroup)
-        {
+        if(chat.chat.isGroup) {
           this.chatName = chat.chat.title;
         }
-        else
-        {
+        else {
           const anotherUser = chat.members.find(m => m.id != this.user.id);
           this.profileId = anotherUser?.id ?? this.user.id;
           this.chatName = anotherUser?.username ?? "Saved Messages";
@@ -159,6 +179,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   setDefaults() {
     this.chat = null;
     this.messages = [];
+    this.messagesContainer.nativeElement.scrollTop = 0;
 
     this.canLoadMore = true;
     this.loadTime = new Date();

@@ -20,7 +20,7 @@
               <div>
                 <div *ngIf="!chat.chat.isGroup; else groupName">
                   <div *ngIf="chat?.anotherUser; else localChat">
-                    Chat with {{chat?.anotherUser?.username}}
+                    {{chat?.anotherUser?.username}}
                   </div>
                   <ng-template #localChat>
                     <div>
@@ -48,6 +48,11 @@
 
       <hr *ngIf="!isLast" class="border-secondary-content group-hover:border-primary-content">
     </a>
+    <app-limit-loader
+      [limit]="1"
+      [reqName]="limitNames.chatLoads"
+    >
+    </app-limit-loader>
   </div>
   <div class="basis-3/4">
     <div class="">

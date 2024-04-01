@@ -14,7 +14,10 @@ export class ChatService {
 
 
   public getChats(offset: Offset, time: Date) {
+    const headers = new HttpHeaders().set(env.limitNames.nameParam, env.limitNames.chatLoads);
+
     return this.http.get(`${this.baseURL}`, {
+      headers: headers,
       params: {
         ...offset,
         time: time.toISOString()

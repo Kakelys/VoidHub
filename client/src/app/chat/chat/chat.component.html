@@ -15,7 +15,7 @@
         </div>
       </app-limit-loader>
   </div>
-  <div class="flex flex-col-reverse overflow-auto overflow-x-hidden mt-auto max-w-full">
+  <div #messagesContainer class="flex flex-col-reverse overflow-auto overflow-x-hidden mt-auto max-w-full">
       <div
         *ngFor="let msg of messages"
         class="mx-2"
@@ -25,7 +25,7 @@
         'ms-auto': msg.sender.id == user.id
       }"
       >
-        <div class="whitespace-pre-wrap">
+        <div class="whitespace-pre-wrap break-all">
           {{msg.message.content}}
         </div>
         <div class="text-xs ms-3 text-secondary-content mt-auto">
@@ -42,9 +42,6 @@
             id="content"
             name="content"
             class="textarea flexs textarea-ghost focus:bg-neutral focus:outline-none"
-            [ngClass]="{
-              'input-error': sendMessageForm.controls['content']?.touched && sendMessageForm.controls['content'].invalid
-            }"
             placeholder="Type your message here"
             [(ngModel)]="message"
             required

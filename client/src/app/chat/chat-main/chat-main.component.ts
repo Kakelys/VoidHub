@@ -1,14 +1,14 @@
 import { ChatResponse } from './../models/chat-response.model';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { ChatService } from '../services/chat.service';
 import { ReplaySubject } from 'rxjs';
-import { createLabeledTextarea } from 'ckeditor5/src/ui';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { ToastrService } from 'ngx-toastr';
 import { ToastrExtension } from 'src/shared/toastr.extension';
 import { Offset } from 'src/shared/offset.model';
 import { environment as env } from 'src/environments/environment';
+import { NotifyService } from 'src/app/notify/notify.service';
+import { NewMessageNotification } from 'src/app/notify/new-message-notification.model';
 
 @Component({
   selector: 'app-chat-main',
@@ -24,14 +24,15 @@ export class ChatMainComponent implements OnDestroy, OnInit {
   chatLimit = 5;
 
   resourceUrl = env.resourceURL;
+  limitNames = env.limitNames;
 
   public destroy$ = new ReplaySubject<boolean>();
 
   constructor(
-    private router: Router,
     private chat: ChatService,
     private cdr: ChangeDetectorRef,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private notifyService: NotifyService
   ) {
   }
 
@@ -39,6 +40,11 @@ export class ChatMainComponent implements OnDestroy, OnInit {
     this.chat.currentChat$.subscribe(chatId => {
       this.chatId = chatId;
       this.cdr.detectChanges();
+    })
+
+    this.notifyService.subscribe("newMessage", {
+      callback: this.onNewMessage.bind(this),
+      timestamp: this.loadTime
     })
 
     this.loadNextChats();
@@ -64,8 +70,20 @@ export class ChatMainComponent implements OnDestroy, OnInit {
     })
   }
 
+  onNewMessage(notify: NewMessageNotification) {
+    this.chats = this.chats.filter(c => c.chat.id != notify.chat.id);
+    this.chats.unshift({
+      chat: notify.chat,
+      lastMessage: notify.message,
+      sender: notify.sender,
+      anotherUser: notify.anotherUser
+    })
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
+
+    this.notifyService.unsubscribe("newMessage", this.loadTime);
   }
 }
