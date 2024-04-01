@@ -1,0 +1,61 @@
+<div class="flex flex-row border rounded border-primary-content mx-12 bg-neutral h-[70vh]">
+  <div class="flex flex-col overflow-auto basis-1/4 border-r-2 border-primary-content">
+    <div class="px-3 py-2">
+      Last chats:
+    </div>
+    <hr class="border-secondary-content">
+    <a
+      class="group cursor-pointer"
+      *ngFor="let chat of chats; last as isLast"
+      routerLink="/chats/{{chat.chat.id}}">
+      <div class="px-1 py-2 group-hover:text-secondary-content">
+        <div class="flex flex-row">
+          <div class="avatar h-fit my-auto me-1">
+            <div class="w-12 rounded">
+              <img src="{{resourceUrl}}/{{chat.anotherUser?.avatarPath ?? chat.sender.avatarPath}}" loading="lazy">
+            </div>
+          </div>
+          <div class="flex flex-col flex-grow">
+            <div class="flex flex-row justify-between">
+              <div>
+                <div *ngIf="!chat.chat.isGroup; else groupName">
+                  <div *ngIf="chat?.anotherUser; else localChat">
+                    Chat with {{chat?.anotherUser?.username}}
+                  </div>
+                  <ng-template #localChat>
+                    <div>
+                      Saved messages
+                    </div>
+                  </ng-template>
+                </div>
+                <ng-template #groupName>
+                  <div>
+                    {{chat.chat.title}}
+                  </div>
+                </ng-template>
+              </div>
+              <div class="flex-none text-xs my-auto text-secondary-content">
+                {{chat.lastMessage.createdAt | date:'shortTime'}}
+              </div>
+            </div>
+
+            <div class="text text-secondary-content">
+              {{chat.lastMessage.content | slice:0:50}}{{chat.lastMessage.content.length > 50 ? '...' : ''}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr *ngIf="!isLast" class="border-secondary-content group-hover:border-primary-content">
+    </a>
+  </div>
+  <div class="basis-3/4">
+    <div class="">
+      <div class="px-3 py-2" *ngIf="!chatId">
+        Choose chat or start new from profile page
+      </div>
+
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
