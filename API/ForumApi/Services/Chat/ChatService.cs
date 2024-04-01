@@ -1,7 +1,11 @@
 using System.Linq.Dynamic.Core;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
 using ForumApi.Data.Repository.Interfaces;
+using ForumApi.DTO.Auth;
+using ForumApi.DTO.DChat;
 using ForumApi.DTO.Page;
 using ForumApi.Services.ChatS.Interfaces;
 using ForumApi.Utils.Exceptions;
@@ -9,9 +13,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services.ChatS
 {
-    public class ChatService(IRepositoryManager rep) : IChatService
+    public class ChatService(IRepositoryManager rep, IMapper mapper) : IChatService
     {
-        public async Task<Chat> CreatePersonal(int senderId, int targetId, string message)
+        public async Task<ChatDto> CreatePersonal(int senderId, int targetId, string message)
         {
             var sender = await rep.Account.Value
                 .FindById(senderId).FirstOrDefaultAsync() ?? throw new NotFoundException("Sender not found");
@@ -19,10 +23,9 @@ namespace ForumApi.Services.ChatS
                 .FindById(targetId).FirstOrDefaultAsync() ?? throw new NotFoundException("Account not found");
 
             // check for doubles
-            if(rep.Chat.Value
-                .FindByCondition(c => !c.IsGroup && c.Members.Count(m => m.AccountId == senderId || m.AccountId == targetId) == 2)
-                .Any()
-            )
+            var doublesCondition = rep.Chat.Value.FindByCondition(c => !c.IsGroup && c.Members.Count(m => m.AccountId == senderId || m.AccountId == targetId) == 2);
+            if(senderId == targetId && doublesCondition.Any() ||
+               senderId != targetId && doublesCondition.Where(c => c.Members.GroupBy(m => m.AccountId).Count() == 2).Any())
                 throw new BadRequestException("Chat alredy exist");
 
             var chat = new Chat();
@@ -67,26 +70,66 @@ namespace ForumApi.Services.ChatS
                 throw;
             }
 
-            return chat;
+            return mapper.Map<ChatDto>(chat);
         }
 
-        public async Task<List<Chat>> Get(int accountId, Offset offset, DateTime time)
+        public async Task<List<ChatResponse>> Get(int accountId, Offset offset, DateTime time)
         {
             var acc = rep.Account.Value
                 .FindById(accountId, true)
                 .FirstOrDefault() ?? throw new NotFoundException("Account not found");
 
-            var chats = await rep.Chat.Value
+            var tmp = await rep.Chat.Value
                 .FindByCondition(c => c.Members.Where(m => m.AccountId == accountId).Any())
-                .OrderByDescending(c => 
-                    c.Messages
+                .Select(c => new {
+                    Chat = c,
+                    LastMessage = c.Messages
                     .Where(m => m.CreatedAt < time.ToUniversalTime())
-                    .Max(m => m.CreatedAt)
-                )
+                    .OrderByDescending(c => c.CreatedAt)
+                    .First()
+                })
+                .OrderByDescending(c => c.LastMessage.CreatedAt)
                 .TakeOffset(offset)
+                .Select(c => new ChatResponse {
+                    Chat = mapper.Map<ChatDto>(c.Chat),
+                    LastMessage = mapper.Map<MessageDto>(c.LastMessage),
+                    Sender = mapper.Map<User>(c.LastMessage.Member.Account),
+                    AnotherUser = c.Chat.IsGroup ? default : mapper.Map<User>(c.Chat.Members.Where(m => m.AccountId != accountId).First().Account)
+                })
                 .ToListAsync();
 
-            return chats;
+            return tmp;
+        }
+
+        public async Task<ChatDto?> Get(int accountId, int targetId)
+        {
+            Chat? chat;
+            var tmp = rep.Chat.Value
+                .FindByCondition(c => !c.IsGroup && c.Members.Where(m => m.AccountId == accountId || m.AccountId == targetId).Count() == 2, true);
+
+            if(accountId == targetId)
+            {
+                chat = await tmp.FirstOrDefaultAsync();
+            }
+            else
+            {
+                chat = await tmp
+                    .Where(c => c.Members.GroupBy(c => c.AccountId).Count() == 2)
+                    .FirstOrDefaultAsync();
+            }
+
+            return chat == null ? null : mapper.Map<ChatDto>(chat);
+        }
+
+        public async Task<ChatInfo?> Get(int chatId)
+        {
+            return await rep.Chat.Value
+                .FindByCondition(c => c.Id == chatId, true)
+                .Select(c => new ChatInfo {
+                    Chat = mapper.Map<ChatDto>(c),
+                    Members = mapper.Map<List<User>>(c.Members.Select(c => c.Account).ToList())
+                })
+                .FirstOrDefaultAsync() ?? throw new NotFoundException("Chat not found");
         }
     }
 }

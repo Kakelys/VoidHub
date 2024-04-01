@@ -44,7 +44,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new() { Title = "QuakeAPI", Version = "v1" });
+    c.SwaggerDoc("v1", new() { Title = "FroumAPI", Version = "v1" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
       {

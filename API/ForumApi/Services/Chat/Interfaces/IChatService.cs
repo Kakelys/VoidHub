@@ -1,11 +1,13 @@
-using ForumApi.Data.Models;
+using ForumApi.DTO.DChat;
 using ForumApi.DTO.Page;
 
 namespace ForumApi.Services.ChatS.Interfaces
 {
     public interface IChatService
     {
-        Task<Chat> CreatePersonal(int senderId, int targetId, string message);
-        Task<List<Chat>> Get(int accountId, Offset offset, DateTime time);
+        Task<ChatDto> CreatePersonal(int senderId, int targetId, string message);
+        Task<ChatInfo?> Get(int chatId);
+        Task<ChatDto?> Get(int accountId, int targetId);
+        Task<List<ChatResponse>> Get(int accountId, Offset offset, DateTime time);
     }
 }

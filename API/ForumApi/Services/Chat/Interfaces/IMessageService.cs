@@ -1,11 +1,12 @@
 using ForumApi.Data.Models;
+using ForumApi.DTO.DChat;
 using ForumApi.DTO.Page;
 
 namespace ForumApi.Services.ChatS.Interfaces
 {
     public interface IMessageService
     {
-        Task<ChatMessage> SendMessage(int chatId, int accountId, string message);
-        Task<List<ChatMessage>> GetMesages(int chatId, Offset offset, DateTime time);
+        Task<MessageResponse> SendMessage(int chatId, int accountId, string message);
+        Task<List<MessageResponse>> GetMesages(int chatId, Offset offset, DateTime time);
     }
 }

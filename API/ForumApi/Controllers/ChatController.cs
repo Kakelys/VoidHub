@@ -22,6 +22,21 @@ namespace ForumApi.Controllers
 
         [Authorize]
         [PermissionActionFilterV2<ChatMember>("ChatId", "chatId")]
+        [HttpGet("{chatId}")]
+        public async Task<IActionResult> GetChat(int chatId)
+        {
+            return Ok(await chatService.Get(chatId));
+        }
+
+        [Authorize]
+        [HttpGet("between")]
+        public async Task<IActionResult> GetBetween([FromQuery] int targetId)
+        {
+            return Ok(await chatService.Get(User.GetId(), targetId));
+        }
+
+        [Authorize]
+        [PermissionActionFilterV2<ChatMember>("ChatId", "chatId")]
         [HttpGet("{chatId}/messages")]
         public async Task<IActionResult> GetChatMesages(int chatId, [FromQuery] Offset offset, [FromQuery] DateTime time)
         {
@@ -32,7 +47,7 @@ namespace ForumApi.Controllers
         [HttpPost("personal")]
         public async Task<IActionResult> CreatePersonal(Message dto)
         {
-            return Ok(await chatService.CreatePersonal(User.GetId(), dto.TagretId, dto.Content));
+            return Ok(await chatService.CreatePersonal(User.GetId(), dto.TargetId, dto.Content));
         }
 
         [Authorize]
