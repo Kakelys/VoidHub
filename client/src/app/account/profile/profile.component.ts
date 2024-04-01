@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AccountService } from '../account.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,7 +8,6 @@ import { Roles } from 'src/shared/roles.enum';
 import { AdminService } from 'src/app/forum/admin/services/admin.service';
 import { environment } from 'src/environments/environment';
 import { ChatService } from 'src/app/chat/services/chat.service';
-import { HttpExceptionInterceptor } from 'src/shared/error/http-exception.interceptor';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { ToastrExtension } from 'src/shared/toastr.extension';
 import { ToastrService } from 'ngx-toastr';
@@ -38,7 +37,7 @@ export class ProfileComponent implements OnDestroy {
     private adminService: AdminService,
     private chatService: ChatService,
     private toastr: ToastrService,
-    router: Router,
+    private router: Router,
     authService: AuthService
   ) {
 
@@ -61,7 +60,6 @@ export class ProfileComponent implements OnDestroy {
     route.params.subscribe(async params => {
       this.handleIdChange(params['id']);
     });
-
   }
 
   async handleIdChange(newId: number) {
@@ -106,7 +104,7 @@ export class ProfileComponent implements OnDestroy {
     this.chatService.createPersonal(form.value.content, this.profile.id)
     .subscribe({
       next: (chat: Chat) => {
-        //navigate to chat?
+        this.router.navigate(['/chats/', chat.id]);
       },
       error: (err: HttpException) => {
         ToastrExtension.handleErrors(this.toastr, err.errors);
