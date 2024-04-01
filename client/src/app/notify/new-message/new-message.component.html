@@ -1,0 +1,14 @@
+<div
+  class="bg-base-200 rounded-t rounded-b-[2px] cursor-pointer pointer-events-auto max-w-[240px] w-[999px] ms-auto my-2"
+  [style.display]="state.value === 'inactive' ? 'none' : ''"
+>
+  <div class="flex flex-col px-3 py-1">
+    <div *ngIf="title" class="text-accent" [class]="options.titleClass">
+      {{ title }}
+    </div>
+    <div *ngIf="message" role="alert"
+      [class]="options.messageClass">
+      {{ message }}
+    </div>
+  </div>
+</div>
