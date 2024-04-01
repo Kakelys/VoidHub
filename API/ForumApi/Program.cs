@@ -5,7 +5,6 @@ using ForumApi.Utils.Middlewares;
 using ForumApi.Options;
 using Microsoft.OpenApi.Models;
 using ForumApi.Hubs;
-using SignalR.Modules;
 
 //need to be checked before create builder
 if (!Directory.Exists("wwwroot"))
