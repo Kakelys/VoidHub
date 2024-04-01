@@ -1,8 +1,10 @@
 using ForumApi.Controllers.Filters;
 using ForumApi.Data.Models;
 using ForumApi.DTO.DChat;
+using ForumApi.DTO.DNotification;
 using ForumApi.DTO.Page;
 using ForumApi.Services.ChatS.Interfaces;
+using ForumApi.Services.Utils.Interfaces;
 using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +13,10 @@ namespace ForumApi.Controllers
 {
     [ApiController]
     [Route("api/v1/chats")]
-    public class ChatController(IChatService chatService, IMessageService messageService) : ControllerBase
+    public class ChatController(
+        IChatService chatService, 
+        IMessageService messageService, 
+        INotifyService notifyService) : ControllerBase
     {
         [Authorize]
         [HttpGet]
@@ -55,7 +60,28 @@ namespace ForumApi.Controllers
         [HttpPost("{chatId}/messages")]
         public async Task<IActionResult> SendMessage(int chatId, Message dto)
         {
-            return Ok(await messageService.SendMessage(chatId, User.GetId(), dto.Content));
+            var msgRes = await messageService.SendMessage(chatId, User.GetId(), dto.Content);
+
+            Response.OnCompleted(async () => {
+                var chat = await chatService.Get(msgRes.Message.ChatId);
+                var notification = new NewMessageNotification
+                 {
+                    Type = "newMessage",
+                    Message = msgRes.Message,
+                    Chat = chat.Chat,
+                    Sender = msgRes.Sender
+                };
+
+                //chat.Members.Where(m => m.Id != msgRes.Sender.Id)
+                chat.Members.ToList().ForEach(m => {
+                    if(!chat.Chat.IsGroup)
+                        notification.AnotherUser = chat.Members.FirstOrDefault(cm => cm.Id != m.Id);
+
+                    notifyService.Notify(m.Id, notification);
+                });
+            });
+
+            return Ok(msgRes);
         }
 
     }
