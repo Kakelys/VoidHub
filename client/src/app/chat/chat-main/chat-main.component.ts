@@ -1,7 +1,7 @@
 import { ChatResponse } from './../models/chat-response.model';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from '../services/chat.service';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { ReplaySubject, debounceTime, fromEvent, takeUntil } from 'rxjs';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { ToastrService } from 'ngx-toastr';
 import { ToastrExtension } from 'src/shared/toastr.extension';
@@ -23,12 +23,16 @@ export class ChatMainComponent implements OnDestroy, OnInit {
   public chats: ChatResponse[] =  [];
   loadTime = new Date();
   canLoadMore = true;
-  chatLimit = 5;
+  loading = false;
+  chatLimit = 10;
 
   resourceUrl = env.resourceURL;
   limitNames = env.limitNames;
 
   public destroy$ = new ReplaySubject<boolean>();
+
+  @ViewChild('chatsContainer', {static: true})
+  chatsContainer:ElementRef;
 
   constructor(
     private chat: ChatService,
@@ -59,12 +63,21 @@ export class ChatMainComponent implements OnDestroy, OnInit {
         this.router.navigate(['/']);
     })
 
+    fromEvent(this.chatsContainer.nativeElement, 'scroll')
+    .pipe(takeUntil(this.destroy$), debounceTime(300))
+    .subscribe((e:any) => {
+      let sum = e.target.scrollTop + e.target.clientHeight;
+      if(sum + sum * 0.6 > e.target.scrollHeight)
+        this.loadNextChats();
+    })
+
     this.loadNextChats();
   }
 
   loadNextChats() {
     if(!this.canLoadMore)
       return;
+    this.loading = true;
 
     const additionalOffset = this.chats.filter(c => c.lastMessage.createdAt > this.loadTime).length;
     const offset = new Offset(this.chats.length + additionalOffset, this.chatLimit);
@@ -78,7 +91,8 @@ export class ChatMainComponent implements OnDestroy, OnInit {
         this.chats.push(...chats);
       },
       error: (err: HttpException) =>
-        ToastrExtension.handleErrors(this.toastr, err.errors)
+        ToastrExtension.handleErrors(this.toastr, err.errors),
+      complete: () => { this.loading = false; }
     })
   }
 
