@@ -1,45 +1,45 @@
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { HubConnection } from "@microsoft/signalr";
 import { ToastrService } from "ngx-toastr";
 import { SignalrService } from "src/shared/signalr.service";
 import { NotificationBase } from "./notifcation-base.model";
-@Injectable()
-export class NotifyService {
+import { ReplaySubject, Subject, takeUntil } from "rxjs";
 
-  private subscribes: Map<string, {timestamp: Date, callback: (notifyData: NotificationBase) => void}[]> = new Map();
+@Injectable()
+export class NotifyService implements OnDestroy {
+
+  private bindings: Map<string, Subject<NotificationBase>> = new Map();
+  private destroy$ = new ReplaySubject<boolean>();
 
   constructor(private signalR: SignalrService, private toastr: ToastrService) {
-    this.signalR.addToFactory('notify', this.startRecievingNotifies.bind(this));
+    this.signalR.connected$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(val => {
+      if(val)
+        this.startRecievingNotifies(this.signalR.hub);
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   private startRecievingNotifies(hub: HubConnection) {
     hub.on('notify', (ntf: NotificationBase) => {
-      if(!this.subscribes.has(ntf.type)) {
-        this.toastr.info("Notify)");
+      if(!this.bindings.has(ntf.type)) {
+        console.log('notify')
         return;
       }
 
-      this.subscribes.get(ntf.type).forEach(n => {
-        n.callback(ntf);
-      })
+      this.bindings.get(ntf.type).next(ntf);
     })
   }
 
-  subscribe(type: string, callbackObj: {timestamp: Date, callback: (notifyData: NotificationBase) => void}) {
-    if(!this.subscribes.has(type))
-      this.subscribes.set(type, new Array());
+  getSubject(name: string) : Subject<NotificationBase> {
+    if(!this.bindings.has(name))
+      this.bindings.set(name, new Subject<NotificationBase>())
 
-    this.subscribes.get(type).push(callbackObj);
-  }
-
-  unsubscribe(type: string, timestamp: Date) {
-    if(!this.subscribes.has(type))
-      return;
-
-    var idx = this.subscribes.get(type).findIndex(el => el.timestamp == timestamp);
-    if(idx == -1)
-      return;
-
-    this.subscribes.get(type).splice(idx, 1);
+    return this.bindings.get(name);
   }
 }

@@ -1,7 +1,7 @@
 import { ChatResponse } from './../models/chat-response.model';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ChatService } from '../services/chat.service';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, takeUntil } from 'rxjs';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { ToastrService } from 'ngx-toastr';
 import { ToastrExtension } from 'src/shared/toastr.extension';
@@ -42,9 +42,10 @@ export class ChatMainComponent implements OnDestroy, OnInit {
       this.cdr.detectChanges();
     })
 
-    this.notifyService.subscribe("newMessage", {
-      callback: this.onNewMessage.bind(this),
-      timestamp: this.loadTime
+    this.notifyService.getSubject('newMessage')
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((notify: NewMessageNotification) => {
+      this.onNewMessage(notify);
     })
 
     this.loadNextChats();
@@ -83,7 +84,5 @@ export class ChatMainComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
-
-    this.notifyService.unsubscribe("newMessage", this.loadTime);
   }
 }

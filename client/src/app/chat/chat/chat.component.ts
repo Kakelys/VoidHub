@@ -40,7 +40,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   limitNames = env.limitNames;
 
-  message: string;
+  message: string = '';
 
   private destroy$ = new ReplaySubject<boolean>(1);
 
@@ -73,9 +73,10 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.loadMessages();
     })
 
-    this.notifyService.subscribe("newMessage", {
-      timestamp: this.firstLoad,
-      callback: this.onNewMessage.bind(this)
+    this.notifyService.getSubject('newMessage')
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((notify: NewMessageNotification) => {
+      this.onNewMessage(notify);
     })
   }
 
@@ -159,7 +160,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.sendMessage(this.chatId, form.value.content)
     .subscribe({
       next: (msg: MessageResponse) => {
-        //this.messages.unshift(msg)
         form.reset();
       },
       error: (err: HttpException) =>
