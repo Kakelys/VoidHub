@@ -9,6 +9,8 @@ import { Offset } from 'src/shared/offset.model';
 import { environment as env } from 'src/environments/environment';
 import { NotifyService } from 'src/app/notify/notify.service';
 import { NewMessageNotification } from 'src/app/notify/new-message-notification.model';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat-main',
@@ -32,7 +34,9 @@ export class ChatMainComponent implements OnDestroy, OnInit {
     private chat: ChatService,
     private cdr: ChangeDetectorRef,
     private toastr: ToastrService,
-    private notifyService: NotifyService
+    private notifyService: NotifyService,
+    private auth: AuthService,
+    private router: Router
   ) {
   }
 
@@ -46,6 +50,13 @@ export class ChatMainComponent implements OnDestroy, OnInit {
     .pipe(takeUntil(this.destroy$))
     .subscribe((notify: NewMessageNotification) => {
       this.onNewMessage(notify);
+    })
+
+    this.auth.user$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(user => {
+      if(!user)
+        this.router.navigate(['/']);
     })
 
     this.loadNextChats();

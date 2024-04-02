@@ -22,7 +22,7 @@
       >
       <div class="flex flex-row w-fit max-w-[30vw] px-2 py-1 my-1 bg-base-100 rounded"
       [ngClass]="{
-        'ms-auto': msg.sender.id == user.id
+        'ms-auto': msg.sender.id == user?.id
       }"
       >
         <div class="whitespace-pre-wrap break-all">
