@@ -3,7 +3,7 @@ using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DBan;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Services.Auth.Interfaces;
 using Microsoft.EntityFrameworkCore;

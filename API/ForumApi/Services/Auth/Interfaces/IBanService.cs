@@ -1,6 +1,6 @@
 using ForumApi.Data.Models;
 using ForumApi.DTO.DBan;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 
 namespace ForumApi.Services.Auth.Interfaces
 {

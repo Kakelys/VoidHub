@@ -1,6 +1,6 @@
 using ForumApi.Data.Models;
 using ForumApi.DTO.DPost;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Services.ForumS.Interfaces;

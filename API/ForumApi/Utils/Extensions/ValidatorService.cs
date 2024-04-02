@@ -3,7 +3,7 @@ using FluentValidation.AspNetCore;
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
 using ForumApi.DTO.DSearch;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 
 namespace ForumApi.Utils.Extensions
 {

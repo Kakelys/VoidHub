@@ -1,6 +1,6 @@
 using ForumApi.Data.Models;
 using ForumApi.DTO.DPost;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 
 namespace ForumApi.Services.ForumS.Interfaces
 {

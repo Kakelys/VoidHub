@@ -4,7 +4,7 @@ using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DSearch;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Services.Utils.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

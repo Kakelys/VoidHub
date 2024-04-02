@@ -1,4 +1,4 @@
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Data.Repository.Extensions
