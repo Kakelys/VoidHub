@@ -5,7 +5,7 @@ using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
 using ForumApi.DTO.DTopic;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -46,10 +46,21 @@ namespace ForumApi.Services.ForumS
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<TopicResponse>> GetTopics(Offset offset, DateTime time)
+        public async Task<List<TopicResponse>> GetTopics(Offset offset, Params prms)
         {
+            var predicate = PredicateBuilder.Create<Topic>(t => true);
+            
+            if(prms.BelowTime != null)
+                predicate.AND(t => t.CreatedAt < prms.BelowTime.Value.ToUniversalTime());
+
+            if(!prms.IncludeDeleted)
+                predicate.AND(t => t.DeletedAt == null);
+
+            if(prms.ByAccountId != 0)
+                predicate.AND(t => t.AccountId == prms.ByAccountId);
+
             return await _rep.Topic.Value
-                .FindByCondition(t => t.DeletedAt == null && t.CreatedAt < time.ToUniversalTime())
+                .FindByCondition(predicate)
                 .OrderByDescending(t => t.CreatedAt)
                 .TakeOffset(offset)
                 .Select(t => new {

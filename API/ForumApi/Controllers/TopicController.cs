@@ -1,7 +1,7 @@
 using ForumApi.Data.Models;
 using ForumApi.DTO.DSearch;
 using ForumApi.DTO.DTopic;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Services.ForumS.Interfaces;
@@ -32,7 +32,10 @@ namespace ForumApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTopics([FromQuery] Offset offset, [FromQuery] DateTime time)
         {
-            return Ok(await _topicService.GetTopics(offset, time));
+            return Ok(await _topicService.GetTopics(offset, new Params 
+            {
+                BelowTime = time
+            }));
         }
 
         [Authorize]
