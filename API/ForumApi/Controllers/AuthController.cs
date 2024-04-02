@@ -1,5 +1,5 @@
 using ForumApi.DTO.Auth;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.Auth.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers

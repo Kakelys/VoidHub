@@ -1,9 +1,14 @@
 <div class="flex flex-col">
   <app-limit-loader [limit]="1" [ignore]="!!topic">
     <ng-template #topicNotFound>
-      <div class="text-center text-xl">
-        Topic not found or it have been deleted
-      </div>
+      <app-limit-loader
+        [limit]="1"
+        [reqName]="limitNames.topicLoad"
+      >
+        <div class="text-center text-xl">
+          Topic not found or it have been deleted
+        </div>
+      </app-limit-loader>
     </ng-template>
 
     <div class="flex flex-col" *ngIf="topic; else topicNotFound">

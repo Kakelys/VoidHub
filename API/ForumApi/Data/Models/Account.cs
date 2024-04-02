@@ -31,5 +31,7 @@ namespace ForumApi.Data.Models
         public virtual List<Ban> UpdatedBans { get; set; } = new();
         [JsonIgnore]
         public virtual List<File> UploadedFiles { get; set; } = new();
+        [JsonIgnore]
+        public virtual List<ChatMember> ChatMembers { get; set; } = new();
     }
 }

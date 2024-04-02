@@ -11,6 +11,7 @@ import { RoleMenuComponent } from "../forum/admin/role-menu/role-menu.component"
 import { canActivateAdmin, canActivateModer } from "../forum/admin/role.guard";
 import { ErrorMessageListComponent } from "../error-message-list/error-message-list.component";
 import { RenameMenuComponent } from "../forum/admin/rename-menu/rename-menu.component";
+import { ChatService } from "../chat/services/chat.service";
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { RenameMenuComponent } from "../forum/admin/rename-menu/rename-menu.comp
     ])
   ],
   providers: [
-    AccountService
+    AccountService,
+    ChatService
   ]
 })
 export class AccountModule {}

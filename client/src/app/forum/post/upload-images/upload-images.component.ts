@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { environment as env } from 'src/environments/environment';
 import { ToastrExtension } from 'src/shared/toastr.extension';
 import { ReplaySubject } from 'rxjs';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-upload-images',
@@ -50,8 +51,8 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
         this.uploadedFiles = files;
         this.onFilesUpdates.emit(files);
       },
-      error: errs => {
-        ToastrExtension.handleErrors(this.toastr, errs);
+      error: (err:HttpException) => {
+        ToastrExtension.handleErrors(this.toastr, err.errors);
       }
     })
   }
@@ -67,7 +68,7 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
     if(ids.length > 0)
     {
       this.uploadService.deleteMany(ids).subscribe({
-        error: errs => ToastrExtension.handleErrors(this.toastr, errs)
+        error: (err:HttpException) => ToastrExtension.handleErrors(this.toastr, err.errors)
       })
     }
   }
@@ -93,8 +94,8 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
         this.uploadedFiles.push(file);
         this.onFilesUpdates.emit(this.uploadedFiles);
       },
-      error: errs => {
-        ToastrExtension.handleErrors(this.toastr, errs)
+      error: (err:HttpException) => {
+        ToastrExtension.handleErrors(this.toastr, err.errors)
       }
     })
   }
@@ -112,7 +113,7 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
         this.uploadedFiles = this.uploadedFiles.filter(f => f.id != id);
         this.onFilesUpdates.emit(this.uploadedFiles);
       },
-      error: errs => ToastrExtension.handleErrors(this.toastr, errs)
+      error: (err: HttpException) => ToastrExtension.handleErrors(this.toastr, err.errors)
     })
   }
 

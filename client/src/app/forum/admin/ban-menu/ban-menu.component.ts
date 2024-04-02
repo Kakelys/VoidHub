@@ -4,6 +4,7 @@ import { NgFormExtension } from 'src/shared/ng-form.extension';
 import { BanService } from '../services/ban.service';
 import { AdminService } from '../services/admin.service';
 import { ToastrService } from 'ngx-toastr';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-ban-menu',
@@ -76,8 +77,8 @@ export class BanMenuComponent implements OnInit {
 
           this.toastr.success("User banned")
         },
-        error: errs => {
-          this.errorMessages = errs;
+        error: (err: HttpException) => {
+          this.errorMessages = err.errors;
         }
       });
   }

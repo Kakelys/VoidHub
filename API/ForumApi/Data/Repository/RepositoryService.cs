@@ -29,6 +29,13 @@ namespace ForumApi.Data.Repository
             services.AddScoped<IFileRepository, FileRepository>()
                 .AddScoped(provider => new Lazy<IFileRepository>(() => provider.GetRequiredService<IFileRepository>()));
 
+            services.AddScoped<IChatRepository, ChatRepository>()
+                .AddScoped(provider => new Lazy<IChatRepository>(() => provider.GetRequiredService<IChatRepository>()));
+            services.AddScoped<IChatMemberRepository, ChatMemberRepository>()
+                .AddScoped(provider => new Lazy<IChatMemberRepository>(() => provider.GetRequiredService<IChatMemberRepository>()));
+            services.AddScoped<IChatMessageRepository, ChatMessageRepository>()
+                .AddScoped(provider => new Lazy<IChatMessageRepository>(() => provider.GetRequiredService<IChatMessageRepository>()));
+
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
             return services;

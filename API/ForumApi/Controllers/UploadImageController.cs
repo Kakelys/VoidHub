@@ -2,7 +2,7 @@ using FluentValidation;
 using ForumApi.Controllers.Filters;
 using ForumApi.DTO.DFile;
 using ForumApi.Options;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.FileS.Interfaces;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;

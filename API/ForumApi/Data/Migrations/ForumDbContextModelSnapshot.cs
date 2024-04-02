@@ -129,6 +129,91 @@ namespace ForumApi.Migrations
                     b.ToTable("Bans");
                 });
 
+            modelBuilder.Entity("ForumApi.Data.Models.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsGroup")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Title")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Chats");
+                });
+
+            modelBuilder.Entity("ForumApi.Data.Models.ChatMember", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("ChatMembers");
+                });
+
+            modelBuilder.Entity("ForumApi.Data.Models.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ChatMemberId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("timezone('utc', now())");
+
+                    b.Property<DateTime?>("DeletetAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.HasIndex("ChatMemberId");
+
+                    b.ToTable("ChatMessages");
+                });
+
             modelBuilder.Entity("ForumApi.Data.Models.File", b =>
                 {
                     b.Property<int>("Id")
@@ -383,6 +468,44 @@ namespace ForumApi.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
+            modelBuilder.Entity("ForumApi.Data.Models.ChatMember", b =>
+                {
+                    b.HasOne("ForumApi.Data.Models.Account", "Account")
+                        .WithMany("ChatMembers")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ForumApi.Data.Models.Chat", "Chat")
+                        .WithMany("Members")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Chat");
+                });
+
+            modelBuilder.Entity("ForumApi.Data.Models.ChatMessage", b =>
+                {
+                    b.HasOne("ForumApi.Data.Models.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ForumApi.Data.Models.ChatMember", "Member")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("Member");
+                });
+
             modelBuilder.Entity("ForumApi.Data.Models.File", b =>
                 {
                     b.HasOne("ForumApi.Data.Models.Account", "Account")
@@ -468,6 +591,8 @@ namespace ForumApi.Migrations
 
             modelBuilder.Entity("ForumApi.Data.Models.Account", b =>
                 {
+                    b.Navigation("ChatMembers");
+
                     b.Navigation("GivenBans");
 
                     b.Navigation("Posts");
@@ -481,6 +606,18 @@ namespace ForumApi.Migrations
                     b.Navigation("UpdatedBans");
 
                     b.Navigation("UploadedFiles");
+                });
+
+            modelBuilder.Entity("ForumApi.Data.Models.Chat", b =>
+                {
+                    b.Navigation("Members");
+
+                    b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("ForumApi.Data.Models.ChatMember", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("ForumApi.Data.Models.Forum", b =>

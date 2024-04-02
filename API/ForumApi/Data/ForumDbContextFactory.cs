@@ -14,9 +14,11 @@ namespace ForumApi.Data
 
             string workingDirectory = Environment.CurrentDirectory;
 
-            ConfigurationBuilder builder = new ConfigurationBuilder();
-            builder.SetBasePath(Directory.GetCurrentDirectory());
-            builder.AddJsonFile($"{workingDirectory}\\appsettings.json");
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile($"{workingDirectory}\\appsettings.json")
+            .AddUserSecrets<Program>();
+            
             IConfigurationRoot config = builder.Build();
 
             string? connectionString = config.GetConnectionString("ForumDb");

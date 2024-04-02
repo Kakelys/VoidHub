@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Offset } from "src/shared/offset.model";
 import { environment as env } from "src/environments/environment";
@@ -13,7 +13,10 @@ export class TopicService {
   ) {}
 
   getTopic(topicId, offset: Offset) {
+    const headers = new HttpHeaders().set(env.limitNames.nameParam, env.limitNames.topicLoad);
+
     return this.http.get(`${this.baseURL}/${topicId}`, {
+      headers,
       params: {...offset}
     });
   }

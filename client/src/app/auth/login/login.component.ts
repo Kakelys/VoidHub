@@ -4,6 +4,7 @@ import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { NgFor } from '@angular/common';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-login',
@@ -30,9 +31,8 @@ export class LoginComponent {
       next: (data) => {
         this.router.navigate(['/']);
       },
-      error: (err) => {
-        this.errorMessages = err;
-        console.log(err);
+      error: (err: HttpException) => {
+        this.errorMessages = err.errors;
       }
     })
   }

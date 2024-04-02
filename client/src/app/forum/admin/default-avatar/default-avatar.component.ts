@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { AccountService } from '../../services/account.service';
 import { ToastrService } from 'ngx-toastr';
 import { ToastrExtension } from 'src/shared/toastr.extension';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-default-avatar',
@@ -29,8 +30,8 @@ export class DefaultAvatarComponent {
         next: _ => {
           this.toastr.success("Avatar updated successfully");
         },
-        error: errs => {
-          ToastrExtension.handleErrors(this.toastr, errs)
+        error: (err: HttpException) => {
+          ToastrExtension.handleErrors(this.toastr, err.errors)
         }
       })
   }

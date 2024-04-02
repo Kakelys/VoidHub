@@ -42,12 +42,60 @@
         Total topics: {{profile.topicsCount}}
       </div>
 
-      <div class="flex flex-row my-auto mt-5" *ngIf="user && (user.role == roles.ADMIN || user.role == roles.MODER)">
-        <app-admin-panel
-          [skipRouting]="true"
-          [blockUserId]="true">
-        </app-admin-panel>
-        <app-default-avatar [accountId]="profile.id"></app-default-avatar>
+      <div class="flex flex-row my-auto mt-5" *ngIf="user">
+        <div *ngIf="this.pChat; else newChat" class="btn btn-neutral min-h-fit h-8">
+          <a class=""
+            routerLink="/chats/{{this.profile.id}}"
+          >
+            Send message
+          </a>
+        </div>
+        <ng-template #newChat>
+          <div class="btn btn-neutral min-h-fit h-8" (click)="modalStartChat.showModal()">
+            Start chat
+          </div>
+          <dialog #modalStartChat class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Start chat with some message</h3>
+              <p class="py-2 text-xs">Press ESC key or click outside to close</p>
+              <form #startChatForm="ngForm" (ngSubmit)="onStartChat(startChatForm)">
+                <div class="form-control">
+                  <textarea
+                    id="content"
+                    name="content"
+                    class="textarea textarea-bordered"
+                    [ngClass]="{
+                      'input-error': startChatForm.controls['content']?.touched && startChatForm.controls['content'].invalid
+                    }"
+                    placeholder="Type your message here"
+                    ngModel
+                    required
+                    maxlength="3000"
+                  >
+                  </textarea>
+                </div>
+                <div class="my-4">
+                  <app-limit-loader [limit]="1">
+                    <button class="btn btn-accent text-base-content min-h-fit h-8">
+                      Send
+                    </button>
+                  </app-limit-loader>
+                </div>
+              </form>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
+        </ng-template>
+
+        <div class="flex flex-row" *ngIf="(user.role == roles.ADMIN || user.role == roles.MODER)">
+          <app-admin-panel
+            [skipRouting]="true"
+            [blockUserId]="true">
+          </app-admin-panel>
+          <app-default-avatar [accountId]="profile.id"></app-default-avatar>
+        </div>
       </div>
 
       <div class="w-fit">

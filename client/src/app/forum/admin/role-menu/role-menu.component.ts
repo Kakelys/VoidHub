@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
 import { AccountService } from '../../services/account.service';
 import { ToastrService } from 'ngx-toastr';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-role-menu',
@@ -47,8 +48,8 @@ export class RoleMenuComponent implements OnInit {
       next: () => {
         this.toastr.success('Role updated successfully');
       },
-      error: errs => {
-        this.errorMessages = errs;
+      error: (err: HttpException) => {
+        this.errorMessages = err.errors;
       }
     })
   }

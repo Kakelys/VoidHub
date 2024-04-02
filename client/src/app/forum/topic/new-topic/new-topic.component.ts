@@ -9,6 +9,7 @@ import { Name } from '../../models/names.model';
 import { ToastrExtension } from 'src/shared/toastr.extension';
 import { ToastrService } from 'ngx-toastr';
 import { PostEditorData } from '../../models/post-editor-data.model';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-new-topic',
@@ -48,7 +49,7 @@ export class NewTopicComponent implements OnInit {
       next: (names: Name[]) => {
         this.names = names;
       },
-      error: errs => {ToastrExtension.handleErrors(this.toastr, errs)}
+      error: (err:HttpException) => {ToastrExtension.handleErrors(this.toastr, err.errors)}
     })
   }
 
@@ -66,8 +67,8 @@ export class NewTopicComponent implements OnInit {
       next: _ => {
         this.created.emit();
       },
-      error: errs => {
-        this.errorMessages = errs
+      error: (err:HttpException) => {
+        this.errorMessages = err.errors
       }
     });
   }

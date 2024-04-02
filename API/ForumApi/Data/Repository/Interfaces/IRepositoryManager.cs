@@ -11,6 +11,10 @@ namespace ForumApi.Data.Repository.Interfaces
         Lazy<IBanRepository> Ban { get; }
         Lazy<IFileRepository> File { get; }
 
+        Lazy<IChatRepository> Chat { get; }
+        Lazy<IChatMemberRepository> ChatMember { get; }
+        Lazy<IChatMessageRepository> ChatMessage { get; }
+
         bool IsInTransaction { get; }
 
         Task BeginTransaction();

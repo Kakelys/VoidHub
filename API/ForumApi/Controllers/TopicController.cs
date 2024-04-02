@@ -4,7 +4,8 @@ using ForumApi.DTO.DTopic;
 using ForumApi.DTO.Page;
 using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
-using ForumApi.Services.Interfaces;
+using ForumApi.Services.ForumS.Interfaces;
+using ForumApi.Services.Utils.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -3,19 +3,19 @@ using ForumApi.Data.Repository;
 using ForumApi.Utils.Extensions;
 using ForumApi.Utils.Middlewares;
 using ForumApi.Options;
-using ForumApi.Services;
-using ForumApi.Services.Interfaces;
 using Microsoft.OpenApi.Models;
+using ForumApi.Hubs;
 
 //need to be checked before create builder
-if(!Directory.Exists("wwwroot"))
+if (!Directory.Exists("wwwroot"))
 {
   Directory.CreateDirectory("wwwroot");
 }
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.AddConsole();
+builder.Services.AddLogging();
+//builder.Logging.AddConsole();
 
 builder.Services.AddAppOptions(builder.Configuration);
 
@@ -36,29 +36,14 @@ if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.PostImageFolder}"))
 
 builder.Services.AddRepository(builder.Configuration);
 
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-
-builder.Services.AddScoped<ISectionService, SectionService>();
-builder.Services.AddScoped<IForumService, ForumService>();
-builder.Services.AddScoped<ITopicService, TopicService>();
-builder.Services.AddScoped<IPostService, PostService>();
-builder.Services.AddScoped<IBanService, BanService>();
-builder.Services.AddScoped<ISearchService, SearchService>();
-builder.Services.AddScoped<IImageService, ImageService>();
-
-builder.Services.AddScoped<INamesService, NamesService>();
-
-builder.Services.AddScoped<IFileService, FileService>();
-builder.Services.AddScoped<IUploadService, UploadService>();
+builder.Services.AddAppServices();
 
 builder.Services.AddControllers()
   .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new() { Title = "QuakeAPI", Version = "v1" });
+    c.SwaggerDoc("v1", new() { Title = "FroumAPI", Version = "v1" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
       {
@@ -93,6 +78,8 @@ builder.Services.ConfigureAutoMapper();
 builder.Services.AddValidators();
 builder.Services.AddJwtAuth(builder.Configuration);
 
+builder.Services.AddSignalR();
+
 var frontCorsPolicy = "frontCorsPolicy";
 builder.Services.AddCors(options => 
 {
@@ -108,16 +95,16 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(client);
       }
 
-      policy.WithOrigins("http://localhost:4200")
-            .WithOrigins("https://localhost:4200")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
+      policy.AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<QueryTokenMiddleware>();
 
 //check for default avatar
 if(!File.Exists($"{imageSettings.Folder}/{imageSettings.AvatarDefault}"))
@@ -140,5 +127,6 @@ app.UseSwaggerUI( options => {
 });
 
 app.MapControllers();
+app.MapHub<MainHub>("/api/v1/signalr");
 
 app.Run();

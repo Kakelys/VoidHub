@@ -2,6 +2,7 @@ import { AuthService } from './../auth.service';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpException } from 'src/shared/models/http-exception.model';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
 
 @Component({
@@ -32,8 +33,8 @@ export class RegisterComponent {
         next: data => {
           this.router.navigate(['/']);
         },
-        error: err => {
-          this.errorMessages = err
+        error: (err: HttpException) => {
+          this.errorMessages = err.errors;
         }
       })
   }

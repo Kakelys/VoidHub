@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, of, tap } from "rxjs";
 import { User } from "../../shared/models/user.model";
@@ -34,7 +34,7 @@ export class AuthService
     localStorage.removeItem('refresh-token');
     localStorage.removeItem('user');
 
-    this.user.next(null);
+    this.setUser(null);
   }
 
   public setUser(user: User) {
@@ -43,7 +43,7 @@ export class AuthService
 
   public updateUser(user: User) {
     localStorage.setItem('user', JSON.stringify(user));
-    this.user.next(user);
+    this.setUser(user)
   }
 
   public refreshAndAuth() {
@@ -52,12 +52,12 @@ export class AuthService
     if(!refreshToken)
       return of(null);
 
-    return this.http.get<AuthResponse>(this.baseURL + 'refresh?refreshToken=' + refreshToken, {
-      headers: {
-        'X-Limit-Skip': 'true'
-      }
-      })
-      .pipe(tap(data => this.handleAuth(data)))
+    const headers = new HttpHeaders().set(env.limitNames.skipParam, 'true');
+    return this.http
+    .get<AuthResponse>(this.baseURL + 'refresh?refreshToken=' + refreshToken, {
+      headers: headers
+    })
+    .pipe(tap(data => this.handleAuth(data)))
   }
 
   public setRefreshTimeout()
@@ -65,8 +65,12 @@ export class AuthService
     const access = localStorage.getItem('access-token');
     const refresh = localStorage.getItem('refresh-token');
 
-    if(!access && !refresh)
+    if(!access && !refresh) {
+      if(this.user.value)
+        this.logout();
+
       return;
+    }
 
     if(!access && refresh) {
       this.refreshAndAuth().subscribe();
@@ -89,7 +93,7 @@ export class AuthService
         return;
 
       this.refreshAndAuth().subscribe();
-    }, ms)
+    }, ms - 100000)
   }
 
   private handleAuth(authResponse:AuthResponse) {
@@ -102,7 +106,7 @@ export class AuthService
 
     localStorage.setItem('user', JSON.stringify(authResponse.user));
 
-    this.user.next(authResponse.user);
+    this.setUser(authResponse.user);
 
     // set timer to next force refresh
     this.setRefreshTimeout();

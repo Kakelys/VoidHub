@@ -4,10 +4,11 @@ using ForumApi.DTO.DAccount;
 using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Options;
-using ForumApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using ForumApi.Services.ForumS.Interfaces;
+using ForumApi.Services.Utils.Interfaces;
 
 namespace ForumApi.Controllers
 {
@@ -47,7 +48,7 @@ namespace ForumApi.Controllers
             var fullPath = Path.Combine(_imageOptions.Folder, avatarPath);
 
             var image = _imageService.Load(accountDto.Img);
-            _imageService.Resize(image, _imageOptions.ResizeWidth, _imageOptions.ResizePostHeight);
+            _imageService.ResizeWithAspect(image, _imageOptions.ResizeWidth, _imageOptions.ResizePostHeight);
             _imageService.Crop(image);
             await _imageService.SaveImage(image, fullPath);
 

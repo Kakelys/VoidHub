@@ -15,6 +15,10 @@ namespace ForumApi.Data
         public virtual DbSet<Ban> Bans { get; set; } = null!;
         public virtual DbSet<Models.File> Files { get; set; } = null!;
 
+        public virtual DbSet<Chat> Chats { get; set; } = null!;
+        public virtual DbSet<ChatMember> ChatMembers { get; set; } = null!;
+        public virtual DbSet<ChatMessage> ChatMessages { get; set; } = null!;
+
         public ForumDbContext(DbContextOptions<ForumDbContext> options) 
             : base(options)
         {}
@@ -28,7 +32,11 @@ namespace ForumApi.Data
             new ForumConfig(builder.Entity<Forum>());
             new PostConfig(builder.Entity<Post>());
             new BanConfig(builder.Entity<Ban>()) ;
-            new FileConfig(builder.Entity<Models.File>()) ;
+            new FileConfig(builder.Entity<Models.File>());
+
+            new ChatConfig(builder.Entity<Chat>());
+            new ChatMemberConfig(builder.Entity<ChatMember>());
+            new ChatMessageConfig(builder.Entity<ChatMessage>());
 
             base.OnModelCreating(builder);
         }

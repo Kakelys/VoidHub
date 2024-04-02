@@ -7,6 +7,7 @@ import { SectionService } from '../../services/section.service';
 import { Roles } from 'src/shared/roles.enum';
 import { ToastrService } from 'ngx-toastr';
 import { ToastrExtension } from 'src/shared/toastr.extension';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-section-list',
@@ -35,8 +36,8 @@ export class SectionListComponent implements OnDestroy {
       next: (sections: Section[]) => {
         this.sections = sections;
       },
-      error: errs => {
-        ToastrExtension.handleErrors(this.toastr, errs)
+      error: (err:HttpException) => {
+        ToastrExtension.handleErrors(this.toastr, err.errors)
       }
     })
   }

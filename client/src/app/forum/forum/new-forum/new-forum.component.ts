@@ -7,6 +7,7 @@ import { Name } from '../../models/names.model';
 import { NameService } from '../../services/name.service';
 import { ToastrService } from 'ngx-toastr';
 import { ToastrExtension } from 'src/shared/toastr.extension';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-new-forum',
@@ -36,8 +37,8 @@ export class NewForumComponent implements OnInit {
       next: (names: Name[]) => {
         this.names = names;
       },
-      error: errs => {
-        ToastrExtension.handleErrors(this.toastr, errs);
+      error: (err:HttpException) => {
+        ToastrExtension.handleErrors(this.toastr, err.errors);
       }
     })
   }
@@ -55,8 +56,8 @@ export class NewForumComponent implements OnInit {
       next: _ => {
         this.router.navigate(['/forum'], { relativeTo: this.route });
       },
-      error: errs => {
-        this.errorMessages = errs;
+      error: (err: HttpException) => {
+        this.errorMessages = err.errors;
       }
     });
   }
