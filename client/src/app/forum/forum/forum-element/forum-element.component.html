@@ -24,7 +24,7 @@
         </div>
         <div class="flex flex-col text-sm" *ngIf="forum.lastTopic">
           <div class="text-secondary-content text-xs">
-            {{forum.lastTopic.updatedAt | date: 'dd.MM.yyyy HH:mm'}}
+            {{forum.lastTopic.updatedAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
           </div>
           <div>
             <span class="text-secondary-content text-xs">topic: </span>

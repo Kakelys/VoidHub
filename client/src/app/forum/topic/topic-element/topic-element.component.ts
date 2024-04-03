@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { TruncatePipe } from 'src/shared/truncate.pipe';
+import { TimezonePipe } from 'src/shared/timemezone.pipe';
 
 @Component({
   selector: 'app-topic-element',
@@ -16,7 +17,8 @@ import { TruncatePipe } from 'src/shared/truncate.pipe';
     PinnedIconComponent,
     ClosedIconComponent,
     RouterModule,
-    TruncatePipe
+    TruncatePipe,
+    TimezonePipe
   ]
 })
 export class TopicElementComponent {

@@ -16,7 +16,7 @@
           </div>
 
           <div class="text-xs text-secondary-content">
-            created: {{topic.createdAt | date: 'dd.MM.yyyy HH:mm'}}
+            created: {{topic.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@
               {{topic?.lastPost?.author.username}}
             </a>
             <div class="text-xs text-secondary-content">
-              time: {{topic?.lastPost?.createdAt | date: 'dd.MM.yyyy HH:mm'}}
+              time: {{topic?.lastPost?.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
             </div>
           </div>
         </div>

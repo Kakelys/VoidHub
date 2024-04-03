@@ -1,9 +1,5 @@
 <div class="flex flex-row border rounded border-primary-content mx-12 bg-neutral h-[70vh]">
   <div #chatsContainer class="flex flex-col overflow-auto basis-1/4 border-r-2 border-primary-content">
-    <div class="px-3 py-2">
-      Last chats:
-    </div>
-    <hr class="border-secondary-content">
     <a
       class="group cursor-pointer"
       *ngFor="let chat of chats; last as isLast"
@@ -39,7 +35,7 @@
               </div>
             </div>
 
-            <div class="text text-secondary-content">
+            <div class="text text-secondary-content whitespace-pre-wrap break-all">
               {{chat.lastMessage.content | slice:0:50}}{{chat.lastMessage.content.length > 50 ? '...' : ''}}
             </div>
           </div>
