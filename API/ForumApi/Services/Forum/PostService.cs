@@ -1,6 +1,5 @@
 using AutoMapper;
 using ForumApi.Data.Models;
-using ForumApi.Data.Repository.Extensions;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
@@ -8,6 +7,11 @@ using ForumApi.DTO.Utils;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
+using ForumApi.DTO.DTopic;
+using LinqKit;
+using ForumApi.Data.Repository.Extensions;
+
 
 namespace ForumApi.Services.ForumS
 {
@@ -24,7 +28,7 @@ namespace ForumApi.Services.ForumS
             _mapper = mapper;
         }
 
-        public async Task<Post> Create(int accountId, PostDto postDto)
+        public async Task<Post> Create(int accountId, PostEditDto postDto)
         {
             if(!_rep.IsInTransaction)
                 throw new DatabaseException("Function runs outside the transaction");
@@ -109,16 +113,45 @@ namespace ForumApi.Services.ForumS
                 .OrderBy(p => p.CreatedAt)
                 .Include(p => p.Author)
                 .TakeOffset(page)
-                .Select(p => new PostResponse(p)
+                .Select(p => new PostResponse
                 {
-                    Author = _mapper.Map<User>(p.Author)
+                    Post = _mapper.Map<PostDto>(p),
+                    Sender = _mapper.Map<User>(p.Author)
                 })
                 .ToListAsync();
 
             return posts;
         }
 
-        public async Task<Post> Update(int postId, PostDto postDto)
+        public async Task<List<PostInfoResponse>> GetPosts(Offset offset, Params prms)
+        {
+            var predicate = PredicateBuilder.New<Post>(p => true);
+            
+            if(prms.BelowTime != null)
+                predicate.And(t => t.CreatedAt < prms.BelowTime.Value.ToUniversalTime());
+
+            if(!prms.IncludeDeleted)
+                predicate.And(t => t.DeletedAt == null);
+
+            if(prms.ByAccountId != 0)
+                predicate.And(t => t.AccountId == prms.ByAccountId);
+
+            return await _rep.Post.Value
+            .FindByCondition(predicate)
+            .OrderBy(prms.OrderBy)
+            .Include(p => p.Author)
+            .Include(p => p.Topic)
+            .TakeOffset(offset)
+            .Select(p => new PostInfoResponse
+            {
+                Post = _mapper.Map<PostDto>(p),
+                Topic = _mapper.Map<TopicDto>(p.Topic), 
+                Sender = _mapper.Map<User>(p.Author)
+            })
+            .ToListAsync();
+        }
+
+        public async Task<Post> Update(int postId, PostEditDto postDto)
         {
             var entity = await _rep.Post.Value
                 .FindByCondition(p => p.Id == postId && p.DeletedAt == null, true)

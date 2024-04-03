@@ -1,0 +1,32 @@
+<div #postsContainer class="flex flex-col">
+  <div class="flex-col bg-base-100 rounded my-2" *ngFor="let post of posts">
+      <div class="ms-3">
+        <div class="text-error" *ngIf="post.post.deletedAt">
+          [Deleted]
+        </div>
+        <div class="flex flex-row my-2">
+          <div class="avatar">
+            <div class="w-10 rounded me-2">
+              <img src="{{resourceUrl}}/{{post.sender.avatarPath}}" loading="lazy">
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <a class="align-middle link no-underline " routerLink="/forum/topic/{{post.topic.id}}">
+              {{post.topic.title}}
+            </a>
+            <div class="text-xs text-secondary-content">
+              {{post.post.createdAt | withtimezone | date:'MMM d h:mm a'}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="border-neutral mx-2">
+      <div class="ms-3">
+        <ckeditor [ngModel]="post.post.content" [editor]="editor" [disabled]="true" class="ck-viewer"></ckeditor>
+      </div>
+  </div>
+  <app-limit-loader
+    [limit]="1"
+    [reqName]="limitNames.loadProfilePosts">
+  </app-limit-loader>
+</div>

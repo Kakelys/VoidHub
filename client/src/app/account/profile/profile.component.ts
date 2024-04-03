@@ -23,6 +23,8 @@ import { NgFormExtension } from 'src/shared/ng-form.extension';
 export class ProfileComponent implements OnDestroy {
   resourceUrl = environment.resourceURL;
 
+  daysBetween = 0;
+
   user: User = null;
   profile: any = null;
   userId = null;
@@ -55,8 +57,6 @@ export class ProfileComponent implements OnDestroy {
         }
       )
 
-    this.handleIdChange(this.route.snapshot.params['id']);
-
     route.params.subscribe(async params => {
       this.handleIdChange(params['id']);
     });
@@ -73,6 +73,12 @@ export class ProfileComponent implements OnDestroy {
         next: (user: any) => {
           this.adminService.user = user;
           this.profile = user;
+
+
+            // days between register day and today
+            const oneDay = 1000 * 60 * 60 * 24;
+            const diffInTime = new Date().getTime() - new Date(user.createdAt).getTime();
+            this.daysBetween = Math.round(diffInTime / oneDay);
 
           if(this.user)
             this.updateChatBetween();

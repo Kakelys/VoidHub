@@ -12,20 +12,28 @@ import { canActivateAdmin, canActivateModer } from "../forum/admin/role.guard";
 import { ErrorMessageListComponent } from "../error-message-list/error-message-list.component";
 import { RenameMenuComponent } from "../forum/admin/rename-menu/rename-menu.component";
 import { ChatService } from "../chat/services/chat.service";
+import { AccountTopicsComponent } from './topics/topics.component';
+import { AccountPostsComponent } from './posts/posts.component';
+import { SharedEditorModule } from "src/shared/shared-editor.module";
 
 @NgModule({
   declarations: [
     ProfileComponent,
     SettingsComponent,
+    AccountTopicsComponent,
+    AccountPostsComponent
   ],
   imports: [
     SharedModule,
+    SharedEditorModule,
     AdminComponentsModule,
     ErrorMessageListComponent,
     RouterModule.forChild([
       {path: 'settings', component: SettingsComponent, canActivate: [canActivateSelf]},
       {path: '', component: ProfileComponent},
       {path: ':id', component: ProfileComponent, children: [
+        {path: 'topics', component: AccountTopicsComponent},
+        {path: 'posts', component: AccountPostsComponent},
         {path: 'ban-menu', component: BanMenuComponent, canActivate: [canActivateAdmin]},
         {path: 'role-menu', component: RoleMenuComponent, canActivate: [canActivateAdmin]},
         {path: 'rename-menu', component: RenameMenuComponent, canActivate: [canActivateModer]},
