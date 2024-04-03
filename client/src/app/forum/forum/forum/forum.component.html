@@ -61,7 +61,7 @@
     </div>
   </app-limit-loader>
 
-  <app-new-topic *ngIf="user && showNewTopic" (close)="toggleNewTopic()" (created)="onCreated()"></app-new-topic>
+  <app-new-topic *ngIf="user && showNewTopic" (close)="toggleNewTopic()" (created)="onCreated($event)"></app-new-topic>
 
   <app-limit-loader [limit]="1" [ignore]="topics.length > 0">
     <div *ngIf="forum && topics.length > 0">

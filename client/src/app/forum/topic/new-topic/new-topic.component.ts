@@ -10,6 +10,7 @@ import { ToastrExtension } from 'src/shared/toastr.extension';
 import { ToastrService } from 'ngx-toastr';
 import { PostEditorData } from '../../models/post-editor-data.model';
 import { HttpException } from 'src/shared/models/http-exception.model';
+import { Topic } from '../../models/topic.model';
 
 @Component({
   selector: 'app-new-topic',
@@ -29,7 +30,7 @@ export class NewTopicComponent implements OnInit {
   close = new EventEmitter();
 
   @Output()
-  created = new EventEmitter();
+  created = new EventEmitter<Topic>();
 
   names: Name[] = null;
 
@@ -62,10 +63,11 @@ export class NewTopicComponent implements OnInit {
     }
 
     form.value.content = postData.content;
+    form.value.fileIds = postData.fileIds;
 
     this.topicService.createTopic(form.value).subscribe({
-      next: _ => {
-        this.created.emit();
+      next: (topic: Topic) => {
+        this.created.emit(topic);
       },
       error: (err:HttpException) => {
         this.errorMessages = err.errors
