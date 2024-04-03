@@ -1,6 +1,6 @@
 namespace ForumApi.DTO.DTopic
 {
-    public class TopicNew : TopicDto
+    public class TopicNew : TopicEdit
     {
         public string Content { get; set; } = null!;       
     }

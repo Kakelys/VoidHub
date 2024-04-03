@@ -7,11 +7,12 @@ namespace ForumApi.Services.ForumS.Interfaces
     public interface IPostService
     {
         Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page, bool allowDeleted = false);
+        Task<List<PostInfoResponse>> GetPosts(Offset offset, Params prms);
         /// <summary>
         /// Run in transaction
         /// </summary>
-        Task<Post> Create(int accountId, PostDto postDto);
-        Task<Post> Update(int postId , PostDto postDto);
+        Task<Post> Create(int accountId, PostEditDto postDto);
+        Task<Post> Update(int postId , PostEditDto postDto);
         Task Delete(int postId);
     }
 }

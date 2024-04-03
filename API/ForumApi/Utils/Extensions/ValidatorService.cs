@@ -22,7 +22,7 @@ namespace ForumApi.Utils.Extensions
             services.AddScoped<IValidator<Register>, RegisterValidator>();
             services.AddScoped<IValidator<Login>, LoginValidator>();
 
-            services.AddScoped<IValidator<PostDto>, PostValidator>();
+            services.AddScoped<IValidator<PostEditDto>, PostValidator>();
             services.AddScoped<IValidator<SearchDto>, SearchDtoValidator>();
 
             return services;

@@ -62,7 +62,6 @@ export class TitleEditorComponent {
     }
 
     this.onSave.emit(form.value);
-    console.log(form.value)
     this.editMode = false;
   }
 

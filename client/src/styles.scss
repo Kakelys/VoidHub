@@ -15,6 +15,10 @@
 .ck.ck-toolbar div,
 .ck.ck-dropdown.ck-heading-dropdown
 {
+ // @apply bg-neutral;
+}
+
+.ck.ck.ck-toolbar__items {
   @apply bg-neutral;
 }
 

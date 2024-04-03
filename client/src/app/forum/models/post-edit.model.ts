@@ -1,6 +1,6 @@
 import { User } from "../../../shared/models/user.model";
 
-export class Post {
+export class PostEdit {
   public id: number;
   public content: string;
   public createdAt: Date;

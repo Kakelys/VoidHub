@@ -76,7 +76,7 @@ namespace ForumApi.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = $"{Role.Admin},{Role.Moder}")]
         [BanFilter]
-        public async Task<IActionResult> Update(int id, TopicDto topicDto)
+        public async Task<IActionResult> Update(int id, TopicEdit topicDto)
         {
             var topic = await _topicService.Update(id, topicDto);
             return Ok(topic);
