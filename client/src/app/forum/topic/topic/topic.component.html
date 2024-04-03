@@ -10,10 +10,9 @@
         </div>
       </app-limit-loader>
     </ng-template>
-
     <div class="flex flex-col" *ngIf="topic; else topicNotFound">
+      <app-breadcrumb [from]="'topic'" [id]="topic.topic.id"></app-breadcrumb>
       <div>
-        <div class="link no-underline" routerLink="/forum/{{topic.topic.forumId}}">Back to forum...</div>
         <div class="flex flex-row my-auto">
           <div class="text-3xl font-bold">
             {{topic.topic.title}}

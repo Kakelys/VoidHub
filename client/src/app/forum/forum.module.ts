@@ -36,6 +36,8 @@ import { NameService } from "./services/name.service";
 import { UploadImagesComponent } from './post/upload-images/upload-images.component';
 import { UploadService } from "./services/upload.service";
 import { SharedEditorModule } from "src/shared/shared-editor.module";
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { BreadcrumbService } from "./services/breadcrumb.service";
 
 @NgModule({
   providers: [
@@ -47,7 +49,8 @@ import { SharedEditorModule } from "src/shared/shared-editor.module";
     AdminService,
     AccountService,
     NameService,
-    UploadService
+    UploadService,
+    BreadcrumbService
   ],
   declarations: [
     SectionListComponent,
@@ -65,8 +68,8 @@ import { SharedEditorModule } from "src/shared/shared-editor.module";
     CommentsComponent,
     RecentComponent,
     PostEditorComponent,
-    UploadImagesComponent
-
+    UploadImagesComponent,
+    BreadcrumbComponent
   ],
   imports: [
     SharedModule,

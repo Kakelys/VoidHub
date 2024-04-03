@@ -7,6 +7,7 @@
     </ng-template>
     <div *ngIf="forum; else forumNotFound" class="flex flex-col">
       <div class="ms-6 mt-3 flex flex-col">
+        <app-breadcrumb [from]="'forum'" [id]="forum.id"></app-breadcrumb>
         <div class="text-3xl font-bold">{{forum.title}}</div>
         <div class="text-xs text-secondary-content flex flex-row">
           <div>topics: {{forum.topicsCount}}</div>
