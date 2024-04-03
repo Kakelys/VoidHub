@@ -87,7 +87,6 @@ export class AccountTopicsComponent implements OnInit, OnDestroy {
     this.accService.getTopics(this.id, this.loadTime, offset)
     .subscribe({
       next: (data: TopicInfo[]) => {
-        console.log(data);
         if(!data || data.length < this.postLimit) {
           this.canLoadMore = false;
         }

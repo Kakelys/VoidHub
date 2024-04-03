@@ -87,7 +87,6 @@ export class AccountPostsComponent implements OnInit, OnDestroy {
     this.accService.getPosts(this.id, this.loadTime, offset)
     .subscribe({
       next: (data: PostInfo[]) => {
-        console.log(data);
         if(!data || data.length < this.postLimit) {
           this.canLoadMore = false;
         }

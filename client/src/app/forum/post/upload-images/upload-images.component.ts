@@ -103,7 +103,6 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
 
     this.uploadService.upload(formData).subscribe({
       next: (file: FileModel) => {
-        console.log(file);
         this.uploadedFiles.push(file);
         this.onFilesUpdates.emit(this.uploadedFiles);
       },

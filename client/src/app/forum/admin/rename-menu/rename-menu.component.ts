@@ -42,7 +42,7 @@ export class RenameMenuComponent implements OnInit {
         NgFormExtension.markAllAsTouched(form);
         return;
       }
-      console.log(form.value);
+
       this.accountService.updateUsername(form.value.accountId, form.value).subscribe({
         next: () => {
           this.toastr.success('Name updated successfully');

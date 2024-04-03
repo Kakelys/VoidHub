@@ -19,7 +19,6 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     this.bcService.getFrom(this.from, this.id)
     .subscribe({
       next: (links: Link[]) => {
-        console.log(links);
         if(links)
           this.links = links;
       },
