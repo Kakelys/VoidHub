@@ -36,7 +36,7 @@ namespace ForumApi.Services.ForumS
                 }).FirstOrDefaultAsync();
         }
 
-        public async Task<Forum> Create(ForumDto forumDto)
+        public async Task<Forum> Create(ForumEdit forumDto)
         {
             var forum = _rep.Forum.Value.Create(_mapper.Map<Forum>(forumDto));
             await _rep.Save();
@@ -44,7 +44,7 @@ namespace ForumApi.Services.ForumS
             return forum;
         }
 
-        public async Task<Forum> Update(int forumId, ForumDto forumDto)
+        public async Task<Forum> Update(int forumId, ForumEdit forumDto)
         {
             var entity = await _rep.Forum.Value
                 .FindByCondition(f => f.Id == forumId && f.DeletedAt == null, true)

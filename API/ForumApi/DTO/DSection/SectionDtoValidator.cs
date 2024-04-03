@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace ForumApi.DTO.DSection
 {
-    public class SectionDtoValidator : AbstractValidator<SectionDto>
+    public class SectionDtoValidator : AbstractValidator<SectionEdit>
     {
         public SectionDtoValidator()
         {

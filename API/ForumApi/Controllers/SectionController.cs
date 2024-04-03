@@ -40,7 +40,7 @@ namespace ForumApi.Controllers
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]
-        public async Task<IActionResult> Create(SectionDto sectionDto)
+        public async Task<IActionResult> Create(SectionEdit sectionDto)
         {
             var section = await _sectionService.Create(sectionDto);
             return Ok(section);
@@ -49,7 +49,7 @@ namespace ForumApi.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]
-        public async Task<IActionResult> Update(int id, SectionDto sectionDto)
+        public async Task<IActionResult> Update(int id, SectionEdit sectionDto)
         {
             var section = await _sectionService.Update(id, sectionDto);
             return Ok(section);

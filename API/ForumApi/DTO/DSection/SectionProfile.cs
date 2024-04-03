@@ -7,8 +7,10 @@ namespace ForumApi.DTO.DSection
     {
         public SectionProfile()
         {
+            CreateMap<Section, SectionEdit>();
+            CreateMap<SectionEdit, Section>();
+
             CreateMap<Section, SectionDto>();
-            CreateMap<SectionDto, Section>();
         }
     }
 }

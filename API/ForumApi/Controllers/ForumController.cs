@@ -38,7 +38,7 @@ namespace ForumApi.Controllers
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]
-        public async Task<IActionResult> Create(ForumDto forumDto)
+        public async Task<IActionResult> Create(ForumEdit forumDto)
         {
             var forum = await _forumService.Create(forumDto);
             return Ok(forum);
@@ -47,7 +47,7 @@ namespace ForumApi.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]
-        public async Task<IActionResult> Update(int id, ForumDto forumDto)
+        public async Task<IActionResult> Update(int id, ForumEdit forumDto)
         {
             var forum = await _forumService.Update(id, forumDto);
             return Ok(forum);

@@ -72,7 +72,7 @@ namespace ForumApi.Services.ForumS
                 }).ToListAsync();
         }
 
-        public async Task<Section> Create(SectionDto sectionDto)
+        public async Task<Section> Create(SectionEdit sectionDto)
         {
             var newSection = _rep.Section.Value.Create(_mapper.Map<Section>(sectionDto));
 
@@ -81,7 +81,7 @@ namespace ForumApi.Services.ForumS
             return newSection;
         }
 
-        public async Task<Section> Update(int sectionId, SectionDto section)
+        public async Task<Section> Update(int sectionId, SectionEdit section)
         {
             var entity = await _rep.Section.Value
                 .FindByCondition(s => s.Id == sectionId, true)
