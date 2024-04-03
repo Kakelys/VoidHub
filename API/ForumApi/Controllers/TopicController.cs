@@ -8,6 +8,8 @@ using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.Services.Utils.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ForumApi.Data.Repository.Interfaces;
+using ForumApi.Services.FileS.Interfaces;
 
 namespace ForumApi.Controllers
 {
@@ -18,15 +20,21 @@ namespace ForumApi.Controllers
         private readonly ITopicService _topicService;
         private readonly IPostService _postService;
         private readonly ISearchService _searchService;
+        private readonly IRepositoryManager _rep;
+        private readonly IFileService _fileService;
 
         public TopicController(
             ITopicService topicService,
             IPostService postService,
-            ISearchService searchService)
+            ISearchService searchService,
+            IRepositoryManager rep,
+            IFileService fileService)
         {
             _topicService = topicService;
             _postService = postService;
             _searchService = searchService;
+            _rep = rep;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -69,8 +77,24 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> Create(TopicNew topicDto)
         {
-            var topic = await _topicService.Create(User.GetId(), topicDto);
-            return Ok(topic);
+            await _rep.BeginTransaction();
+            try
+            {
+                var res = await _topicService.Create(User.GetId(), topicDto);
+                // update files post ids
+                if(topicDto.FileIds.Count > 0)
+                    await _fileService.Update(topicDto.FileIds.ToArray(), res.Post.Id);
+                
+                await _rep.Save();
+                await _rep.Commit();
+
+                return Ok(res.Topic);
+            }
+            catch
+            {
+                await _rep.Rollback();
+                throw;
+            }
         }
 
         [HttpPut("{id}")]

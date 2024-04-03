@@ -102,7 +102,7 @@ namespace ForumApi.Services.ForumS
                 .ToListAsync();
         }
 
-        public async Task<TopicDto> Create(int authorId, TopicNew topicDto)
+        public async Task<TopicInfoResponse> Create(int authorId, TopicNew topicDto)
         {
             var forum = await _rep.Forum.Value
                 .FindByCondition(f => f.Id == topicDto.ForumId)
@@ -124,7 +124,10 @@ namespace ForumApi.Services.ForumS
 
             _rep.Topic.Value.Create(topic);
             await _rep.Save();
-            return _mapper.Map<TopicDto>(topic);
+            return new  TopicInfoResponse{
+                Topic = _mapper.Map<TopicDto>(topic),
+                Post = _mapper.Map<PostDto>(post)
+            };
         }
 
         public async Task<TopicDto> Update(int topicId, TopicEdit topicDto)

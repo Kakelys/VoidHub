@@ -20,7 +20,7 @@ namespace ForumApi.Services.ForumS.Interfaces
         /// <param name="time">Tmestamp from first load to not load newest topics</param>
         /// <returns></returns>
         Task<List<TopicInfoResponse>> GetTopics(Offset offset, Params prms);
-        Task<TopicDto> Create(int authorId, TopicNew topicDto);
+        Task<TopicInfoResponse> Create(int authorId, TopicNew topicDto);
         Task<TopicDto> Update(int topicId, TopicEdit topicDto);
         Task Delete(int topicId);
     }

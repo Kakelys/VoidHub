@@ -2,11 +2,13 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Offset } from "src/shared/offset.model";
 import { environment as env } from "src/environments/environment";
+import { Subject, tap } from "rxjs";
 
 @Injectable()
 export class TopicService {
 
   private baseURL = env.baseAPIUrl + '/v1/topics';
+  public topicCreated$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,
@@ -31,7 +33,8 @@ export class TopicService {
   }
 
   createTopic(topic) {
-    return this.http.post(this.baseURL, topic);
+    return this.http.post(this.baseURL, topic)
+    .pipe(tap(_ => {this.topicCreated$.next()}));;
   }
 
   updateTopic(topicId, data) {
