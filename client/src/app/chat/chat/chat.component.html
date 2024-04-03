@@ -3,7 +3,7 @@
       <app-limit-loader [limit]="1" [reqName]="limitNames.chatInfoLoad">
         <div class="ps-2 py-2">
           <div *ngIf="chat; else chatNotFound">
-            <a routerLink="/profile/{{profileId}}">
+            <a routerLink="/profile/{{profileId}}" class="link no-underline">
               {{chatName}}
             </a>
           </div>

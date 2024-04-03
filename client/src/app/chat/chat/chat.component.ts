@@ -184,6 +184,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       event.preventDefault();
       if(event.shiftKey)
       {
+        if(!this.message)
+          this.message = ' ';
+
         this.message += "\n"
       }
       else
