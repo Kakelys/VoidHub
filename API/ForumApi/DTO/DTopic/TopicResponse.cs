@@ -1,27 +1,13 @@
-using ForumApi.Data.Models;
+using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
 
 namespace ForumApi.DTO.DTopic
 {
-    public class TopicResponse : Topic
+    public class TopicResponse
     { 
-        public int CommentsCount { get; set; }
-
-        public PostResponse Post { get; set; } = null!;
-        public new List<PostResponse> Posts { get; set; } = null!;
-
-        public TopicResponse() {}
-
-        public TopicResponse(Topic topic)
-        {
-            Id = topic.Id;
-            ForumId = topic.ForumId;
-            Title = topic.Title;
-            CreatedAt = topic.CreatedAt;
-            DeletedAt = topic.DeletedAt;
-            IsClosed = topic.IsClosed;
-            IsPinned = topic.IsPinned;
-            PostsCount = topic.PostsCount;
-        }
+        public TopicDto Topic { get; set; }= null!;
+        public PostDto Post { get; set; } = null!;
+        public User Sender { get; set; }= null!;
+        public List<PostResponse> Posts { get; set; } = null!;
     }
 }

@@ -2,7 +2,7 @@ using ForumApi.Controllers.Filters;
 using ForumApi.Data.Models;
 using ForumApi.DTO.DChat;
 using ForumApi.DTO.DNotification;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Services.ChatS.Interfaces;
 using ForumApi.Services.Utils.Interfaces;
 using ForumApi.Utils.Extensions;

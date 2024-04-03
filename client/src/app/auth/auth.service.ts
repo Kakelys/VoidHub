@@ -97,7 +97,6 @@ export class AuthService
   }
 
   private handleAuth(authResponse:AuthResponse) {
-    console.log('handle auth')
     if(!authResponse || !authResponse.user || !authResponse.tokens)
       return;
 

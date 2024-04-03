@@ -1,7 +1,9 @@
 namespace ForumApi.DTO.DTopic
 {
-    public class TopicNew : TopicDto
+    public class TopicNew : TopicEdit
     {
-        public string Content { get; set; } = null!;       
+        public string Content { get; set; } = null!;
+
+        public List<int> FileIds { get; set; } = new();
     }
 }

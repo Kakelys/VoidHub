@@ -3,8 +3,9 @@ import { Offset } from 'src/shared/offset.model';
 import { TopicService } from '../services/topic.service';
 import Editor from 'ckeditor5/build/ckeditor';
 import { LimitterService } from 'src/app/limitter/limitter.service';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { ReplaySubject, debounceTime, fromEvent, takeUntil } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { TopicInfo } from '../models/topic-info.model';
 
 @Component({
   selector: 'app-recent',
@@ -15,59 +16,53 @@ export class RecentComponent implements OnInit, OnDestroy {
   editor = Editor as {create: any}
   resourceUrl = environment.resourceURL;
 
-  private _firstLoadTime: Date = new Date();
-  offset = new Offset(0, 5);
+  private firstLoadTime: Date = new Date();
+  topicLimit = 10;
 
-  topics = [];
+  topics: TopicInfo[] = [];
 
-  @ViewChild('topicsContainer', {static: false})
+  @ViewChild('topicsContainer', {static: true})
   topicsContainer:ElementRef;
 
-  lastDataLoaded = false;
+  canLoadMore = true;
+  loading = false;
   threshold = 400;
 
   private destroy$ = new ReplaySubject<boolean>(1);
-  private activeReq = 0;
 
   constructor(
-    private topicService: TopicService,
-    private limitter: LimitterService) {
-      this.limitter.activeReq$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: activeReqs => {
-          this.activeReq = activeReqs
-        }
-      });
-  }
-
-  @HostListener('window:scroll', ['$event'])
-  onWindowScroll() {
-    if(!this.topicsContainer)
-      return;
-
-    const pos = document.documentElement.scrollTop + document.documentElement.clientHeight;
-    const max = this.topicsContainer.nativeElement.offsetHeight + this.topicsContainer.nativeElement.offsetTop - this.threshold;
-    if(pos > max) {
-      if(this.activeReq == 0 && this.lastDataLoaded)
-        this.loadNew();
-    }
-  }
+    private topicService: TopicService) {}
 
   ngOnInit(): void {
-    this.loadNew();
+    this.loadNext();
+
+    fromEvent(window, 'scroll')
+    .pipe(takeUntil(this.destroy$), debounceTime(300))
+    .subscribe((e:any) => {
+      const currentScroll = e.target.documentElement.scrollTop + e.target.documentElement.clientHeight;
+      const blockEnd = this.topicsContainer.nativeElement.offsetHeight + this.topicsContainer.nativeElement.offsetTop;
+
+      if(currentScroll > blockEnd - blockEnd * 0.35)
+        this.loadNext();
+    })
   }
 
-  loadNew() {
+  loadNext() {
+    if(!this.canLoadMore || this.loading)
+      return
+    this.loading = true;
+
     // TODO: remove old after some cap
-    this.offset.offsetNumber = this.topics.length;
-    this.topicService.getTopics(this.offset, this._firstLoadTime)
-      .subscribe({
-        next: (topics:any[]) => {
-          this.topics.push(...topics);
-          this.lastDataLoaded = topics.length > 0;
-        }
-      })
+    const offset = new Offset(this.topics.length, this.topicLimit)
+    this.topicService.getTopics(offset, this.firstLoadTime)
+    .subscribe({
+      next: (topics: TopicInfo[]) => {
+        if(!topics || topics.length < this.topicLimit)
+          this.canLoadMore = false;
+        this.topics.push(...topics);
+      },
+      complete: () => { this.loading = false;}
+    })
   }
 
   ngOnDestroy(): void {

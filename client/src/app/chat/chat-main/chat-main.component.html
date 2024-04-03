@@ -35,7 +35,7 @@
                 </ng-template>
               </div>
               <div class="flex-none text-xs my-auto text-secondary-content">
-                {{chat.lastMessage.createdAt | date:'shortTime'}}
+                {{chat.lastMessage.createdAt | withtimezone | date:'shortTime'}}
               </div>
             </div>
 

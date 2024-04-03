@@ -1,6 +1,5 @@
 using ForumApi.Data.Models;
-using ForumApi.DTO.DPost;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Services.ForumS.Interfaces;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.Services.FileS.Interfaces;
+using ForumApi.DTO.DPost;
 
 namespace ForumApi.Controllers
 {
@@ -36,7 +36,7 @@ namespace ForumApi.Controllers
         [HttpPost]
         [Authorize]
         [BanFilter]
-        public async Task<IActionResult> Create(PostDto postDto)
+        public async Task<IActionResult> Create(PostEditDto postDto)
         {
             await _rep.BeginTransaction();
             try
@@ -62,7 +62,7 @@ namespace ForumApi.Controllers
         [Authorize]
         [BanFilter]
         [PermissionActionFilter<Post>]
-        public async Task<IActionResult> Update(int id, PostDto postDto)
+        public async Task<IActionResult> Update(int id, PostEditDto postDto)
         {
             var post = await _postService.Update(id, postDto);
             return Ok(post);

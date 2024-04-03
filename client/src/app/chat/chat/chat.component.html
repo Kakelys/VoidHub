@@ -3,7 +3,7 @@
       <app-limit-loader [limit]="1" [reqName]="limitNames.chatInfoLoad">
         <div class="ps-2 py-2">
           <div *ngIf="chat; else chatNotFound">
-            <a routerLink="/profile/{{profileId}}">
+            <a routerLink="/profile/{{profileId}}" class="link no-underline">
               {{chatName}}
             </a>
           </div>
@@ -29,7 +29,7 @@
           {{msg.message.content}}
         </div>
         <div class="text-xs ms-3 text-secondary-content mt-auto">
-          {{msg.message.modifiedAt ? "edited" + (msg.message.modifiedAt | date:'shortTime') : msg.message.createdAt | date:'shortTime'}}
+          {{msg.message.modifiedAt ? "edited" + (msg.message.modifiedAt | date:'shortTime') : msg.message.createdAt | withtimezone | date:'shortTime'}}
         </div>
       </div>
     </div>

@@ -4,6 +4,8 @@ import { PostService } from '../../services/post.service';
 import { Roles } from 'src/shared/roles.enum';
 import Editor from 'ckeditor5/build/ckeditor';
 import { environment } from 'src/environments/environment';
+import { Post } from 'src/shared/models/post-model';
+import { PostInfo } from 'src/shared/models/post-info.model';
 
 @Component({
   selector: 'app-post',
@@ -15,7 +17,7 @@ export class PostElementComponent {
   resourceUrl = environment.resourceURL;
 
   @Input()
-  post;
+  post: PostInfo;
 
   @Input()
   user: User;
@@ -45,10 +47,10 @@ export class PostElementComponent {
   }
 
   onPostEdit(data) {
-    this.postService.updatePost(this.post.id, data).subscribe({
+    this.postService.updatePost(this.post.post.id, data).subscribe({
       next: (post: any) => {
         this.editMode = false;
-        this.post.content = post.content;
+        this.post.post.content = post.content;
       }
     })
   }
@@ -58,13 +60,13 @@ export class PostElementComponent {
   }
 
   onAdminDelete() {
-    this.postService.deletePost(this.post.id).subscribe({
+    this.postService.deletePost(this.post.post.id).subscribe({
       next: _ => this.handleDelete(),
     });
   }
 
   handleDelete() {
-    this.onDelete.emit(this.post.id);
+    this.onDelete.emit(this.post.post.id);
   }
 
   // comments
@@ -73,6 +75,6 @@ export class PostElementComponent {
   }
 
   updateCommentsCounter(count) {
-    this.post.commentsCount = count;
+    this.post.post.commentsCount = count;
   }
 }

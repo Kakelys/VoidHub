@@ -18,7 +18,7 @@ import { NewTopicComponent } from './topic/new-topic/new-topic.component';
 import { TopicService } from "./services/topic.service";
 import { PaginatorComponent } from './paginator/paginator.component';
 import { PostService } from "./services/post.service";
-import { NewPostComponent } from './post/post-editor/post-editor.component';
+import { PostEditorComponent } from './post/post-editor/post-editor.component';
 import { DeleteComponent } from './shared/delete/delete.component';
 import { TitleEditorComponent } from './title-editor/title-editor.component';
 import { ForumComponent } from "./forum/forum/forum.component";
@@ -35,6 +35,9 @@ import { TruncatePipe } from "src/shared/truncate.pipe";
 import { NameService } from "./services/name.service";
 import { UploadImagesComponent } from './post/upload-images/upload-images.component';
 import { UploadService } from "./services/upload.service";
+import { SharedEditorModule } from "src/shared/shared-editor.module";
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { BreadcrumbService } from "./services/breadcrumb.service";
 
 @NgModule({
   providers: [
@@ -46,7 +49,8 @@ import { UploadService } from "./services/upload.service";
     AdminService,
     AccountService,
     NameService,
-    UploadService
+    UploadService,
+    BreadcrumbService
   ],
   declarations: [
     SectionListComponent,
@@ -58,18 +62,19 @@ import { UploadService } from "./services/upload.service";
     NewSectionComponent,
     NewForumComponent,
     NewTopicComponent,
-    NewPostComponent,
-    DeleteComponent,
     TitleEditorComponent,
     ForumComponent,
     ForumElementComponent,
     CommentsComponent,
     RecentComponent,
-    UploadImagesComponent
+    PostEditorComponent,
+    UploadImagesComponent,
+    BreadcrumbComponent
   ],
   imports: [
     SharedModule,
-    CKEditorModule,
+    SharedEditorModule,
+    DeleteComponent,
     ErrorMessageListComponent,
     PaginatorComponent,
     TopicElementComponent,

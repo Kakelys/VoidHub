@@ -14,7 +14,7 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
       catchError((err) => {
         let errors = []
         if (err instanceof HttpErrorResponse) {
-          console.log(err);
+          console.error(err);
           switch (err.status) {
             case 400:
               if (err.error.errors) {

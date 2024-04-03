@@ -7,8 +7,10 @@ namespace ForumApi.DTO.DTopic
     {
         public TopicProfile()
         {
-            CreateMap<TopicDto, Topic>();
+            CreateMap<TopicEdit, Topic>();
             CreateMap<TopicNew, Topic>();
+            CreateMap<Topic, TopicEdit>();
+            CreateMap<Topic, TopicDto>();
         }
     }
 }

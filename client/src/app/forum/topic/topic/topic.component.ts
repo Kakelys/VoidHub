@@ -14,6 +14,7 @@ import { NameService } from '../../services/name.service';
 import { Name } from '../../models/names.model';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { environment as env } from 'src/environments/environment';
+import { Topic } from '../../models/topic.model';
 
 
 @Component({
@@ -110,19 +111,19 @@ export class TopicComponent implements OnDestroy {
 
   //post methods
   onPostDelete() {
-    this.topic.postsCount--;
+    this.topic.topic.postsCount--;
     this.loadNewPostsPage();
   }
 
   onPostCreate(data) {
     this.postService.createPost(data).subscribe({
       next: data => {
-        this.topic.postsCount++;
+        this.topic.topic.postsCount++;
         //because one-way binding
         this.newPostContent = new Date().toString();
         setTimeout(() => {this.newPostContent = ''});
 
-        let page = this.topic.postsCount / this.postsOnPage;
+        let page = this.topic.topic.postsCount / this.postsOnPage;
         page = page % 1 > 0 ? Math.floor(page + 1) : page;
         if(page == this.currentPage)
           this.loadNewPostsPage();
@@ -134,15 +135,14 @@ export class TopicComponent implements OnDestroy {
 
   //topic methods
   onTopicEdit(data) {
-    console.log(data);
     this.topicService
-      .updateTopic(this.topic.id, data)
+      .updateTopic(this.topic.topic.id, data)
       .subscribe({
-        next: topicResponse => {
+        next: (topicResponse: Topic) => {
           //also save old values
-          this.topic = {
+          this.topic.topic = {
             ...this.topic,
-            ...topicResponse
+            ...topicResponse,
           }
         },
         error: (err:HttpException) => {
@@ -167,9 +167,9 @@ export class TopicComponent implements OnDestroy {
   }
 
   onTopicDelete() {
-    this.topicService.deleteTopic(this.topic.id).subscribe({
+    this.topicService.deleteTopic(this.topic.topic.id).subscribe({
       next: () => {
-        this.router.navigate(['/', 'forum', this.topic.forumId]);
+        this.router.navigate(['/', 'forum', this.topic.topic.forumId]);
       }
     });
   }

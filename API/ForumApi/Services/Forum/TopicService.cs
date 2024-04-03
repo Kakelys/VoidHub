@@ -5,10 +5,11 @@ using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
 using ForumApi.DTO.DTopic;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using LinqKit;
 
 namespace ForumApi.Services.ForumS
 {
@@ -35,21 +36,30 @@ namespace ForumApi.Services.ForumS
             return await _rep.Topic.Value
                 .FindByCondition(t => t.Id == id)
                 .AllowDeleted(allowDeleted)
-                .Select(t => new TopicResponse(t)
+                .Select(t => new TopicResponse
                 {
-                    Post = new PostResponse(firstPost)
-                    {
-                        Author = _mapper.Map<User>(firstPost.Author)
-                    },
-                    CommentsCount = firstPost.CommentsCount
+                    Topic = _mapper.Map<TopicDto>(t),
+                    Post = _mapper.Map<PostDto>(firstPost),
+                    Sender = _mapper.Map<User>(firstPost.Author),
                 })
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<TopicResponse>> GetTopics(Offset offset, DateTime time)
+        public async Task<List<TopicInfoResponse>> GetTopics(Offset offset, Params prms)
         {
+            var predicate = PredicateBuilder.New<Topic>(t => true);
+            
+            if(prms.BelowTime != null)
+                predicate.And(t => t.CreatedAt < prms.BelowTime.Value.ToUniversalTime());
+
+            if(!prms.IncludeDeleted)
+                predicate.And(t => t.DeletedAt == null);
+
+            if(prms.ByAccountId != 0)
+                predicate.And(t => t.AccountId == prms.ByAccountId);
+
             return await _rep.Topic.Value
-                .FindByCondition(t => t.DeletedAt == null && t.CreatedAt < time.ToUniversalTime())
+                .FindByCondition(predicate)
                 .OrderByDescending(t => t.CreatedAt)
                 .TakeOffset(offset)
                 .Select(t => new {
@@ -59,13 +69,11 @@ namespace ForumApi.Services.ForumS
                         .OrderBy(p => p.CreatedAt)
                         .First()
                 })
-                .Select(t => new TopicResponse(t.Topic)
+                .Select(t => new TopicInfoResponse
                 {
-                    Post = new PostResponse(t.FirstPost)
-                    {
-                        Author = _mapper.Map<User>(t.FirstPost.Author)
-                    },
-                    CommentsCount = t.FirstPost.CommentsCount
+                    Topic = _mapper.Map<TopicDto>(t.Topic),
+                    Sender = _mapper.Map<User>(t.Topic.Author),
+                    Post = _mapper.Map<PostDto>(t.FirstPost),
                 })
                 .ToListAsync();
         }
@@ -94,7 +102,7 @@ namespace ForumApi.Services.ForumS
                 .ToListAsync();
         }
 
-        public async Task<Topic> Create(int authorId, TopicNew topicDto)
+        public async Task<TopicInfoResponse> Create(int authorId, TopicNew topicDto)
         {
             var forum = await _rep.Forum.Value
                 .FindByCondition(f => f.Id == topicDto.ForumId)
@@ -116,10 +124,13 @@ namespace ForumApi.Services.ForumS
 
             _rep.Topic.Value.Create(topic);
             await _rep.Save();
-            return topic;
+            return new  TopicInfoResponse{
+                Topic = _mapper.Map<TopicDto>(topic),
+                Post = _mapper.Map<PostDto>(post)
+            };
         }
 
-        public async Task<Topic> Update(int topicId, TopicDto topicDto)
+        public async Task<TopicDto> Update(int topicId, TopicEdit topicDto)
         {
             var entity = await _rep.Topic.Value
                 .FindByCondition(t => t.Id == topicId && t.DeletedAt == null, true)
@@ -128,7 +139,7 @@ namespace ForumApi.Services.ForumS
             _mapper.Map(topicDto, entity);
             await _rep.Save();
 
-            return entity;
+            return _mapper.Map<TopicDto>(entity);
         }
 
         public async Task Delete(int topicId)

@@ -10,32 +10,31 @@
         </div>
       </app-limit-loader>
     </ng-template>
-
     <div class="flex flex-col" *ngIf="topic; else topicNotFound">
+      <app-breadcrumb [from]="'topic'" [id]="topic.topic.id"></app-breadcrumb>
       <div>
-        <div class="link no-underline" routerLink="/forum/{{topic.forumId}}">Back to forum...</div>
         <div class="flex flex-row my-auto">
           <div class="text-3xl font-bold">
-            {{topic.title}}
-            <span *ngIf="topic.deletedAt" class="text-error">[Deleted]</span>
+            {{topic.topic.title}}
+            <span *ngIf="topic.topic.deletedAt" class="text-error">[Deleted]</span>
           </div>
 
           <div class="flex flex-row ms-3">
-            <div *ngIf="topic.isClosed" class="my-auto">
+            <div *ngIf="topic.topic.isClosed" class="my-auto">
               <app-closed-icon></app-closed-icon>
             </div>
-            <div *ngIf="topic.isPinned" class="my-auto ms-1">
+            <div *ngIf="topic.topic.isPinned" class="my-auto ms-1">
               <app-pinned-icon></app-pinned-icon>
             </div>
           </div>
         </div>
         <div class="text-xs text-secondary-content flex flex-row">
-          <div>posts: {{topic.commentsCount}}</div>
+          <div>posts: {{topic.post.commentsCount}}</div>
         </div>
         <div class="flex flex-row my-auto" *ngIf="user && user?.role == roles.ADMIN || user?.role == roles.MODER">
           <div>
             <app-title-editor
-              [title]="topic.title"
+              [title]="topic.topic.title"
               (onSave)="onTopicEdit($event)"
               (onToggle)="onTopicEditChanged($event)"
               *ngIf="topic"
@@ -48,11 +47,11 @@
                   class="select select-bordered"
                   id="forumId"
                   name="forumId"
-                  [ngModel]="topic.forumId"
+                  [ngModel]="topic.topic.forumId"
                 >
                   <option *ngFor="let name of names" [value]="name.id"
                     [disabled]="!name.isSelectable"
-                    [selected]="name.id == topic.forumId && name.isSelectable"
+                    [selected]="name.id == topic.topic.forumId && name.isSelectable"
                   >
                     {{name.isSelectable ? '-- ' + name.title : name.title}}
                   </option>
@@ -65,7 +64,7 @@
                   class="toggle my-auto"
                   id="isClosed"
                   name="isClosed"
-                  [(ngModel)]="topic.isClosed"
+                  [(ngModel)]="topic.topic.isClosed"
                 >
                 <label class="label">Closed</label>
               </div>
@@ -75,7 +74,7 @@
                   class="toggle my-auto"
                   id="isPinned"
                   name="isPinned"
-                  [(ngModel)]="topic.isPinned"
+                  [(ngModel)]="topic.topic.isPinned"
                 >
               <label class="label">Pinned</label>
               </div>
@@ -89,13 +88,13 @@
         </div>
 
         <div class="mt-3">
-          <app-post [post]="topic?.post" [user]="user" [enableDeliting]="false" [enableComments]="false" ></app-post>
+          <app-post [post]="{topic: topic.topic, post: topic.post, sender: topic.sender}" [user]="user" [enableDeliting]="false" [enableComments]="false" ></app-post>
         </div>
       </div>
       <div class="my-3">
         <app-paginator
           (changePage)="changePage($event)"
-          [max]="topic.postsCount / postsOnPage"
+          [max]="topic.topic.postsCount / postsOnPage"
           [currentPage]="currentPage">
         </app-paginator>
       </div>
@@ -107,7 +106,7 @@
               [post]="post"
               [user]="user"
               [depth]="1"
-              [isTopicClosed]="topic.isClosed"
+              [isTopicClosed]="topic.topic.isClosed"
               (onDelete)="onPostDelete()">
             </app-post>
           </div>
@@ -117,13 +116,13 @@
       <div class="my-3">
         <app-paginator
           (changePage)="changePage($event)"
-          [max]="topic.postsCount / postsOnPage"
+          [max]="topic.topic.postsCount / postsOnPage"
           [currentPage]="currentPage">
         </app-paginator>
       </div>
       <app-post-editor
-        *ngIf="user && !topic.isClosed"
-        [topicId]="topic.id"
+        *ngIf="user && !topic.topic.isClosed"
+        [topicId]="topic.topic.id"
         [ancestorId]="topic?.post.id"
         [content]="newPostContent"
         [cancelPlaceholder]="'Clear'"

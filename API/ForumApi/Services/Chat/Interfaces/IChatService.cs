@@ -1,5 +1,5 @@
 using ForumApi.DTO.DChat;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 
 namespace ForumApi.Services.ChatS.Interfaces
 {

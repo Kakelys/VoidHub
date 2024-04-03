@@ -134,11 +134,8 @@ export class ForumComponent implements OnDestroy {
     })
   }
 
-  onCreated() {
-    this.forum.topicsCount++;
-    this.forum.postsCount++;
-    this.toggleNewTopic();
-    this.loadTopicsPage();
+  onCreated(topic: Topic) {
+    this.router.navigate(['/forum/topic/', topic.id])
   }
 
   ngOnDestroy(): void {

@@ -9,19 +9,71 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.Services.Utils.Interfaces;
+using ForumApi.DTO.Utils;
 
 namespace ForumApi.Controllers
 {
     [ApiController]
     [Route("api/v1/accounts")]
-    public class AccountController(IAccountService _accountService, IOptions<ImageOptions> options, IImageService _imageService) : ControllerBase
+    public class AccountController(
+        IAccountService accountService, 
+        IOptions<ImageOptions> options, 
+        IImageService imageService,
+        IPostService postService,
+        ITopicService topicService) : ControllerBase
     {   
         private readonly ImageOptions _imageOptions = options.Value;
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAccount(int id)
         {
-            return Ok(await _accountService.Get(id));
+            return Ok(await accountService.Get(id));
+        }
+
+        [Authorize]
+        [AllowAnonymous]
+        [HttpGet("{id}/posts")]
+        public async Task<IActionResult> GetAccountPosts(int id, [FromQuery] Offset offset, [FromQuery] DateTime belowTime)
+        {
+            var includeDeleted = false;
+            if(User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
+                    includeDeleted = true;
+            }
+
+            var prms = new Params() 
+            {
+                BelowTime = belowTime,
+                IncludeDeleted = includeDeleted,
+                ByAccountId = id,
+                OrderBy = "CreatedAt desc"
+            };
+
+            return Ok(await postService.GetPosts(offset, prms));
+        }
+
+         [Authorize]
+        [AllowAnonymous]
+        [HttpGet("{id}/topics")]
+        public async Task<IActionResult> GetAccountTopics(int id, [FromQuery] Offset offset, [FromQuery] DateTime belowTime)
+        {
+            var includeDeleted = false;
+            if(User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
+                    includeDeleted = true;
+            }
+
+            var prms = new Params() 
+            {
+                BelowTime = belowTime,
+                IncludeDeleted = includeDeleted,
+                ByAccountId = id,
+                OrderBy = "CreatedAt desc"
+            };
+
+            return Ok(await topicService.GetTopics(offset, prms));
         }
 
         [HttpPatch]
@@ -33,7 +85,7 @@ namespace ForumApi.Controllers
             await validator.ValidateAndThrowAsync(accountDto);
 
             var senderId = User.GetId();
-            return Ok(await _accountService.Update(senderId, senderId, accountDto));
+            return Ok(await accountService.Update(senderId, senderId, accountDto));
         }
 
         [HttpPatch("avatar")]
@@ -47,12 +99,12 @@ namespace ForumApi.Controllers
             var avatarPath = $"{_imageOptions.AvatarFolder}/{User.GetId()}{_imageOptions.FileType}";
             var fullPath = Path.Combine(_imageOptions.Folder, avatarPath);
 
-            var image = _imageService.Load(accountDto.Img);
-            _imageService.ResizeWithAspect(image, _imageOptions.ResizeWidth, _imageOptions.ResizePostHeight);
-            _imageService.Crop(image);
-            await _imageService.SaveImage(image, fullPath);
+            var image = imageService.Load(accountDto.Img);
+            imageService.ResizeWithAspect(image, _imageOptions.ResizeWidth, _imageOptions.ResizePostHeight);
+            imageService.Crop(image);
+            await imageService.SaveImage(image, fullPath);
 
-            return Ok(await _accountService.UpdateImg(User.GetId(), avatarPath));
+            return Ok(await accountService.UpdateImg(User.GetId(), avatarPath));
         }
 
         [HttpPatch("{id}")]
@@ -63,7 +115,7 @@ namespace ForumApi.Controllers
             var validator = new AccountDtoAdminValidator();
             await validator.ValidateAndThrowAsync(accountDto);
 
-            await _accountService.Update(id, User.GetId(), accountDto);
+            await accountService.Update(id, User.GetId(), accountDto);
             return Ok();
         }
 
@@ -72,7 +124,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> AvatarToDefault(int id)
         {
-            await _accountService.UpdateImg(id, _imageOptions.AvatarDefault);
+            await accountService.UpdateImg(id, _imageOptions.AvatarDefault);
             return Ok();
         }
 
@@ -84,7 +136,7 @@ namespace ForumApi.Controllers
             var validator = new AccountDtoAdminUsernameValidator();
             await validator.ValidateAndThrowAsync(accountDto);
 
-            await _accountService.Update(id, User.GetId(), accountDto);
+            await accountService.Update(id, User.GetId(), accountDto);
             return Ok();
         }
 
@@ -93,7 +145,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> DeleteAccount(int id) 
         {
-            await _accountService.Delete(User.GetId());
+            await accountService.Delete(User.GetId());
             return Ok();
         }
 
@@ -101,7 +153,7 @@ namespace ForumApi.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteSelf()
         {
-            await _accountService.Delete(User.GetId());
+            await accountService.Delete(User.GetId());
             return Ok();
         }
     }
