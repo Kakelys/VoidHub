@@ -13,7 +13,7 @@ export class BanService {
     return this.http.post(this.baseUrl, data);
   }
 
-  public unbanUser(accountId) {
-    return this.http.delete(`${this.baseUrl}?accountId=${accountId}`);
+  public unbanUser(username: string) {
+    return this.http.delete(`${this.baseUrl}?username=${username}`);
   }
 }

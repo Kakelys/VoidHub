@@ -2,7 +2,7 @@ using ForumApi.Data.Models;
 
 namespace ForumApi.DTO.DBan
 {
-    public class BanResponse : BanDto
+    public class BanResponse : BanEdit
     {
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }

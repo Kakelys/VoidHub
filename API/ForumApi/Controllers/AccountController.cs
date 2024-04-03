@@ -10,6 +10,9 @@ using Microsoft.Extensions.Options;
 using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.Services.Utils.Interfaces;
 using ForumApi.DTO.Utils;
+using ForumApi.Data.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using ForumApi.Utils.Exceptions;
 
 namespace ForumApi.Controllers
 {
@@ -20,7 +23,8 @@ namespace ForumApi.Controllers
         IOptions<ImageOptions> options, 
         IImageService imageService,
         IPostService postService,
-        ITopicService topicService) : ControllerBase
+        ITopicService topicService,
+        IRepositoryManager rep) : ControllerBase
     {   
         private readonly ImageOptions _imageOptions = options.Value;
 
@@ -107,15 +111,19 @@ namespace ForumApi.Controllers
             return Ok(await accountService.UpdateImg(User.GetId(), avatarPath));
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{username}/role")]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]
-        public async Task<IActionResult> ChangeRole(int id, [FromBody] AccountDto accountDto)
+        public async Task<IActionResult> ChangeRole(string username, [FromBody] AccountDto accountDto)
         {
             var validator = new AccountDtoAdminValidator();
             await validator.ValidateAndThrowAsync(accountDto);
 
-            await accountService.Update(id, User.GetId(), accountDto);
+            var user = await rep.Account.Value
+                .FindByUsername(username)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
+
+            await accountService.Update(user.Id, User.GetId(), accountDto);
             return Ok();
         }
 
@@ -128,15 +136,19 @@ namespace ForumApi.Controllers
             return Ok();
         }
 
-        [HttpPatch("{id}/rename")]
+        [HttpPatch("{username}/rename")]
         [Authorize(Roles = $"{Role.Admin},{Role.Moder}")]
         [BanFilter]
-        public async Task<IActionResult> RenameAccount(int id, [FromBody] AccountDto accountDto)
+        public async Task<IActionResult> RenameAccount(string username, [FromBody] AccountDto accountDto)
         {
             var validator = new AccountDtoAdminUsernameValidator();
             await validator.ValidateAndThrowAsync(accountDto);
 
-            await accountService.Update(id, User.GetId(), accountDto);
+            var user = await rep.Account.Value
+                .FindByUsername(username)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
+
+            await accountService.Update(user.Id, User.GetId(), accountDto);
             return Ok();
         }
 

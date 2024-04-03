@@ -38,7 +38,7 @@ namespace ForumApi.Services.ForumS
                     Ban = a.RecievedBans.Where(b => b.IsActive && b.ExpiresAt > DateTime.UtcNow)
                         .OrderByDescending(b => b.IsActive)
                         .ThenByDescending(b => b.ExpiresAt)
-                        .Select(b => _mapper.Map<BanDto>(b))
+                        .Select(b => _mapper.Map<BanEdit>(b))
                         .FirstOrDefault()
                 })
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("User with such id doesn't exist");
