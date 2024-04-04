@@ -1,6 +1,5 @@
 using System.Linq.Dynamic.Core;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
 using ForumApi.Data.Repository.Interfaces;
@@ -15,7 +14,7 @@ namespace ForumApi.Services.ChatS
 {
     public class ChatService(IRepositoryManager rep, IMapper mapper) : IChatService
     {
-        public async Task<ChatDto> CreatePersonal(int senderId, int targetId, string message)
+        public async Task<(ChatDto, MessageDto)> CreatePersonal(int senderId, int targetId, string message)
         {
             var sender = await rep.Account.Value
                 .FindById(senderId).FirstOrDefaultAsync() ?? throw new NotFoundException("Sender not found");
@@ -29,6 +28,7 @@ namespace ForumApi.Services.ChatS
                 throw new BadRequestException("Chat alredy exist");
 
             var chat = new Chat();
+            ChatMessage firstMessage;
             var chatMember1 = new ChatMember() 
             {
                 ChatId = chat.Id,
@@ -51,7 +51,7 @@ namespace ForumApi.Services.ChatS
 
                 await rep.Save();
 
-                var firstMessage = new ChatMessage()
+                firstMessage = new ChatMessage()
                 {
                     ChatId = chat.Id,
                     ChatMemberId = chatMember1.Id,
@@ -70,7 +70,7 @@ namespace ForumApi.Services.ChatS
                 throw;
             }
 
-            return mapper.Map<ChatDto>(chat);
+            return (mapper.Map<ChatDto>(chat), mapper.Map<MessageDto>(firstMessage));
         }
 
         public async Task<List<ChatResponse>> Get(int accountId, Offset offset, DateTime time)
