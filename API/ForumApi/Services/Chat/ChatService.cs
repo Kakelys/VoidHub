@@ -8,6 +8,7 @@ using ForumApi.DTO.DChat;
 using ForumApi.DTO.Utils;
 using ForumApi.Services.ChatS.Interfaces;
 using ForumApi.Utils.Exceptions;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services.ChatS
@@ -103,20 +104,16 @@ namespace ForumApi.Services.ChatS
 
         public async Task<ChatDto?> Get(int accountId, int targetId)
         {
-            Chat? chat;
-            var tmp = rep.Chat.Value
-                .FindByCondition(c => !c.IsGroup && c.Members.Where(m => m.AccountId == accountId || m.AccountId == targetId).Count() == 2, true);
-
+            Console.WriteLine($"{accountId} {targetId}");
+            var predicate = PredicateBuilder.New<Chat>(c => !c.IsGroup);
             if(accountId == targetId)
-            {
-                chat = await tmp.FirstOrDefaultAsync();
-            }
+                predicate.And(c => c.Members.Where(m => m.AccountId == accountId).Count() == 2);
             else
-            {
-                chat = await tmp
-                    .Where(c => c.Members.GroupBy(c => c.AccountId).Count() == 2)
-                    .FirstOrDefaultAsync();
-            }
+                predicate.And(c => c.Members.Where(m => m.AccountId == accountId || m.AccountId == targetId).GroupBy(m => m.AccountId).Count() == 2);
+
+            var chat = await rep.Chat.Value
+                .FindByCondition(predicate, true)
+                .FirstOrDefaultAsync();
 
             return chat == null ? null : mapper.Map<ChatDto>(chat);
         }
