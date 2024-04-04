@@ -15,6 +15,8 @@ namespace ForumApi.Data.ModelConfigurations
 
             builder.Property(p => p.CommentsCount)
                 .HasDefaultValue(0);
+            builder.Property(p => p.LikesCount)
+                .HasDefaultValue(0);
 
             builder.Property(p => p.Content)
                 .IsRequired();

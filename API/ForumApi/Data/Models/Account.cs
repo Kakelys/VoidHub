@@ -33,5 +33,7 @@ namespace ForumApi.Data.Models
         public virtual List<File> UploadedFiles { get; set; } = new();
         [JsonIgnore]
         public virtual List<ChatMember> ChatMembers { get; set; } = new();
+        [JsonIgnore]
+        public virtual List<Like> Likes { get; set; } = new();
     }
 }
