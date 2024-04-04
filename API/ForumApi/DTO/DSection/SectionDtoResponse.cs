@@ -2,9 +2,9 @@ using ForumApi.DTO.DForum;
 
 namespace ForumApi.DTO.DSection
 {
-    public class SectionResponse
+    public class SectionDtoResponse
     {
         public SectionDto Section { get; set; } = null!;
-        public List<ForumResponse> Forums {get;set;} = new();
+        public List<ForumDto> Forums { get; set; } = null!;    
     }
 }

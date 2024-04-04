@@ -24,17 +24,21 @@ namespace ForumApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
-            List<SectionResponse> res = null;
-            if(User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                if(User.IsInRole(Role.Admin))
-                    res = await _sectionService.GetSections(true);
-            }
-            
-            if(res == null)
-                res = await _sectionService.GetSections();
-            
-            return Ok(res);
+            if(User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole(Role.Admin))
+                return Ok(await _sectionService.GetSections(true));   
+            else
+                return Ok(await _sectionService.GetSections());
+        }
+
+        [HttpGet("short")]
+        [Authorize]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetShort()
+        {
+            if(User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole(Role.Admin))
+                return Ok(await _sectionService.GetDtoSections(true));   
+            else
+                return Ok(await _sectionService.GetDtoSections());
         }
 
         [HttpPost]
