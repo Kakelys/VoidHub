@@ -114,5 +114,14 @@ namespace ForumApi.Controllers
             await _topicService.Delete(id);
             return Ok();
         }
+
+        [HttpPatch("{id}/recover")]
+        [Authorize(Roles = $"{Role.Admin},{Role.Moder}")]
+        [BanFilter]
+        public async Task<IActionResult> Recover(int id)
+        {
+            var dto = await _topicService.Recover(id);
+            return Ok(dto);
+        }
     }
 }

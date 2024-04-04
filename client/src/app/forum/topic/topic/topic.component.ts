@@ -170,6 +170,21 @@ export class TopicComponent implements OnDestroy {
     this.topicService.deleteTopic(this.topic.topic.id).subscribe({
       next: () => {
         this.router.navigate(['/', 'forum', this.topic.topic.forumId]);
+      },
+      error: (err: HttpException) => {
+        ToastrExtension.handleErrors(this.toastr, err.errors)
+      }
+    });
+  }
+
+  onConfirmRecover() {
+    this.topicService.recoverTopic(this.topic.topic.id).subscribe({
+      next: (topic: Topic) => {
+        this.topic.topic.deletedAt = null;
+        this.loadNewPostsPage();
+      },
+      error: (err: HttpException) => {
+        ToastrExtension.handleErrors(this.toastr, err.errors);
       }
     });
   }

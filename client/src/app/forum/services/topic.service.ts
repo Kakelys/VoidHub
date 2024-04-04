@@ -44,4 +44,8 @@ export class TopicService {
   deleteTopic(topicId) {
     return this.http.delete(this.baseURL + '/' + topicId);
   }
+
+  recoverTopic(topicId) {
+    return this.http.patch(this.baseURL + '/' + topicId + '/recover', {});
+  }
 }
