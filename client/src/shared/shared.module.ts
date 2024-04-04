@@ -6,10 +6,12 @@ import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
 import { PostEditorComponent } from "src/app/forum/post/post-editor/post-editor.component";
 import { LimitLoaderComponent } from "src/app/limitter/limit-loader/limit-loader.component";
 import { TimezonePipe } from "./timemezone.pipe";
+import { ConfirmComponent } from "src/app/shared/confirm/confirm.component";
 
 @NgModule({
   declarations: [
     LimitLoaderComponent,
+    ConfirmComponent
   ],
   imports:[
     FormsModule,
@@ -22,7 +24,8 @@ import { TimezonePipe } from "./timemezone.pipe";
     CommonModule,
     RouterModule,
     LimitLoaderComponent,
-    TimezonePipe
+    TimezonePipe,
+    ConfirmComponent
   ]
 })
 export class  SharedModule{}
