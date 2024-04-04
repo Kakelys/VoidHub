@@ -15,7 +15,7 @@ export const canActivateAdmin: CanActivateFn = (
   const toastr = inject(ToastrService);
 
   return authService.user$.pipe(take(1), map((user:User) => {
-    if (!user || user.role == Roles.USER || user.role == Roles.MODER) {
+    if (!user || user.role == Roles.USER) {
       toastr.warning("You don't have permission to access this page");
       router.navigate(["../"]);
       return false;
