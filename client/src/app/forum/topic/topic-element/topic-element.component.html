@@ -4,7 +4,7 @@
       <div class="basis-8/12 h-full">
         <div class="flex flex-col">
           <div class="flex flex-row">
-            <a routerLink="/forum/topic/{{topic.id}}" class="link link-hover font-semibold grow">
+            <a routerLink="/forum/topic/{{topic.id}}" class="link no-underline font-semibold grow">
               {{topic.title | truncate:70}}
             </a>
             <div *ngIf="topic.isPinned">
@@ -16,7 +16,7 @@
           </div>
 
           <div class="text-xs text-secondary-content">
-            created: {{topic.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
+            {{topic.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
           </div>
         </div>
       </div>

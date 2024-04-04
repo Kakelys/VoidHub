@@ -1,7 +1,7 @@
 <div class="group">
   <div class="flex flex-row items-center my-2">
     <div class="basis-8/12 h-full">
-      <a routerLink="/forum/{{forum.id}}" class="link link-hover no-underline text-lg">
+      <a routerLink="/forum/{{forum.id}}" class="link no-underline text-lg">
         {{forum.title}}
       </a>
     </div>
@@ -28,7 +28,7 @@
           </div>
           <div>
             <span class="text-secondary-content text-xs">topic: </span>
-            <a class="link link-hover no-underline"
+            <a class="link no-underline"
               routerLink="/forum/topic/{{forum.lastTopic.id}}"
             >
               {{forum.lastTopic.title | truncate}}
@@ -36,7 +36,7 @@
           </div>
           <div>
             <span class="text-secondary-content text-xs">author: </span>
-            <a class="link link-hover no-underline"
+            <a class="link no-underline"
               routerLink="/profile/{{forum.lastTopic.user.id}}"
             >
               {{forum.lastTopic.user.username}}

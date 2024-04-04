@@ -7,21 +7,23 @@
     </a>
   </div>
   <div class="ms-5 flex-1 text-lg">
-    <a class="font-medium link no-underline"
-      routerLink="/forum/recent">
-      Recent
-    </a>
-    <!--
-      <a class="ms-5 text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-red-500 text-lg font-medium cursor-pointer">
-        Donation
+    <div class="block xl:hidden">
+      <a class="font-medium link no-underline"
+        routerLink="/forum/recent">
+        Recent
       </a>
-    -->
-    <a class="ms-5 font-medium link no-underline"
-      routerLink="/forum/admin-panel"
-      *ngIf="user?.role == roles.ADMIN || user?.role == roles.MODER"
-    >
-      Admin panel
-    </a>
+      <!--
+        <a class="ms-5 text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-red-500 text-lg font-medium cursor-pointer">
+          Donation
+        </a>
+      -->
+      <a class="ms-5 font-medium link no-underline"
+        routerLink="/forum/admin-panel"
+        *ngIf="user?.role == roles.ADMIN || user?.role == roles.MODER"
+      >
+        Admin panel
+      </a>
+    </div>
     <div class="grow">
 
     </div>
