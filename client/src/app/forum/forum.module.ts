@@ -38,6 +38,7 @@ import { UploadService } from "./services/upload.service";
 import { SharedEditorModule } from "src/shared/shared-editor.module";
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { BreadcrumbService } from "./services/breadcrumb.service";
+import { RecentElementComponent } from './recent/recent-element/recent-element.component';
 
 @NgModule({
   providers: [
@@ -69,7 +70,8 @@ import { BreadcrumbService } from "./services/breadcrumb.service";
     RecentComponent,
     PostEditorComponent,
     UploadImagesComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    RecentElementComponent
   ],
   imports: [
     SharedModule,

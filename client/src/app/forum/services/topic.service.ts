@@ -24,7 +24,10 @@ export class TopicService {
   }
 
   getTopics(offset: Offset, time: Date) {
+    let headers = new HttpHeaders().set(env.limitNames.nameParam, env.limitNames.topicLoad);
+
     return this.http.get(this.baseURL, {
+      headers: headers,
       params: {
         ...offset,
         time: time.toISOString()
