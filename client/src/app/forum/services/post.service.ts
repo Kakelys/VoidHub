@@ -16,12 +16,22 @@ export class PostService {
     let headers = new HttpHeaders().set(env.limitNames.nameParam, env.limitNames.loadComments);
     headers.set(env.limitNames.limitParam, '3');
 
-    return this.http.get(`${this.baseURL}/${ancestorId}/comments`, {
-      headers: headers,
-      params: {
+    let params;
+    if(belowTime) {
+      params = {
         ...offset,
         belowTime: belowTime? belowTime.toISOString() : null
-      }
+      };
+    }
+    else {
+      params = {
+        ...offset,
+      };
+    }
+
+    return this.http.get(`${this.baseURL}/${ancestorId}/comments`, {
+      headers: headers,
+      params: params
     })
   }
 

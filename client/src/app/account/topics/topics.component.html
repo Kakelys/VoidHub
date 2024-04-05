@@ -1,29 +1,8 @@
 <div #topicsContainer class="flex flex-col">
-  <div class="flex-col bg-base-100 rounded my-2" *ngFor="let el of topics">
-    <div class="ms-3">
-      <div class="text-error" *ngIf="el.topic.deletedAt">
-        [Deleted]
-      </div>
-      <div class="flex flex-row my-2">
-        <div class="avatar">
-          <div class="w-10 rounded me-2">
-            <img src="{{resourceUrl}}/{{el.sender.avatarPath}}" loading="lazy">
-          </div>
-        </div>
-        <div class="flex flex-col">
-          <a class="align-middle link no-underline " routerLink="/forum/topic/{{el.topic.id}}">
-            {{el.topic.title}}
-          </a>
-          <div class="text-xs text-secondary-content">
-            {{el.topic.createdAt | withtimezone | date:'MMM d h:mm a'}}
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr class="border-neutral mx-2">
-    <div class="ms-3">
-      <ckeditor [ngModel]="el.post.content" [editor]="editor" [disabled]="true" class="ck-viewer"></ckeditor>
-    </div>
+  <div class="flex-col bg-base-100 rounded my-2" *ngFor="let data of topics">
+    <app-account-topic-element
+      [post]="{topic: data.topic, post: data.post, sender: data.sender}" [user]="user" [enableDeliting]="false"
+    ></app-account-topic-element>
   </div>
   <app-limit-loader
     [limit]="1"

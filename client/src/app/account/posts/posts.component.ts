@@ -9,6 +9,8 @@ import { ToastrExtension } from 'src/shared/toastr.extension';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { environment } from 'src/environments/environment';
 import Editor from 'ckeditor5/build/ckeditor';
+import { User } from 'src/shared/models/user.model';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-posts',
@@ -19,6 +21,7 @@ export class AccountPostsComponent implements OnInit, OnDestroy {
 
   editor = Editor as {create: any}
   posts: PostInfo[] = []
+  user: User;
 
   loadTime = new Date();
   postLimit = 10;
@@ -35,10 +38,15 @@ export class AccountPostsComponent implements OnInit, OnDestroy {
   private destroy$ = new ReplaySubject<boolean>(1);
 
   constructor(
-    private accService: AccountService,
-    private route: ActivatedRoute,
-    private toastr: ToastrService) {
-
+  private accService: AccountService,
+  private route: ActivatedRoute,
+  private toastr: ToastrService,
+  private auth: AuthService) {
+    this.auth.user$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(user => {
+      this.user = user;
+    })
   }
 
   ngOnInit(): void {

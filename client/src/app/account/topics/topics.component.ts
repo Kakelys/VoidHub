@@ -9,6 +9,8 @@ import { TopicInfo } from 'src/app/forum/models/topic-info.model';
 import { Offset } from 'src/shared/offset.model';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { ToastrExtension } from 'src/shared/toastr.extension';
+import { User } from 'src/shared/models/user.model';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-topics',
@@ -19,6 +21,7 @@ export class AccountTopicsComponent implements OnInit, OnDestroy {
 
   editor = Editor as {create: any}
   topics: TopicInfo[] = []
+  user: User;
 
   loadTime = new Date();
   postLimit = 10;
@@ -35,10 +38,15 @@ export class AccountTopicsComponent implements OnInit, OnDestroy {
   private destroy$ = new ReplaySubject<boolean>(1);
 
   constructor(
-    private accService: AccountService,
-    private route: ActivatedRoute,
-    private toastr: ToastrService) {
-
+  private accService: AccountService,
+  private route: ActivatedRoute,
+  private toastr: ToastrService,
+  private auth: AuthService) {
+    this.auth.user$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(user => {
+      this.user = user;
+    })
   }
 
   ngOnInit(): void {
