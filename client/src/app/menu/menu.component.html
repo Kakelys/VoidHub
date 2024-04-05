@@ -32,7 +32,7 @@
         <div class="join join-vertical">
           <div *ngFor="let sect of sections">
             <div class="collapse collapse-arrow join-item border border-neutral">
-              <input type="radio" name="sectionItem" class=""/>
+              <input type="radio" name="sectionItem" tabindex="-1"/>
               <div class="collapse-title font-medium">
                 {{sect.section.title}}
               </div>
@@ -41,9 +41,8 @@
                   class="link no-underline group"
                   *ngFor="let forum of sect.forums"
                   routerLink="/forum/{{forum.id}}/1"
-                  routerLinkActive=""
                 >
-                  <div class="border-b-[1px] border-neutral group-hover:border-secondary-content mt-1 py-0.5" routerLinkActive="border-base-content">
+                  <div class="border-b-[1px] border-neutral group-hover:border-secondary-content mt-1 py-0.5" routerLinkActive="border-accent">
                     {{forum.title | slice:0:10}}{{forum.title.length > 10 ? '...' : ''}}
                   </div>
                 </a>
