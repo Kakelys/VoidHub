@@ -10,6 +10,9 @@ using Microsoft.Extensions.Options;
 using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.Services.Utils.Interfaces;
 using ForumApi.DTO.Utils;
+using ForumApi.Data.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using ForumApi.Utils.Exceptions;
 
 namespace ForumApi.Controllers
 {
@@ -20,7 +23,9 @@ namespace ForumApi.Controllers
         IOptions<ImageOptions> options, 
         IImageService imageService,
         IPostService postService,
-        ITopicService topicService) : ControllerBase
+        ITopicService topicService,
+        IRepositoryManager rep,
+        ILikeService likeService) : ControllerBase
     {   
         private readonly ImageOptions _imageOptions = options.Value;
 
@@ -36,7 +41,8 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> GetAccountPosts(int id, [FromQuery] Offset offset, [FromQuery] DateTime belowTime)
         {
             var includeDeleted = false;
-            if(User.Identity != null && User.Identity.IsAuthenticated)
+            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
+            if(isAuthed)
             {
                 if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
                     includeDeleted = true;
@@ -50,16 +56,27 @@ namespace ForumApi.Controllers
                 OrderBy = "CreatedAt desc"
             };
 
-            return Ok(await postService.GetPosts(offset, prms));
+            var res = await postService.GetPosts(offset, prms);
+            if(isAuthed)
+            {
+                var userId = User.GetId();
+                foreach(var post in res)
+                {
+                    await likeService.UpdateLikeStatus(userId, post.Post);
+                }
+            }
+
+            return Ok(res);
         }
 
-         [Authorize]
+        [Authorize]
         [AllowAnonymous]
         [HttpGet("{id}/topics")]
         public async Task<IActionResult> GetAccountTopics(int id, [FromQuery] Offset offset, [FromQuery] DateTime belowTime)
         {
             var includeDeleted = false;
-            if(User.Identity != null && User.Identity.IsAuthenticated)
+            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
+            if(isAuthed)
             {
                 if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
                     includeDeleted = true;
@@ -73,7 +90,17 @@ namespace ForumApi.Controllers
                 OrderBy = "CreatedAt desc"
             };
 
-            return Ok(await topicService.GetTopics(offset, prms));
+            var res = await topicService.GetTopics(offset, prms);
+            if(isAuthed)
+            {
+                var userId = User.GetId();
+                foreach(var data in res)
+                {
+                    await likeService.UpdateLikeStatus(userId, data.Post);
+                }
+            }
+
+            return Ok(res);
         }
 
         [HttpPatch]
@@ -107,15 +134,19 @@ namespace ForumApi.Controllers
             return Ok(await accountService.UpdateImg(User.GetId(), avatarPath));
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{username}/role")]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]
-        public async Task<IActionResult> ChangeRole(int id, [FromBody] AccountDto accountDto)
+        public async Task<IActionResult> ChangeRole(string username, [FromBody] AccountDto accountDto)
         {
             var validator = new AccountDtoAdminValidator();
             await validator.ValidateAndThrowAsync(accountDto);
 
-            await accountService.Update(id, User.GetId(), accountDto);
+            var user = await rep.Account.Value
+                .FindByUsername(username)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
+
+            await accountService.Update(user.Id, User.GetId(), accountDto);
             return Ok();
         }
 
@@ -128,15 +159,19 @@ namespace ForumApi.Controllers
             return Ok();
         }
 
-        [HttpPatch("{id}/rename")]
+        [HttpPatch("{username}/rename")]
         [Authorize(Roles = $"{Role.Admin},{Role.Moder}")]
         [BanFilter]
-        public async Task<IActionResult> RenameAccount(int id, [FromBody] AccountDto accountDto)
+        public async Task<IActionResult> RenameAccount(string username, [FromBody] AccountDto accountDto)
         {
             var validator = new AccountDtoAdminUsernameValidator();
             await validator.ValidateAndThrowAsync(accountDto);
 
-            await accountService.Update(id, User.GetId(), accountDto);
+            var user = await rep.Account.Value
+                .FindByUsername(username)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
+
+            await accountService.Update(user.Id, User.GetId(), accountDto);
             return Ok();
         }
 

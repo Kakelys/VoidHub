@@ -4,16 +4,16 @@
   <form #roleChangeForm="ngForm" (ngSubmit)="onSubmit(roleChangeForm)">
     <div class="form-control">
       <input
-        type="number"
-        name="accountId"
-        id="accountId"
-        placeholder="user id"
+        type="text"
+        name="username"
+        id="username"
+        placeholder="username"
         class="input-sm bg-neutral input input-bordered"
         [ngClass]="{
-          'input-error': roleChangeForm.controls['accountId']?.touched && roleChangeForm.controls['accountId'].invalid,
+          'input-error': roleChangeForm.controls['username']?.touched && roleChangeForm.controls['username'].invalid,
           'btn-disabled': userIdBlocked
         }"
-        [ngModel]="userId"
+        [ngModel]="username"
         required
         autocomplete="id"
       />

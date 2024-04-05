@@ -13,7 +13,9 @@ export const environment = {
     sectionsLoad: 'sections-load',
     chatInfoLoad: 'chat-info-load',
     chatLoads: 'chatsLoad',
+    chatLoadMsgs: 'chatLoadMsgs',
     loadProfilePosts: 'loadProfilePosts',
-    loadProfileTopics: 'loadProfileTopics'
+    loadProfileTopics: 'loadProfileTopics',
+    loadComments: 'loadComments'
   },
 }

@@ -49,7 +49,10 @@ export class ChatService {
   }
 
   public getMessages(chatId: number, offset: Offset, time: Date) {
+    const headers = new HttpHeaders().set(env.limitNames.nameParam, env.limitNames.chatLoadMsgs);
+
     return this.http.get(`${this.baseURL}/${chatId}/messages`, {
+      headers: headers,
       params: {
         ...offset,
         time: time.toISOString()

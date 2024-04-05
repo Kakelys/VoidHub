@@ -105,11 +105,18 @@ namespace ForumApi.Services.ForumS
             }
         }
 
-        public async Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page, bool allowDeleted = false)
+        public async Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page, Params prms)
         {
+            var predicate = PredicateBuilder.New<Post>(p => p.AncestorId == ancestorId);
+            if(prms.BelowTime != null)
+                predicate.And(p => p.CreatedAt < prms.BelowTime.Value.ToUniversalTime());
+
+            if(prms.ByAccountId != 0)
+                predicate.And(p => p.AccountId == prms.ByAccountId);
+
             var posts = await _rep.Post.Value
-                .FindByCondition(p => p.AncestorId == ancestorId)
-                .AllowDeletedWithTopic(allowDeleted)
+                .FindByCondition(predicate)
+                .AllowDeletedWithTopic(prms.IncludeDeleted)
                 .OrderBy(p => p.CreatedAt)
                 .Include(p => p.Author)
                 .TakeOffset(page)

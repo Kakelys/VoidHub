@@ -1,11 +1,12 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Offset } from 'src/shared/offset.model';
 import { TopicService } from '../services/topic.service';
 import Editor from 'ckeditor5/build/ckeditor';
-import { LimitterService } from 'src/app/limitter/limitter.service';
 import { ReplaySubject, debounceTime, fromEvent, takeUntil } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TopicInfo } from '../models/topic-info.model';
+import { AuthService } from 'src/app/auth/auth.service';
+import { User } from 'src/shared/models/user.model';
 
 @Component({
   selector: 'app-recent',
@@ -15,11 +16,13 @@ import { TopicInfo } from '../models/topic-info.model';
 export class RecentComponent implements OnInit, OnDestroy {
   editor = Editor as {create: any}
   resourceUrl = environment.resourceURL;
+  limitNames = environment.limitNames;
 
   private firstLoadTime: Date = new Date();
   topicLimit = 10;
 
   topics: TopicInfo[] = [];
+  user: User;
 
   @ViewChild('topicsContainer', {static: true})
   topicsContainer:ElementRef;
@@ -31,7 +34,14 @@ export class RecentComponent implements OnInit, OnDestroy {
   private destroy$ = new ReplaySubject<boolean>(1);
 
   constructor(
-    private topicService: TopicService) {}
+    private topicService: TopicService,
+    private auth: AuthService) {
+      this.auth.user$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        this.user = user;
+      })
+    }
 
   ngOnInit(): void {
     this.loadNext();

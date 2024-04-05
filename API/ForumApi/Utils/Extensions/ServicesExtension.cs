@@ -29,6 +29,7 @@ namespace ForumApi.Utils.Extensions
             services.AddScoped<ISearchService, SearchService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<INamesService, NamesService>();
+            services.AddScoped<ILikeService, LikeService>();
 
             // work with files services
             services.AddScoped<IFileService, FileService>();

@@ -6,6 +6,7 @@ using ForumApi.Controllers.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ForumApi.Services.Auth.Interfaces;
+using SixLabors.ImageSharp.ColorSpaces.Companding;
 
 namespace ForumApi.Controllers
 {
@@ -29,7 +30,7 @@ namespace ForumApi.Controllers
         [HttpPost]
         [Authorize(Roles = $"{Role.Admin},{Role.Moder}")]
         [BanFilter]
-        public async Task<IActionResult> Create(BanDto ban)
+        public async Task<IActionResult> Create(BanEdit ban)
         {
             return Ok(await _banService.Create(User.GetId(), ban));
         }
@@ -37,7 +38,7 @@ namespace ForumApi.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = $"{Role.Admin},{Role.Moder}")]
         [BanFilter]
-        public async Task<IActionResult> Update(int id, BanDto ban)
+        public async Task<IActionResult> Update(int id, BanEdit ban)
         {
             return Ok(await _banService.Update(User.GetId(), id, ban));
         }
@@ -45,10 +46,10 @@ namespace ForumApi.Controllers
         [HttpDelete]
         [Authorize(Roles = $"{Role.Admin},{Role.Moder}")]
         [BanFilter]
-        public async Task<IActionResult> Delete([FromQuery] int accountId)
+        public async Task<IActionResult> Delete([FromQuery] string username)
         {
             Console.WriteLine("ban");
-            await _banService.Delete(User.GetId(), accountId);
+            await _banService.Delete(User.GetId(), username);
             return Ok();
         }
     }

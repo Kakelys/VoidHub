@@ -38,25 +38,23 @@ import { UploadService } from "./services/upload.service";
 import { SharedEditorModule } from "src/shared/shared-editor.module";
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { BreadcrumbService } from "./services/breadcrumb.service";
+import { RecentElementComponent } from './recent/recent-element/recent-element.component';
+import { SharedForumModule } from "./shared.forum.module";
 
 @NgModule({
   providers: [
     SectionService,
     ForumService,
-    TopicService,
-    PostService,
     BanService,
     AdminService,
     AccountService,
     NameService,
-    UploadService,
     BreadcrumbService
   ],
   declarations: [
     SectionListComponent,
     SectionElementComponent,
     ForumListComponent,
-    PostElementComponent,
     MainComponent,
     TopicComponent,
     NewSectionComponent,
@@ -65,15 +63,14 @@ import { BreadcrumbService } from "./services/breadcrumb.service";
     TitleEditorComponent,
     ForumComponent,
     ForumElementComponent,
-    CommentsComponent,
     RecentComponent,
-    PostEditorComponent,
-    UploadImagesComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    RecentElementComponent,
   ],
   imports: [
     SharedModule,
     SharedEditorModule,
+    SharedForumModule,
     DeleteComponent,
     ErrorMessageListComponent,
     PaginatorComponent,

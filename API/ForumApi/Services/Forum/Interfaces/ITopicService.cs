@@ -23,5 +23,6 @@ namespace ForumApi.Services.ForumS.Interfaces
         Task<TopicInfoResponse> Create(int authorId, TopicNew topicDto);
         Task<TopicDto> Update(int topicId, TopicEdit topicDto);
         Task Delete(int topicId);
+        Task<TopicDto> Recover(int topicId);
     }
 }

@@ -1,6 +1,5 @@
 using System.Linq.Dynamic.Core;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
 using ForumApi.Data.Repository.Interfaces;
@@ -9,13 +8,14 @@ using ForumApi.DTO.DChat;
 using ForumApi.DTO.Utils;
 using ForumApi.Services.ChatS.Interfaces;
 using ForumApi.Utils.Exceptions;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services.ChatS
 {
     public class ChatService(IRepositoryManager rep, IMapper mapper) : IChatService
     {
-        public async Task<ChatDto> CreatePersonal(int senderId, int targetId, string message)
+        public async Task<(ChatDto, MessageDto)> CreatePersonal(int senderId, int targetId, string message)
         {
             var sender = await rep.Account.Value
                 .FindById(senderId).FirstOrDefaultAsync() ?? throw new NotFoundException("Sender not found");
@@ -29,6 +29,7 @@ namespace ForumApi.Services.ChatS
                 throw new BadRequestException("Chat alredy exist");
 
             var chat = new Chat();
+            ChatMessage firstMessage;
             var chatMember1 = new ChatMember() 
             {
                 ChatId = chat.Id,
@@ -51,7 +52,7 @@ namespace ForumApi.Services.ChatS
 
                 await rep.Save();
 
-                var firstMessage = new ChatMessage()
+                firstMessage = new ChatMessage()
                 {
                     ChatId = chat.Id,
                     ChatMemberId = chatMember1.Id,
@@ -70,7 +71,7 @@ namespace ForumApi.Services.ChatS
                 throw;
             }
 
-            return mapper.Map<ChatDto>(chat);
+            return (mapper.Map<ChatDto>(chat), mapper.Map<MessageDto>(firstMessage));
         }
 
         public async Task<List<ChatResponse>> Get(int accountId, Offset offset, DateTime time)
@@ -103,20 +104,16 @@ namespace ForumApi.Services.ChatS
 
         public async Task<ChatDto?> Get(int accountId, int targetId)
         {
-            Chat? chat;
-            var tmp = rep.Chat.Value
-                .FindByCondition(c => !c.IsGroup && c.Members.Where(m => m.AccountId == accountId || m.AccountId == targetId).Count() == 2, true);
-
+            Console.WriteLine($"{accountId} {targetId}");
+            var predicate = PredicateBuilder.New<Chat>(c => !c.IsGroup);
             if(accountId == targetId)
-            {
-                chat = await tmp.FirstOrDefaultAsync();
-            }
+                predicate.And(c => c.Members.Where(m => m.AccountId == accountId).Count() == 2);
             else
-            {
-                chat = await tmp
-                    .Where(c => c.Members.GroupBy(c => c.AccountId).Count() == 2)
-                    .FirstOrDefaultAsync();
-            }
+                predicate.And(c => c.Members.Where(m => m.AccountId == accountId || m.AccountId == targetId).GroupBy(m => m.AccountId).Count() == 2);
+
+            var chat = await rep.Chat.Value
+                .FindByCondition(predicate, true)
+                .FirstOrDefaultAsync();
 
             return chat == null ? null : mapper.Map<ChatDto>(chat);
         }

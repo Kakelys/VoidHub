@@ -36,6 +36,9 @@ namespace ForumApi.Data.Repository
             services.AddScoped<IChatMessageRepository, ChatMessageRepository>()
                 .AddScoped(provider => new Lazy<IChatMessageRepository>(() => provider.GetRequiredService<IChatMessageRepository>()));
 
+            services.AddScoped<ILikeRepository, LikeRepository>()
+                .AddScoped(provider => new Lazy<ILikeRepository>(() => provider.GetRequiredService<ILikeRepository>()));
+
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
             return services;

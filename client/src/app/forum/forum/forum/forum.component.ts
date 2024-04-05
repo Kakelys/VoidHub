@@ -54,6 +54,7 @@ export class ForumComponent implements OnDestroy {
   }
 
   async handleForumIdChange(newForumId: number) {
+    let isFirst = !this.forumId;
     if(+newForumId) {
       if(this.forumId == newForumId) {
         return;
@@ -63,6 +64,8 @@ export class ForumComponent implements OnDestroy {
       this.forumService.getForum(this.forumId)
         .subscribe((forum: Forum) => {
           this.forum = forum;
+          if(!isFirst)
+            this.loadTopicsPage();
         });
     }
   }

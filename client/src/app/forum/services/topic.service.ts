@@ -24,7 +24,10 @@ export class TopicService {
   }
 
   getTopics(offset: Offset, time: Date) {
+    let headers = new HttpHeaders().set(env.limitNames.nameParam, env.limitNames.topicLoad);
+
     return this.http.get(this.baseURL, {
+      headers: headers,
       params: {
         ...offset,
         time: time.toISOString()
@@ -43,5 +46,9 @@ export class TopicService {
 
   deleteTopic(topicId) {
     return this.http.delete(this.baseURL + '/' + topicId);
+  }
+
+  recoverTopic(topicId) {
+    return this.http.patch(this.baseURL + '/' + topicId + '/recover', {});
   }
 }

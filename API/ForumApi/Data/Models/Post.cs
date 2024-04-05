@@ -10,6 +10,7 @@ namespace ForumApi.Data.Models
         public int TopicId { get; set; }
         public int? AncestorId { get; set; }
         public int CommentsCount { get; set; }
+        public int LikesCount { get; set; }
         public string Content { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
@@ -29,5 +30,7 @@ namespace ForumApi.Data.Models
 
         [JsonIgnore]
         public virtual List<File> Files { get; set; } = new();
+        [JsonIgnore]
+        public virtual List<Like> Likes { get; set; } = new();
     }
 }

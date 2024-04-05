@@ -1,3 +1,4 @@
+using System.Threading;
 using AutoMapper;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
@@ -145,8 +146,11 @@ namespace ForumApi.Services.ForumS
         public async Task Delete(int topicId)
         {
             var topicEntity = await _rep.Topic.Value
-                .FindByCondition(t => t.Id == topicId && t.DeletedAt == null, true)
+                .FindByCondition(t => t.Id == topicId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
+
+            if(topicEntity.DeletedAt != null)
+                throw new BadRequestException("Topic already deleted");
 
             _rep.Topic.Value.Delete(topicEntity);
 
@@ -160,6 +164,40 @@ namespace ForumApi.Services.ForumS
             );
 
             await _rep.Save();
+        }
+
+        public async Task<TopicDto> Recover(int topicId) 
+        {
+            var topic = await _rep.Topic.Value
+                .FindByCondition(t => t.Id == topicId, true)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
+
+            if(topic.DeletedAt == null)
+                throw new BadRequestException("Topic not deleted");
+
+            var deletedPosts = topic.Posts
+                .Where(p => p.DeletedAt == topic.DeletedAt)
+                .ToList();
+
+            await _rep.BeginTransaction();
+            try 
+            {
+                topic.DeletedAt = null;
+                deletedPosts.ForEach(p => 
+                {
+                    p.DeletedAt = null;
+                });
+
+                await _rep.Save();
+                await _rep.Commit();
+            }
+            catch
+            {
+                await _rep.Rollback();
+                throw;
+            }
+
+            return _mapper.Map<TopicDto>(topic);
         }
     }
 }

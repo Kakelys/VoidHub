@@ -18,7 +18,7 @@ namespace ForumApi.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -271,6 +271,21 @@ namespace ForumApi.Migrations
                     b.ToTable("Forums");
                 });
 
+            modelBuilder.Entity("ForumApi.Data.Models.Like", b =>
+                {
+                    b.Property<int>("AccountId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AccountId", "PostId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("ForumApi.Data.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -301,6 +316,11 @@ namespace ForumApi.Migrations
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("LikesCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
 
                     b.Property<NpgsqlTsVector>("SearchVector")
                         .IsRequired()
@@ -534,6 +554,25 @@ namespace ForumApi.Migrations
                     b.Navigation("Section");
                 });
 
+            modelBuilder.Entity("ForumApi.Data.Models.Like", b =>
+                {
+                    b.HasOne("ForumApi.Data.Models.Account", "Account")
+                        .WithMany("Likes")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ForumApi.Data.Models.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("ForumApi.Data.Models.Post", b =>
                 {
                     b.HasOne("ForumApi.Data.Models.Account", "Author")
@@ -595,6 +634,8 @@ namespace ForumApi.Migrations
 
                     b.Navigation("GivenBans");
 
+                    b.Navigation("Likes");
+
                     b.Navigation("Posts");
 
                     b.Navigation("RecievedBans");
@@ -630,6 +671,8 @@ namespace ForumApi.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Files");
+
+                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("ForumApi.Data.Models.Section", b =>

@@ -1,15 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { User } from 'src/shared/models/user.model';
 import { PostService } from '../../services/post.service';
 import { Offset } from 'src/shared/offset.model';
 import { environment as env } from 'src/environments/environment';
+import { ReplaySubject, debounceTime, fromEvent, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-comments',
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.css']
 })
-export class CommentsComponent implements OnInit {
+export class CommentsComponent implements OnInit, OnDestroy {
 
   @Input()
   user: User;
@@ -38,30 +39,58 @@ export class CommentsComponent implements OnInit {
 
   posts:any = [];
   postOnPage = 5;
+  loadTime: Date = new Date();
   canLoadMore = true;
+  loading = false;
+
+  fullLoad$ = new ReplaySubject<boolean>(1);
+  @ViewChild('commentsContainer', {static: true})
+  commentsContainer: ElementRef;
 
   editorContent = '';
 
   constructor(private postService: PostService) {}
 
   ngOnInit(): void {
-    this.loadNexPosts();
+    this.loadNextPosts();
+
+    fromEvent(window, 'scroll')
+    .pipe(takeUntil(this.fullLoad$), debounceTime(300))
+    .subscribe((e:any) => {
+      console.log(1);
+      const currentScroll = e.target.documentElement.scrollTop + e.target.documentElement.clientHeight;
+      const blockEnd = this.commentsContainer.nativeElement.offsetHeight + this.commentsContainer.nativeElement.offsetTop;
+
+      if(currentScroll > blockEnd - blockEnd * 0.35)
+      this.loadNextPosts();
+    })
   }
 
-  loadNexPosts() {
-    if(this.canLoadMore && this.posts.length >= this.commentsCount) {
+  ngOnDestroy(): void {
+    this.fullLoad$.next(true);
+    this.fullLoad$.complete();
+  }
+
+  loadNextPosts() {
+    if(!this.canLoadMore || this.loading)
       return;
-    }
 
-    let limit = this.commentsCount - this.posts.length;
-    limit = limit > this.postOnPage ? this.postOnPage : limit;
-    let offset = new Offset(this.posts.length, limit);
+    this.loading = true;
 
-    this.postService.getComments(this.postId, offset).subscribe({
-      next: (posts: any) => {
-        this.posts.push(...posts);
-        if(posts.length == 0 || posts.length < this.postOnPage)
+    let offset = new Offset(this.posts.length, this.postOnPage);
+
+    this.postService.getComments(this.postId, offset, this.loadTime).subscribe({
+      next: (posts: any[]) => {
+        if(posts.length == 0 || posts.length < this.postOnPage) {
           this.canLoadMore = false;
+
+          this.fullLoad$.next(true);
+          this.fullLoad$.complete();
+        }
+        this.posts.push(...posts);
+      },
+      complete: () => {
+        this.loading = false;
       }
     });
   }
@@ -71,10 +100,11 @@ export class CommentsComponent implements OnInit {
       next: _ => {
         this.onCommentsCounterUpdated.emit(this.commentsCount + 1);
         this.commentsCount += 1;
-        this.loadNexPosts();
+        this.canLoadMore = true;
+        this.loadNextPosts();
 
         //clear the editor
-        this.editorContent = new Date().toString();
+        this.editorContent = new Date().getMilliseconds() + '';
         setTimeout(() => this.editorContent = '', 0)
       }
     });

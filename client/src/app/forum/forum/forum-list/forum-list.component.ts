@@ -8,5 +8,5 @@ import { Forum } from '../../models/forum.model';
 })
 export class ForumListComponent {
   @Input()
-  forums: Forum[] = [];
+  data: Forum[] = [];
 }

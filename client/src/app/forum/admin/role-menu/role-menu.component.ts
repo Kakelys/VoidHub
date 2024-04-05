@@ -15,7 +15,7 @@ import { HttpException } from 'src/shared/models/http-exception.model';
 export class RoleMenuComponent implements OnInit {
 
   @Input()
-  userId;
+  username: string;
 
   userIdBlocked;
 
@@ -30,7 +30,7 @@ export class RoleMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.userIdBlocked = this.adminService.userIdBlocked;
-    this.userId = this.adminService.user.id + '';
+    this.username = this.adminService.user.username;
   }
 
   onSubmit(form: NgForm) {
@@ -44,7 +44,7 @@ export class RoleMenuComponent implements OnInit {
       return;
     }
 
-    this.accountService.updateRole(form.value.accountId, form.value.roleName).subscribe({
+    this.accountService.updateRole(form.value.username, form.value.roleName).subscribe({
       next: () => {
         this.toastr.success('Role updated successfully');
       },

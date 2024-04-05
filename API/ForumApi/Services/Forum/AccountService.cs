@@ -15,8 +15,8 @@ namespace ForumApi.Services.ForumS
 {
     public class AccountService 
         (
-            IRepositoryManager _rep, 
-            IMapper _mapper, 
+            IRepositoryManager rep, 
+            IMapper mapper, 
             IOptions<ImageOptions> imageOptions
         ) : IAccountService
     {
@@ -24,7 +24,7 @@ namespace ForumApi.Services.ForumS
 
         public async Task<AccountResponse> Get(int id)
         {
-            return await _rep.Account.Value
+            return await rep.Account.Value
                 .FindByCondition(a => a.Id == id)
                 .Select(a => new AccountResponse
                 {
@@ -38,32 +38,42 @@ namespace ForumApi.Services.ForumS
                     Ban = a.RecievedBans.Where(b => b.IsActive && b.ExpiresAt > DateTime.UtcNow)
                         .OrderByDescending(b => b.IsActive)
                         .ThenByDescending(b => b.ExpiresAt)
-                        .Select(b => _mapper.Map<BanDto>(b))
+                        .Select(b => mapper.Map<BanEdit>(b))
                         .FirstOrDefault()
                 })
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("User with such id doesn't exist");
         }
 
+        
+        public async Task<User> GetUser(int id)
+        {
+            var account = await rep.Account.Value
+                .FindById(id)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
+
+            return mapper.Map<User>(account);
+        }
+
         public async Task Delete(int id)
         {
-            var account = await _rep.Account.Value
+            var account = await rep.Account.Value
                 .FindByCondition(a => a.Id == id, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("User with such id doesn't exist");
 
-            _rep.Account.Value.Delete(account);
+            rep.Account.Value.Delete(account);
             account.Tokens.Clear();
 
-            await _rep.Save();
+            await rep.Save();
         }
 
         public async Task<AuthUser> Update(int targetId, int senderId, AccountDto accountDto)
         {
-            var user = await _rep.Account.Value.FindById(targetId, true)
+            var user = await rep.Account.Value.FindById(targetId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("User with such id doesn't exist");
 
             if(!string.IsNullOrEmpty(accountDto.Username) && accountDto.Username != user.Username)
             {
-                if(await _rep.Account.Value.FindByUsername(accountDto.Username).AnyAsync())
+                if(await rep.Account.Value.FindByUsername(accountDto.Username).AnyAsync())
                     throw new BadRequestException("User with such username already exists");
 
                 user.Username = accountDto.Username;
@@ -71,7 +81,7 @@ namespace ForumApi.Services.ForumS
 
             if(!string.IsNullOrEmpty(accountDto.Email) && accountDto.Email != user.Email)
             {
-                if(await _rep.Account.Value.FindByEmail(accountDto.Email).AnyAsync())
+                if(await rep.Account.Value.FindByEmail(accountDto.Email).AnyAsync())
                     throw new BadRequestException("User with such email already exists");
 
                 user.Email = accountDto.Email;
@@ -96,24 +106,24 @@ namespace ForumApi.Services.ForumS
                 user.PasswordHash = PasswordHelper.Hash(accountDto.NewPassword);
             }
             
-            await _rep.Save();
+            await rep.Save();
 
-            return _mapper.Map<AuthUser>(user);
+            return mapper.Map<AuthUser>(user);
         }
 
         public async Task<AuthUser> UpdateImg(int accountId, string newPath)
         {
-            var user = await _rep.Account.Value.FindById(accountId, true)
+            var user = await rep.Account.Value.FindById(accountId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
 
-            await _rep.BeginTransaction();
+            await rep.BeginTransaction();
             try
             {
                 // store old file path
                 var oldPath = user.AvatarPath;
 
                 user.AvatarPath = newPath;
-                await _rep.Save();
+                await rep.Save();
 
                 // delete if changed to default
                 if(user.AvatarPath == _imageOptions.AvatarDefault
@@ -122,15 +132,15 @@ namespace ForumApi.Services.ForumS
                     File.Delete($"{_imageOptions.Folder}/{oldPath}");
                 }
 
-                await _rep.Commit();
+                await rep.Commit();
             }
             catch
             {
-                await _rep.Rollback();
+                await rep.Rollback();
                 throw;
             }
 
-            return _mapper.Map<AuthUser>(user);
+            return mapper.Map<AuthUser>(user);
         }
     }
 }

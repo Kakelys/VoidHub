@@ -15,17 +15,24 @@ import { ChatService } from "../chat/services/chat.service";
 import { AccountTopicsComponent } from './topics/topics.component';
 import { AccountPostsComponent } from './posts/posts.component';
 import { SharedEditorModule } from "src/shared/shared-editor.module";
+import { AccountPostElementComponent } from './posts/element/element.component';
+import { PostService } from "../forum/services/post.service";
+import { SharedForumModule } from "../forum/shared.forum.module";
+import { AccountTopicElement } from './topics/element/element.component';
 
 @NgModule({
   declarations: [
     ProfileComponent,
     SettingsComponent,
     AccountTopicsComponent,
-    AccountPostsComponent
+    AccountPostsComponent,
+    AccountPostElementComponent,
+    AccountTopicElement
   ],
   imports: [
     SharedModule,
     SharedEditorModule,
+    SharedForumModule,
     AdminComponentsModule,
     ErrorMessageListComponent,
     RouterModule.forChild([
@@ -42,7 +49,8 @@ import { SharedEditorModule } from "src/shared/shared-editor.module";
   ],
   providers: [
     AccountService,
-    ChatService
+    ChatService,
+    PostService
   ]
 })
 export class AccountModule {}

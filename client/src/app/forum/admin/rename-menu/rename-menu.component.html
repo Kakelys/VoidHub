@@ -4,16 +4,16 @@
   <form #renameForm="ngForm" (ngSubmit)="onSubmit(renameForm)">
     <div class="form-control">
       <input
-        type="number"
-        name="accountId"
-        id="accountId"
-        placeholder="user id"
+        type="text"
+        name="currentUsername"
+        id="currentUsername"
+        placeholder="username"
         class="input-sm bg-neutral input input-bordered"
         [ngClass]="{
-          'input-error': renameForm.controls['accountId']?.touched && renameForm.controls['accountId'].invalid,
+          'input-error': renameForm.controls['username']?.touched && renameForm.controls['username'].invalid,
           'btn-disabled': userIdBlocked
         }"
-        [ngModel]="userId"
+        [ngModel]="currentUsername"
         required
         autocomplete="on"
       />
