@@ -6,7 +6,7 @@ namespace ForumApi.Services.ForumS.Interfaces
 {
     public interface IPostService
     {
-        Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page, bool allowDeleted = false);
+        Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page, Params prms);
         Task<List<PostInfoResponse>> GetPosts(Offset offset, Params prms);
         /// <summary>
         /// Run in transaction

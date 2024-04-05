@@ -43,7 +43,7 @@
     </a>
     <ng-template #userMenu>
       <div class="dropdown me-5">
-        <label tabindex="0" class="btn m-1 bg-base-200 h-10 min-h-min">{{user?.username}}</label>
+        <div tabindex="0" class="btn m-1 bg-base-200 h-10 min-h-min">{{user?.username}}</div>
         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box">
           <li><a routerLink="/profile/{{user?.id}}">Profile</a></li>
           <li><a routerLink="/chats">Chats</a></li>

@@ -100,7 +100,7 @@ export class TopicComponent implements OnDestroy {
   loadNewPostsPage() {
     let offset = new Page(this.currentPage, this.postsOnPage).getOffset();
 
-    this.postService.getComments(this.topic?.post.id, offset)
+    this.postService.getComments(this.topic?.post.id, offset, null)
       .subscribe({
         next: (posts:any[]) => {
           this.posts = [];
@@ -129,6 +129,9 @@ export class TopicComponent implements OnDestroy {
           this.loadNewPostsPage();
         else
           this.changePage(page);
+      },
+      error: (err: HttpException) => {
+        ToastrExtension.handleErrors(this.toastr, err.errors)
       }
     })
   }

@@ -90,7 +90,6 @@ export class ForumComponent implements OnDestroy {
   }
 
   loadTopicsPage() {
-    console.log(1);
     let page = new Page(this.currentPage, this.topicsOnPage);
     this.topics = [];
 

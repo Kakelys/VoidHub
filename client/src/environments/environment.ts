@@ -15,6 +15,7 @@ export const environment = {
     chatLoads: 'chatsLoad',
     chatLoadMsgs: 'chatLoadMsgs',
     loadProfilePosts: 'loadProfilePosts',
-    loadProfileTopics: 'loadProfileTopics'
+    loadProfileTopics: 'loadProfileTopics',
+    loadComments: 'loadComments'
   },
 }

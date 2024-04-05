@@ -90,7 +90,7 @@ export class AccountPostsComponent implements OnInit, OnDestroy {
         if(!data || data.length < this.postLimit) {
           this.canLoadMore = false;
         }
-
+        console.log(data);
         this.posts.push(...data);
       },
       error: (err : HttpException) =>
