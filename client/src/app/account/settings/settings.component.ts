@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { environment as env } from 'src/environments/environment';
 import { HttpEvent } from '@angular/common/http';
 import { LimitterService } from 'src/app/limitter/limitter.service';
+import { HttpException } from 'src/shared/models/http-exception.model';
 
 @Component({
   selector: 'app-settings',
@@ -66,8 +67,8 @@ export class SettingsComponent implements OnDestroy {
         this.toastr.success('Account updated successfully');
         this.authService.updateUser(user);
       },
-      error: errs => {
-        this.errorMessages = errs;
+      error: (err:HttpException) => {
+        this.errorMessages = err.errors;
       }
     })
   }
@@ -113,8 +114,8 @@ export class SettingsComponent implements OnDestroy {
           form.reset();
         }
       },
-      error: errs => {
-        this.errorMessages = errs;
+      error: (err: HttpException) => {
+        this.errorMessages = err.errors;
       }
     })
   }
