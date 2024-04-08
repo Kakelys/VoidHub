@@ -2,11 +2,11 @@
   <div class="border-b-[1px] border-secondary-content">
       <app-limit-loader [limit]="1" [reqName]="limitNames.chatInfoLoad">
         <div class="ps-2 py-2">
-          <div *ngIf="chat; else chatNotFound">
-            <a routerLink="/profile/{{profileId}}">
+          <a *ngIf="chat; else chatNotFound" routerLink="/profile/{{profileId}}" class="link no-underline">
+            <div>
               {{chatName}}
-            </a>
-          </div>
+            </div>
+          </a>
           <ng-template #chatNotFound>
             <div>
               Chat not found
@@ -16,20 +16,23 @@
       </app-limit-loader>
   </div>
   <div #messagesContainer class="flex flex-col-reverse overflow-auto overflow-x-hidden mt-auto max-w-full">
-      <div
-        *ngFor="let msg of messages"
-        class="mx-2"
-      >
+    <div>
+      <app-limit-loader [reqName]="limitNames.chatLoadMsgs" [limit]="1"></app-limit-loader>
+    </div>
+    <div
+      *ngFor="let msg of messages"
+      class="mx-2"
+    >
       <div class="flex flex-row w-fit max-w-[30vw] px-2 py-1 my-1 bg-base-100 rounded"
-      [ngClass]="{
-        'ms-auto': msg.sender.id == user.id
-      }"
+        [ngClass]="{
+          'ms-auto': msg.sender.id == user?.id
+        }"
       >
         <div class="whitespace-pre-wrap break-all">
           {{msg.message.content}}
         </div>
         <div class="text-xs ms-3 text-secondary-content mt-auto">
-          {{msg.message.modifiedAt ? "edited" + (msg.message.modifiedAt | date:'shortTime') : msg.message.createdAt | date:'shortTime'}}
+          {{msg.message.modifiedAt ? "edited" + (msg.message.modifiedAt | date:'shortTime') : msg.message.createdAt | withtimezone | date:'shortTime'}}
         </div>
       </div>
     </div>

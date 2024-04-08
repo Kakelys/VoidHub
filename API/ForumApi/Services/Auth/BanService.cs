@@ -3,7 +3,7 @@ using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DBan;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Services.Auth.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -41,13 +41,13 @@ namespace ForumApi.Services.Auth
                 }).ToListAsync();
         }
 
-        public async Task<Ban> Create(int moderId, BanDto ban)
+        public async Task<Ban> Create(int moderId, BanEdit ban)
         {
             var moder = await _rep.Account.Value
                 .FindById(moderId).FirstOrDefaultAsync() ?? throw new NotFoundException("Moderator not found");
 
             var user = await _rep.Account.Value
-                .FindById(ban.AccountId).FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
+                .FindByUsername(ban.Username).FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
 
             if(moder.Id == user.Id)
                 throw new BadRequestException("You cannot ban yourself");
@@ -56,6 +56,7 @@ namespace ForumApi.Services.Auth
                 throw new ForbiddenException("You cannot perform this action");
 
             var banEntity = _mapper.Map<Ban>(ban);
+            banEntity.AccountId = user.Id;
             banEntity.ModeratorId = moderId;
             banEntity.UpdatedById = moderId;
 
@@ -66,7 +67,7 @@ namespace ForumApi.Services.Auth
             return banEntity;
         }
         
-        public async Task<Ban> Update(int moderId, int banId, BanDto ban)
+        public async Task<Ban> Update(int moderId, int banId, BanEdit ban)
         {
             var moder = await _rep.Account.Value
                 .FindById(moderId)
@@ -88,14 +89,18 @@ namespace ForumApi.Services.Auth
             return banEntity;
         }
 
-        public async Task Delete(int moderId, int accountId)
+        public async Task Delete(int moderId, string username)
         {
             var moder = await _rep.Account.Value
                 .FindById(moderId)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("Moderator not found");
 
+            var user = await _rep.Account.Value
+                .FindByUsername(username)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
+
             var activeBans = await _rep.Ban.Value
-                .FindByCondition(b => b.AccountId == accountId && b.IsActive && b.ExpiresAt > DateTime.UtcNow, true)
+                .FindByCondition(b => b.AccountId == user.Id && b.IsActive && b.ExpiresAt > DateTime.UtcNow, true)
                 .ToListAsync();
 
             if(!activeBans.Any()) 

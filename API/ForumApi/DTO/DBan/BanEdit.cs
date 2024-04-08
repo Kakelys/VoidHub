@@ -1,8 +1,8 @@
 namespace ForumApi.DTO.DBan
 {
-    public class BanDto
+    public class BanEdit
     {
-        public int AccountId { get; set; }
+        public string Username { get; set; } = null!;
         public string Reason { get; set; } = null!;
         public DateTime ExpiresAt { get; set; }
         public bool IsActive { get; set; } = true;

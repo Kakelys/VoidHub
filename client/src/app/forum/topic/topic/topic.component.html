@@ -10,32 +10,33 @@
         </div>
       </app-limit-loader>
     </ng-template>
-
     <div class="flex flex-col" *ngIf="topic; else topicNotFound">
+      <app-breadcrumb [from]="'topic'" [id]="topic.topic.id"></app-breadcrumb>
       <div>
-        <div class="link no-underline" routerLink="/forum/{{topic.forumId}}">Back to forum...</div>
         <div class="flex flex-row my-auto">
           <div class="text-3xl font-bold">
-            {{topic.title}}
-            <span *ngIf="topic.deletedAt" class="text-error">[Deleted]</span>
+            {{topic.topic.title}}
+            <span *ngIf="topic.topic.deletedAt" class="text-error">
+              [Deleted]
+            </span>
           </div>
 
           <div class="flex flex-row ms-3">
-            <div *ngIf="topic.isClosed" class="my-auto">
+            <div *ngIf="topic.topic.isClosed" class="my-auto">
               <app-closed-icon></app-closed-icon>
             </div>
-            <div *ngIf="topic.isPinned" class="my-auto ms-1">
+            <div *ngIf="topic.topic.isPinned" class="my-auto ms-1">
               <app-pinned-icon></app-pinned-icon>
             </div>
           </div>
         </div>
         <div class="text-xs text-secondary-content flex flex-row">
-          <div>posts: {{topic.commentsCount}}</div>
+          <div>posts: {{topic.post.commentsCount}}</div>
         </div>
         <div class="flex flex-row my-auto" *ngIf="user && user?.role == roles.ADMIN || user?.role == roles.MODER">
           <div>
             <app-title-editor
-              [title]="topic.title"
+              [title]="topic.topic.title"
               (onSave)="onTopicEdit($event)"
               (onToggle)="onTopicEditChanged($event)"
               *ngIf="topic"
@@ -48,11 +49,11 @@
                   class="select select-bordered"
                   id="forumId"
                   name="forumId"
-                  [ngModel]="topic.forumId"
+                  [ngModel]="topic.topic.forumId"
                 >
                   <option *ngFor="let name of names" [value]="name.id"
                     [disabled]="!name.isSelectable"
-                    [selected]="name.id == topic.forumId && name.isSelectable"
+                    [selected]="name.id == topic.topic.forumId && name.isSelectable"
                   >
                     {{name.isSelectable ? '-- ' + name.title : name.title}}
                   </option>
@@ -65,7 +66,7 @@
                   class="toggle my-auto"
                   id="isClosed"
                   name="isClosed"
-                  [(ngModel)]="topic.isClosed"
+                  [(ngModel)]="topic.topic.isClosed"
                 >
                 <label class="label">Closed</label>
               </div>
@@ -75,7 +76,7 @@
                   class="toggle my-auto"
                   id="isPinned"
                   name="isPinned"
-                  [(ngModel)]="topic.isPinned"
+                  [(ngModel)]="topic.topic.isPinned"
                 >
               <label class="label">Pinned</label>
               </div>
@@ -86,16 +87,33 @@
             <app-delete (onConfirm)="onTopicDelete()">
             </app-delete>
           </div>
+          <div *ngIf="topic.topic.deletedAt">
+            <app-confirm
+              (onConfirm)="onConfirmRecover()"
+              [confirmContent]="'Confirm recover'"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg"
+                [style.width]="'1.5em'"
+                [style.height]="'1.5em'"
+                viewBox="0 0 24 24"
+                class="icon fill-none"
+              >
+                <path xmlns="http://www.w3.org/2000/svg" d="M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6"
+                  class="stroke-green-600 stroke-2"
+                />
+              </svg>
+            </app-confirm>
+          </div>
         </div>
 
         <div class="mt-3">
-          <app-post [post]="topic?.post" [user]="user" [enableDeliting]="false" [enableComments]="false" ></app-post>
+          <app-post [post]="{topic: topic.topic, post: topic.post, sender: topic.sender}" [user]="user" [enableDeliting]="false" [enableComments]="false" ></app-post>
         </div>
       </div>
       <div class="my-3">
         <app-paginator
           (changePage)="changePage($event)"
-          [max]="topic.postsCount / postsOnPage"
+          [max]="topic.topic.postsCount / postsOnPage"
           [currentPage]="currentPage">
         </app-paginator>
       </div>
@@ -107,7 +125,7 @@
               [post]="post"
               [user]="user"
               [depth]="1"
-              [isTopicClosed]="topic.isClosed"
+              [isTopicClosed]="topic.topic.isClosed"
               (onDelete)="onPostDelete()">
             </app-post>
           </div>
@@ -117,13 +135,13 @@
       <div class="my-3">
         <app-paginator
           (changePage)="changePage($event)"
-          [max]="topic.postsCount / postsOnPage"
+          [max]="topic.topic.postsCount / postsOnPage"
           [currentPage]="currentPage">
         </app-paginator>
       </div>
       <app-post-editor
-        *ngIf="user && !topic.isClosed"
-        [topicId]="topic.id"
+        *ngIf="user && !topic.topic.isClosed"
+        [topicId]="topic.topic.id"
         [ancestorId]="topic?.post.id"
         [content]="newPostContent"
         [cancelPlaceholder]="'Clear'"

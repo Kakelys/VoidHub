@@ -40,7 +40,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   limitNames = env.limitNames;
 
-  message: string;
+  message: string = '';
 
   private destroy$ = new ReplaySubject<boolean>(1);
 
@@ -69,13 +69,16 @@ export class ChatComponent implements OnInit, OnDestroy {
     fromEvent(this.messagesContainer.nativeElement, 'scroll')
     .pipe(takeUntil(this.destroy$),debounceTime(300))
     .subscribe((e:any) => {
-      if((e.target.scrollTop - e.target.clientHeight - 500) * -1 > e.target.scrollHeight)
+      var dif = e.target.scrollTop - e.target.clientHeight;
+
+      if((dif + dif * 0.3) * -1 > e.target.scrollHeight)
         this.loadMessages();
     })
 
-    this.notifyService.subscribe("newMessage", {
-      timestamp: this.firstLoad,
-      callback: this.onNewMessage.bind(this)
+    this.notifyService.getSubject('newMessage')
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((notify: NewMessageNotification) => {
+      this.onNewMessage(notify);
     })
   }
 
@@ -159,7 +162,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.chatService.sendMessage(this.chatId, form.value.content)
     .subscribe({
       next: (msg: MessageResponse) => {
-        //this.messages.unshift(msg)
         form.reset();
       },
       error: (err: HttpException) =>
@@ -182,6 +184,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       event.preventDefault();
       if(event.shiftKey)
       {
+        if(!this.message)
+          this.message = ' ';
+
         this.message += "\n"
       }
       else

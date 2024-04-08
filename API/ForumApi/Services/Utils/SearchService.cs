@@ -4,9 +4,10 @@ using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DSearch;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Services.Utils.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using LinqKit;
 
 namespace ForumApi.Services.Utils
 {
@@ -23,7 +24,7 @@ namespace ForumApi.Services.Utils
         {
             query = query.Trim();
 
-            var predicate = PredicateBuilder.Create<Topic>(t => t.DeletedAt == null);
+            var predicate = PredicateBuilder.New<Topic>(t => t.DeletedAt == null);
 
             // configure tsquery search
             var forTsQuery = query.Split(' ')
@@ -38,10 +39,10 @@ namespace ForumApi.Services.Utils
                 [SearchParamNames.PartialContent] = t => EF.Functions.Like(t.Posts.First().Content ?? "", $"%{query.ToLower()}%"),
             };
 
-            predicate = predicate.AND(predicators[SearchParamNames.WordTitle]);
+            predicate = predicate.And(predicators[SearchParamNames.WordTitle]);
 
             if(search.WithPostContent)
-                predicate = predicate.OR(predicators[SearchParamNames.WordContent]);
+                predicate = predicate.Or(predicators[SearchParamNames.WordContent]);
             
             // do search
             var q = _rep.Topic.Value.FindByCondition(predicate);

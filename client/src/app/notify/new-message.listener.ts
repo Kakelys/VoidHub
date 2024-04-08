@@ -5,14 +5,15 @@ import { Router } from "@angular/router";
 import { NewMessageNotification } from "./new-message-notification.model";
 import { NewMessageComponent } from "./new-message/new-message.component";
 import { AuthService } from "../auth/auth.service";
-import { ReplaySubject, takeUntil } from "rxjs";
+import { ReplaySubject, Subscription, takeUntil } from "rxjs";
 
 @Injectable()
 export class NewMessageListener implements OnDestroy {
-  private timestamp: Date;
   private ignoredId: number;
 
   private destory$ = new ReplaySubject();
+
+  private sub: Subscription;
 
   constructor(
     private notifyService: NotifyService,
@@ -40,21 +41,18 @@ export class NewMessageListener implements OnDestroy {
   public async start() {
     await this.stop();
 
-    this.timestamp = new Date();
-
-    this.notifyService
-    .subscribe('newMessage', {
-      timestamp: this.timestamp,
-      callback: this.onNewMessage.bind(this)
-    });
+    this.sub = this.notifyService.getSubject('newMessage')
+    .pipe(takeUntil(this.destory$))
+    .subscribe((notify: NewMessageNotification) => {
+      this.onNewMessage(notify)
+    })
   }
 
   public async stop() {
-    if(!this.timestamp)
+    if(!this.sub)
       return;
 
-    this.notifyService.unsubscribe('newMessage', this.timestamp);
-    this.timestamp = null;
+    this.sub.unsubscribe();
   }
 
   private onNewMessage(notify: NewMessageNotification) {

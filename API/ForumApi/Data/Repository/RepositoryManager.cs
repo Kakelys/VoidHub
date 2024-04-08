@@ -15,6 +15,7 @@ namespace ForumApi.Data.Repository
         public Lazy<IPostRepository> Post { get; }
         public Lazy<IBanRepository> Ban { get; }
         public Lazy<IFileRepository> File { get; }
+        public Lazy<ILikeRepository> Like { get; }
 
         public Lazy<IChatRepository> Chat { get; }
         public Lazy<IChatMemberRepository> ChatMember { get; }
@@ -35,7 +36,8 @@ namespace ForumApi.Data.Repository
             Lazy<IFileRepository> file,
             Lazy<IChatRepository> chat,
             Lazy<IChatMemberRepository> chatMember,
-            Lazy<IChatMessageRepository> chatMessage
+            Lazy<IChatMessageRepository> chatMessage,
+            Lazy<ILikeRepository> like
             )
         {
             _context = context;
@@ -51,6 +53,7 @@ namespace ForumApi.Data.Repository
             Chat = chat;
             ChatMember = chatMember;
             ChatMessage = chatMessage;
+            Like = like;
         }
 
         public async Task BeginTransaction() => 

@@ -8,6 +8,7 @@ import { Roles } from 'src/shared/roles.enum';
 import { ToastrService } from 'ngx-toastr';
 import { ToastrExtension } from 'src/shared/toastr.extension';
 import { HttpException } from 'src/shared/models/http-exception.model';
+import { SectionResponse } from '../../models/section-reponse.model';
 
 @Component({
   selector: 'app-section-list',
@@ -16,7 +17,7 @@ import { HttpException } from 'src/shared/models/http-exception.model';
 })
 export class SectionListComponent implements OnDestroy {
 
-  sections = [];
+  sections: SectionResponse[] = [];
   roles = Roles;
 
   private destroy$ = new ReplaySubject<boolean>(1);
@@ -33,7 +34,7 @@ export class SectionListComponent implements OnDestroy {
 
     sectionService.getSections()
     .subscribe({
-      next: (sections: Section[]) => {
+      next: (sections: SectionResponse[]) => {
         this.sections = sections;
       },
       error: (err:HttpException) => {

@@ -12,6 +12,6 @@ namespace ForumApi.DTO.DAccount
         public int PostsCount { get; set; }
         public int TopicsCount { get; set; }
 
-        public BanDto? Ban { get; set; }
+        public BanEdit? Ban { get; set; }
     }
 }

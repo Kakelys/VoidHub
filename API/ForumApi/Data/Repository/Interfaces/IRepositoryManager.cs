@@ -10,6 +10,7 @@ namespace ForumApi.Data.Repository.Interfaces
         Lazy<IPostRepository> Post { get; }
         Lazy<IBanRepository> Ban { get; }
         Lazy<IFileRepository> File { get; }
+        Lazy<ILikeRepository> Like { get; }
 
         Lazy<IChatRepository> Chat { get; }
         Lazy<IChatMemberRepository> ChatMember { get; }

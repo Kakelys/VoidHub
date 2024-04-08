@@ -7,19 +7,19 @@
       <div class="flex flex-col items-center">
         <div class="avatar">
           <div class="w-12 rounded">
-            <a routerLink="/profile/{{post?.author.id}}">
-              <img src="{{resourceUrl}}/{{post?.author?.avatarPath}}" loading="lazy"/>
+            <a routerLink="/profile/{{post?.sender.id}}">
+              <img src="{{resourceUrl}}/{{post?.sender?.avatarPath}}" loading="lazy"/>
             </a>
           </div>
         </div>
-        <a class="link no-underline" routerLink="/profile/{{post?.author.id}}">
-          {{post?.author.username}}
+        <a class="link no-underline" routerLink="/profile/{{post?.sender.id}}">
+          {{post?.sender.username}}
         </a>
         <div class="text-xs">
-          {{post?.createdAt | date: 'dd.MM.yyyy HH:mm'}}
+          {{post?.post.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
         </div>
         <div class="flex flex-row mx-auto">
-          <div class="text-xs" *ngIf="user && user?.id == post?.author.id">
+          <div class="text-xs" *ngIf="user && user?.id == post?.sender.id">
             <div class="btn btn-neutral min-h-min h-8" (click)="setEditMode(true)">
               Edit
             </div>
@@ -36,14 +36,36 @@
 
     <div class="flex flex-col overflow-auto">
       <div class="mx-8 grow">
-        <ckeditor [ngModel]="post.content" [editor]="editor" [disabled]="true" class="ck-viewer"></ckeditor>
+        <ckeditor [ngModel]="post.post.content" [editor]="editor" [disabled]="true" class="ck-viewer"></ckeditor>
       </div>
       <div class="flex flex-row">
+        <div class="btn btn-ghost p-0 min-h-min w-fit h-6 mb-1 ms-1" (click)="changeLikeState()">
+          <div class="flex flex-row mx-2">
+            <div class="my-auto">
+              <div>
+                {{post.post?.likesCount}}
+              </div>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 fill-none" viewBox="0 0 24 24"
+              [ngClass]="{
+                'fill-red-500': post.post.isLiked
+              }"
+            >
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z"
+                class="stroke-base-content"
+                [ngClass]="{
+                  'stroke-red-500': post.post.isLiked
+                }"
+                stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
         <div class="btn btn-ghost p-0 min-h-min w-fit h-6 mb-1 ms-1" *ngIf="enableComments" (click)="toggleCommentsMode()">
           <div class="flex flex-row mx-2">
-            <div class="my-auto" *ngIf="post?.commentsCount > 0">
+            <div class="my-auto" *ngIf="post.post?.commentsCount > 0">
               <div>
-                {{post?.commentsCount}}
+                {{post.post?.commentsCount}}
               </div>
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 fill-none" viewBox="0 0 24 24">
@@ -61,9 +83,9 @@
   <div *ngIf="editMode">
     <app-post-editor
       *ngIf="user"
-      [postId]="post.id"
-      [topicId]="post.topicId"
-      [content]="post.content"
+      [postId]="post.post.id"
+      [topicId]="post.post.topicId"
+      [content]="post.post.content"
       [submitPlaceholder]="'Save'"
       (onCreate)="onPostEdit($event)"
       (onCancel)="setEditMode(false)">
@@ -71,10 +93,10 @@
   </div>
   <div *ngIf="commentsMode">
       <app-comments
-        [postId]="post.id"
-        [topicId]="post.topicId"
+        [postId]="post.post.id"
+        [topicId]="post.post.topicId"
         [user]="user"
-        [commentsCount]="post.commentsCount"
+        [commentsCount]="post.post.commentsCount"
         [depth]="depth + 1"
         [isTopicClosed]="isTopicClosed"
         (onCommentsCounterUpdated)="updateCommentsCounter($event)"

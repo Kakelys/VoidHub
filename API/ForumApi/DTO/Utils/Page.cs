@@ -1,4 +1,4 @@
-namespace ForumApi.DTO.Page
+namespace ForumApi.DTO.Utils
 {
     public class Page
     {

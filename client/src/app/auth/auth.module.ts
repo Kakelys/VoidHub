@@ -15,7 +15,7 @@ function onAppLoad(authService: AuthService): () => Promise<any> {
         authService.setUser(parsedUser);
         authService.setRefreshTimeout();
       } catch(err) {
-        console.log('Error while trying to auto-login user', err)
+        console.error('Error while trying to auto-login user', err)
       }
     }
 

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace ForumApi.DTO.Page
+namespace ForumApi.DTO.Utils
 {
     public class OffsetValidator : AbstractValidator<Offset>
     {

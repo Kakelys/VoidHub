@@ -1,8 +1,8 @@
 <div class="collapse collapse-arrow bg-base-200">
-  <input type="checkbox" [name]="section.title" checked="checked" />
+  <input type="checkbox" [name]="data.section.title" checked="checked" />
   <div class="collapse-title">
     <div class="text-xl font-medium text-accent">
-      {{section.title}}
+      {{data.section.title}}
     </div>
   </div>
   <div class="collapse-content">
@@ -10,7 +10,7 @@
       <div class="flex flex-row" *ngIf="user && user?.role == roles.ADMIN">
         <app-title-editor
           class="grow"
-          [title]="section.title"
+          [title]="data.section.title"
           (onSave)="onEdit($event)"
         >
           <div class="form-control w-fit">
@@ -21,7 +21,7 @@
               name="orderPosition"
               placeholder="order pisition"
               required
-              [(ngModel)]="section.orderPosition"
+              [(ngModel)]="data.section.orderPosition"
               min="0"
               >
             <label class="flex flex-col items-start label pt-0.5">
@@ -40,14 +40,14 @@
               [ngClass]="{
                 'input-error': isHiddenModel.touched && isHiddenModel.invalid
               }"
-              [(ngModel)]="section.isHidden"
+              [(ngModel)]="data.section.isHidden"
             >
             <label class="label">Hidden</label>
           </div>
         </app-title-editor>
         <div>
           <button class="btn btn-neutral w-fit min-h-fit h-8"
-            [routerLink]="['/forum/section', section.id, 'new-forum']"
+            [routerLink]="['/forum/section', data.section.id, 'new-forum']"
           >
             New forum
           </button>
@@ -59,7 +59,7 @@
         <div class="basis-1/12 text-center">topics</div>
         <div class="basis-3/12"></div>
       </div>
-        <app-forum-list [forums]="section.forums"></app-forum-list>
+        <app-forum-list [data]="data.forums"></app-forum-list>
       </div>
     </div>
 </div>

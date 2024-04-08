@@ -8,6 +8,7 @@ using ForumApi.DTO.DTopic;
 using ForumApi.Utils.Exceptions;
 using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using LinqKit;
 
 namespace ForumApi.Services.ForumS
 {
@@ -26,18 +27,15 @@ namespace ForumApi.Services.ForumS
         }
         public async Task<List<SectionResponse>> GetSections(bool includeHidden = false)
         {
-            var sections = _rep.Section.Value;
-            IQueryable<Section> query;
+            var predicate = PredicateBuilder.New<Section>(s => true);
             if(!includeHidden)
-                query = sections.FindByCondition(s => s.IsHidden == includeHidden);
-            else 
-                query = sections.FindAll();
+                predicate.And(s => s.IsHidden == false);
 
-            return await query.OrderBy(s => s.OrderPosition)
+            return await _rep.Section.Value
+                .FindByCondition(predicate)
+                .OrderBy(s => s.OrderPosition)
                 .Select(s => new SectionResponse {
-                    Id = s.Id,
-                    Title = s.Title,
-                    IsHidden = s.IsHidden,
+                    Section = _mapper.Map<SectionDto>(s),
                     Forums = s.Forums
                         .Where(f => f.DeletedAt == null)
                         .Select(f => new {
@@ -72,7 +70,23 @@ namespace ForumApi.Services.ForumS
                 }).ToListAsync();
         }
 
-        public async Task<Section> Create(SectionDto sectionDto)
+        
+        public async Task<List<SectionDtoResponse>> GetDtoSections(bool includeHidden = false)
+        {
+            var predicate = PredicateBuilder.New<Section>(s => true);
+            if(!includeHidden)
+                predicate.And(s => s.IsHidden == false);
+
+            return await _rep.Section.Value
+                .FindByCondition(predicate)
+                .Include(s => s.Forums)
+                .Select(s => new SectionDtoResponse {
+                    Section = _mapper.Map<SectionDto>(s),
+                    Forums = _mapper.Map<List<ForumDto>>(s.Forums)
+                }).ToListAsync();
+        }
+
+        public async Task<Section> Create(SectionEdit sectionDto)
         {
             var newSection = _rep.Section.Value.Create(_mapper.Map<Section>(sectionDto));
 
@@ -81,7 +95,7 @@ namespace ForumApi.Services.ForumS
             return newSection;
         }
 
-        public async Task<Section> Update(int sectionId, SectionDto section)
+        public async Task<Section> Update(int sectionId, SectionEdit section)
         {
             var entity = await _rep.Section.Value
                 .FindByCondition(s => s.Id == sectionId, true)

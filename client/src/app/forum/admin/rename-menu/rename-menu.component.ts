@@ -14,7 +14,7 @@ import { HttpException } from 'src/shared/models/http-exception.model';
 export class RenameMenuComponent implements OnInit {
 
   @Input()
-  userId;
+  currentUsername: string;
   @Input()
   username;
   userIdBlocked;
@@ -28,8 +28,8 @@ export class RenameMenuComponent implements OnInit {
     ngOnInit(): void {
       this.userIdBlocked = this.adminService.userIdBlocked;
 
-      if(!this.userId)
-        this.userId = this.adminService.user.id + '';
+      if(!this.currentUsername)
+        this.currentUsername = this.adminService.user.username;
 
       if(!this.username)
         this.username = this.adminService.user.username;
@@ -42,8 +42,8 @@ export class RenameMenuComponent implements OnInit {
         NgFormExtension.markAllAsTouched(form);
         return;
       }
-      console.log(form.value);
-      this.accountService.updateUsername(form.value.accountId, form.value).subscribe({
+
+      this.accountService.updateUsername(form.value.currentUsername, form.value).subscribe({
         next: () => {
           this.toastr.success('Name updated successfully');
         },

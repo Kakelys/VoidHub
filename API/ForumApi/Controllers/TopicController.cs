@@ -1,38 +1,50 @@
 using ForumApi.Data.Models;
 using ForumApi.DTO.DSearch;
 using ForumApi.DTO.DTopic;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.Services.Utils.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ForumApi.Data.Repository.Interfaces;
+using ForumApi.Services.FileS.Interfaces;
 
 namespace ForumApi.Controllers
 {
     [ApiController]
     [Route("api/v1/topics")]
-    public class TopicController : ControllerBase
+    public class TopicController(
+        ITopicService topicService,
+        IPostService postService,
+        ISearchService searchService,
+        IRepositoryManager rep,
+        IFileService fileService,
+        ILikeService likeService
+    ) : ControllerBase
     {
-        private readonly ITopicService _topicService;
-        private readonly IPostService _postService;
-        private readonly ISearchService _searchService;
 
-        public TopicController(
-            ITopicService topicService,
-            IPostService postService,
-            ISearchService searchService)
-        {
-            _topicService = topicService;
-            _postService = postService;
-            _searchService = searchService;
-        }
-
+        [Authorize]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetTopics([FromQuery] Offset offset, [FromQuery] DateTime time)
         {
-            return Ok(await _topicService.GetTopics(offset, time));
+            var res = await topicService.GetTopics(offset, new Params 
+            {
+                BelowTime = time
+            });
+
+            if(User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var userId = User.GetId();
+                foreach(var post in res)
+                {
+                    await likeService.UpdateLikeStatus(userId, post.Post);
+                }
+            }
+
+            return Ok(res);
         }
 
         [Authorize]
@@ -41,24 +53,36 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> GetTopic(int id, [FromQuery] Offset offset)
         {
             var allowDeleted = false;
-            if(User.Identity != null && User.Identity.IsAuthenticated)
+            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
+            if(isAuthed == true)
             {
                 if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
                     allowDeleted = true;
             }
 
-            var topic = await _topicService.GetTopic(id, allowDeleted);
+            var topic = await topicService.GetTopic(id, allowDeleted);
             if(topic == null)
                 return NotFound();
+            
+            topic.Posts = await postService.GetPostComments(topic.Post.Id, offset, new Params{IncludeDeleted = allowDeleted});
+            if(isAuthed)
+            {
+                var userId = User.GetId();
+                await likeService.UpdateLikeStatus(userId, topic.Post);
 
-            topic.Posts = await _postService.GetPostComments(topic.Post.Id, offset, allowDeleted);
+                foreach(var post in topic.Posts)
+                {
+                    await likeService.UpdateLikeStatus(userId, post.Post);
+                }
+            }
+
             return Ok(topic);
         }
 
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromQuery] SearchDto search, [FromQuery] SearchParams searchParams, [FromQuery] Page page)
         {
-            return Ok(await _searchService.SearchTopics(search.Query, searchParams, page));
+            return Ok(await searchService.SearchTopics(search.Query, searchParams, page));
         }
 
         [HttpPost]
@@ -66,16 +90,32 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> Create(TopicNew topicDto)
         {
-            var topic = await _topicService.Create(User.GetId(), topicDto);
-            return Ok(topic);
+            await rep.BeginTransaction();
+            try
+            {
+                var res = await topicService.Create(User.GetId(), topicDto);
+                // update files post ids
+                if(topicDto.FileIds.Count > 0)
+                    await fileService.Update(topicDto.FileIds.ToArray(), res.Post.Id);
+                
+                await rep.Save();
+                await rep.Commit();
+
+                return Ok(res.Topic);
+            }
+            catch
+            {
+                await rep.Rollback();
+                throw;
+            }
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = $"{Role.Admin},{Role.Moder}")]
         [BanFilter]
-        public async Task<IActionResult> Update(int id, TopicDto topicDto)
+        public async Task<IActionResult> Update(int id, TopicEdit topicDto)
         {
-            var topic = await _topicService.Update(id, topicDto);
+            var topic = await topicService.Update(id, topicDto);
             return Ok(topic);
         }
 
@@ -84,8 +124,17 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> Delete(int id)
         {
-            await _topicService.Delete(id);
+            await topicService.Delete(id);
             return Ok();
+        }
+
+        [HttpPatch("{id}/recover")]
+        [Authorize(Roles = $"{Role.Admin},{Role.Moder}")]
+        [BanFilter]
+        public async Task<IActionResult> Recover(int id)
+        {
+            var dto = await topicService.Recover(id);
+            return Ok(dto);
         }
     }
 }

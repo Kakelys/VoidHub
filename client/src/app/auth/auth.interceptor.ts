@@ -51,7 +51,7 @@ export class AuthInterceptor {
               return next.handle(modifiedReq);
             }),
             catchError((err: HttpException) => {
-              console.log('error while updating', err);
+              console.error('error while updating', err);
               if(err.error instanceof HttpErrorResponse && (err.statusCode == 401 || err.statusCode == 404)) {
                 this.handleLogout();
               }

@@ -7,6 +7,7 @@
     </ng-template>
     <div *ngIf="forum; else forumNotFound" class="flex flex-col">
       <div class="ms-6 mt-3 flex flex-col">
+        <app-breadcrumb [from]="'forum'" [id]="forum.id"></app-breadcrumb>
         <div class="text-3xl font-bold">{{forum.title}}</div>
         <div class="text-xs text-secondary-content flex flex-row">
           <div>topics: {{forum.topicsCount}}</div>
@@ -61,7 +62,7 @@
     </div>
   </app-limit-loader>
 
-  <app-new-topic *ngIf="user && showNewTopic" (close)="toggleNewTopic()" (created)="onCreated()"></app-new-topic>
+  <app-new-topic *ngIf="user && showNewTopic" (close)="toggleNewTopic()" (created)="onCreated($event)"></app-new-topic>
 
   <app-limit-loader [limit]="1" [ignore]="topics.length > 0">
     <div *ngIf="forum && topics.length > 0">

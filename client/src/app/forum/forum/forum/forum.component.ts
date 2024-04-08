@@ -54,6 +54,7 @@ export class ForumComponent implements OnDestroy {
   }
 
   async handleForumIdChange(newForumId: number) {
+    let isFirst = !this.forumId;
     if(+newForumId) {
       if(this.forumId == newForumId) {
         return;
@@ -63,6 +64,8 @@ export class ForumComponent implements OnDestroy {
       this.forumService.getForum(this.forumId)
         .subscribe((forum: Forum) => {
           this.forum = forum;
+          if(!isFirst)
+            this.loadTopicsPage();
         });
     }
   }
@@ -134,11 +137,8 @@ export class ForumComponent implements OnDestroy {
     })
   }
 
-  onCreated() {
-    this.forum.topicsCount++;
-    this.forum.postsCount++;
-    this.toggleNewTopic();
-    this.loadTopicsPage();
+  onCreated(topic: Topic) {
+    this.router.navigate(['/forum/topic/', topic.id])
   }
 
   ngOnDestroy(): void {

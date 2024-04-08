@@ -2,11 +2,13 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Offset } from "src/shared/offset.model";
 import { environment as env } from "src/environments/environment";
+import { Subject, tap } from "rxjs";
 
 @Injectable()
 export class TopicService {
 
   private baseURL = env.baseAPIUrl + '/v1/topics';
+  public topicCreated$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,
@@ -22,7 +24,10 @@ export class TopicService {
   }
 
   getTopics(offset: Offset, time: Date) {
+    let headers = new HttpHeaders().set(env.limitNames.nameParam, env.limitNames.topicLoad);
+
     return this.http.get(this.baseURL, {
+      headers: headers,
       params: {
         ...offset,
         time: time.toISOString()
@@ -31,7 +36,8 @@ export class TopicService {
   }
 
   createTopic(topic) {
-    return this.http.post(this.baseURL, topic);
+    return this.http.post(this.baseURL, topic)
+    .pipe(tap(_ => {this.topicCreated$.next()}));;
   }
 
   updateTopic(topicId, data) {
@@ -40,5 +46,9 @@ export class TopicService {
 
   deleteTopic(topicId) {
     return this.http.delete(this.baseURL + '/' + topicId);
+  }
+
+  recoverTopic(topicId) {
+    return this.http.patch(this.baseURL + '/' + topicId + '/recover', {});
   }
 }

@@ -11,7 +11,11 @@ export class SectionService {
   constructor(private http: HttpClient) {}
 
   getSections() {
-    return this.http.get<Section[]>(this.baseUrl);
+    return this.http.get(this.baseUrl);
+  }
+
+  getShortSections() {
+    return this.http.get(this.baseUrl + '/short');
   }
 
   createSection(section) {

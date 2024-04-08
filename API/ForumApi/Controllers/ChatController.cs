@@ -1,9 +1,11 @@
+using AutoMapper.Configuration.Conventions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Data.Models;
 using ForumApi.DTO.DChat;
 using ForumApi.DTO.DNotification;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Services.ChatS.Interfaces;
+using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.Services.Utils.Interfaces;
 using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +18,8 @@ namespace ForumApi.Controllers
     public class ChatController(
         IChatService chatService, 
         IMessageService messageService, 
-        INotifyService notifyService) : ControllerBase
+        INotifyService notifyService,
+        IAccountService accountService) : ControllerBase
     {
         [Authorize]
         [HttpGet]
@@ -52,7 +55,22 @@ namespace ForumApi.Controllers
         [HttpPost("personal")]
         public async Task<IActionResult> CreatePersonal(Message dto)
         {
-            return Ok(await chatService.CreatePersonal(User.GetId(), dto.TargetId, dto.Content));
+            var res = await chatService.CreatePersonal(User.GetId(), dto.TargetId, dto.Content);
+
+            Response.OnCompleted(async () => {
+                var user = await accountService.GetUser(User.GetId());
+                var notification = new NewMessageNotification
+                 {
+                    Type = "newMessage",
+                    Message = res.Item2,
+                    Chat = res.Item1,
+                    Sender = user
+                };
+
+                await notifyService.Notify(dto.TargetId, notification);
+            });
+
+            return Ok(res.Item1);
         }
 
         [Authorize]
@@ -72,7 +90,6 @@ namespace ForumApi.Controllers
                     Sender = msgRes.Sender
                 };
 
-                //chat.Members.Where(m => m.Id != msgRes.Sender.Id)
                 chat.Members.ToList().ForEach(m => {
                     if(!chat.Chat.IsGroup)
                         notification.AnotherUser = chat.Members.FirstOrDefault(cm => cm.Id != m.Id);

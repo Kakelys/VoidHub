@@ -5,8 +5,9 @@ import { FileModel } from '../../models/file.model';
 import { ToastrService } from 'ngx-toastr';
 import { environment as env } from 'src/environments/environment';
 import { ToastrExtension } from 'src/shared/toastr.extension';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, takeUntil } from 'rxjs';
 import { HttpException } from 'src/shared/models/http-exception.model';
+import { TopicService } from '../../services/topic.service';
 
 @Component({
   selector: 'app-upload-images',
@@ -31,12 +32,24 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
+    private topicService: TopicService,
     private uploadService: UploadService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.postService.postCreated$.subscribe({
+    this.postService.postCreated$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: _ => {
+        this.uploadedFiles = [];
+        this.onFilesUpdates.emit(this.uploadedFiles);
+      }
+    })
+
+    this.topicService.topicCreated$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
       next: _ => {
         this.uploadedFiles = [];
         this.onFilesUpdates.emit(this.uploadedFiles);
@@ -90,7 +103,6 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
 
     this.uploadService.upload(formData).subscribe({
       next: (file: FileModel) => {
-        console.log(file);
         this.uploadedFiles.push(file);
         this.onFilesUpdates.emit(this.uploadedFiles);
       },

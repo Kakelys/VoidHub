@@ -4,7 +4,6 @@ using ForumApi.Controllers.Filters;
 using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ForumApi.Utils.Extensions;
 
 namespace ForumApi.Controllers
 {
@@ -25,23 +24,27 @@ namespace ForumApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
-            List<SectionResponse> res = null;
-            if(User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                if(User.IsInRole(Role.Admin))
-                    res = await _sectionService.GetSections(true);
-            }
-            
-            if(res == null)
-                res = await _sectionService.GetSections();
-            
-            return Ok(res);
+            if(User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole(Role.Admin))
+                return Ok(await _sectionService.GetSections(true));   
+            else
+                return Ok(await _sectionService.GetSections());
+        }
+
+        [HttpGet("short")]
+        [Authorize]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetShort()
+        {
+            if(User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole(Role.Admin))
+                return Ok(await _sectionService.GetDtoSections(true));   
+            else
+                return Ok(await _sectionService.GetDtoSections());
         }
 
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]
-        public async Task<IActionResult> Create(SectionDto sectionDto)
+        public async Task<IActionResult> Create(SectionEdit sectionDto)
         {
             var section = await _sectionService.Create(sectionDto);
             return Ok(section);
@@ -50,7 +53,7 @@ namespace ForumApi.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]
-        public async Task<IActionResult> Update(int id, SectionDto sectionDto)
+        public async Task<IActionResult> Update(int id, SectionEdit sectionDto)
         {
             var section = await _sectionService.Update(id, sectionDto);
             return Ok(section);

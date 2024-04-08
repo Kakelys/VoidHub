@@ -7,21 +7,23 @@
     </a>
   </div>
   <div class="ms-5 flex-1 text-lg">
-    <a class="font-medium link no-underline"
-      routerLink="/forum/recent">
-      Recent
-    </a>
-    <!--
-      <a class="ms-5 text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-red-500 text-lg font-medium cursor-pointer">
-        Donation
+    <div class="block xl:hidden">
+      <a class="font-medium link no-underline"
+        routerLink="/forum/recent">
+        Recent
       </a>
-    -->
-    <a class="ms-5 font-medium link no-underline"
-      routerLink="/forum/admin-panel"
-      *ngIf="user?.role == roles.ADMIN || user?.role == roles.MODER"
-    >
-      Admin panel
-    </a>
+      <!--
+        <a class="ms-5 text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-red-500 text-lg font-medium cursor-pointer">
+          Donation
+        </a>
+      -->
+      <a class="ms-5 font-medium link no-underline"
+        routerLink="/forum/admin-panel"
+        *ngIf="user?.role == roles.ADMIN || user?.role == roles.MODER"
+      >
+        Admin panel
+      </a>
+    </div>
     <div class="grow">
 
     </div>
@@ -41,7 +43,7 @@
     </a>
     <ng-template #userMenu>
       <div class="dropdown me-5">
-        <label tabindex="0" class="btn m-1 bg-base-200 h-10 min-h-min">{{user?.username}}</label>
+        <div tabindex="0" class="btn m-1 bg-base-200 h-10 min-h-min">{{user?.username}}</div>
         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box">
           <li><a routerLink="/profile/{{user?.id}}">Profile</a></li>
           <li><a routerLink="/chats">Chats</a></li>

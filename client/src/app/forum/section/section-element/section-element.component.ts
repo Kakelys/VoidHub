@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Section } from '../../models/section.model';
 import { SectionService } from '../../services/section.service';
 import { User } from 'src/shared/models/user.model';
 import { Roles } from 'src/shared/roles.enum';
+import { SectionResponse } from '../../models/section-reponse.model';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { Roles } from 'src/shared/roles.enum';
 export class SectionElementComponent {
 
   @Input()
-  section: Section;
+  data: SectionResponse;
 
   @Input()
   user: User;
@@ -22,13 +22,14 @@ export class SectionElementComponent {
 
   editMode = false;
 
-  constructor(private sectionService: SectionService) { }
+  constructor(private sectionService: SectionService) {
+  }
 
   onEdit(data) {
-    this.sectionService.updateSection(this.section.id, data)
+    this.sectionService.updateSection(this.data.section.id, data)
     .subscribe({
       next: (section:any) => {
-        this.section.title = section.title;
+        this.data.section.title = section.title;
       }
     })
   }

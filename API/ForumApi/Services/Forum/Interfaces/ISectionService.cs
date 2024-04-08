@@ -6,7 +6,8 @@ namespace ForumApi.Services.ForumS.Interfaces
     public interface ISectionService
     {
         Task<List<SectionResponse>> GetSections(bool includeHidden = false);
-        Task<Section> Create(SectionDto section);
-        Task<Section> Update(int sectionId, SectionDto section);
+        Task<List<SectionDtoResponse>> GetDtoSections(bool includeHidden = false);
+        Task<Section> Create(SectionEdit section);
+        Task<Section> Update(int sectionId, SectionEdit section);
     }
 }

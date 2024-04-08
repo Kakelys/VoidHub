@@ -10,17 +10,17 @@ export class AccountService {
 
   constructor(private http: HttpClient) {}
 
-  updateRole(id, role: Roles) {
-    return this.http.patch(`${this.baseURL}/${id}`, {
+  updateRole(username: string, role: Roles) {
+    return this.http.patch(`${this.baseURL}/${username}/role`, {
       role: role
     });
   }
 
-  updateUsername(id, data) {
-    return this.http.patch(`${this.baseURL}/${id}/rename`, data);
+  updateUsername(username: string, data) {
+    return this.http.patch(`${this.baseURL}/${username}/rename`, data);
   }
 
-  defaultAvatar(id) {
-    return this.http.patch(`${this.baseURL}/${id}/avatar-default`, null);
+  defaultAvatar(username: string) {
+    return this.http.patch(`${this.baseURL}/${username}/avatar-default`, null);
   }
 }

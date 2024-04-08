@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './post-editor.component.html',
   styleUrls: ['./post-editor.component.css']
 })
-export class NewPostComponent {
+export class PostEditorComponent {
   editor = Editor;
   editorInstance: ClassicEditor;
 

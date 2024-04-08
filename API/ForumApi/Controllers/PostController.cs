@@ -1,6 +1,5 @@
 using ForumApi.Data.Models;
-using ForumApi.DTO.DPost;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Services.ForumS.Interfaces;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.Services.FileS.Interfaces;
+using ForumApi.DTO.DPost;
 
 namespace ForumApi.Controllers
 {
@@ -16,14 +16,29 @@ namespace ForumApi.Controllers
     public class PostController(
         IPostService _postService,
         IRepositoryManager _rep,
-        IFileService _fileService
+        IFileService _fileService,
+        ILikeService likeService
     ) : ControllerBase
     {
+        [Authorize]
+        [AllowAnonymous]
         [HttpGet("{id}/comments")]
-        public async Task<IActionResult> GetPage(int id, [FromQuery] Offset page)
+        public async Task<IActionResult> GetPage(int id, [FromQuery] Offset offset, [FromQuery] Params prms)
         {
-            var posts = await _postService.GetPostComments(id, page);
-            return Ok(posts);
+            var res = await _postService.GetPostComments(id, offset, new Params 
+            {
+                BelowTime = prms.BelowTime
+            });
+            if(User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var userId = User.GetId();
+                foreach(var post in res)
+                {
+                    await likeService.UpdateLikeStatus(userId, post.Post);
+                }
+            }
+
+            return Ok(res);
         }
 
         [HttpGet("{id}/images")]
@@ -36,7 +51,7 @@ namespace ForumApi.Controllers
         [HttpPost]
         [Authorize]
         [BanFilter]
-        public async Task<IActionResult> Create(PostDto postDto)
+        public async Task<IActionResult> Create(PostEditDto postDto)
         {
             await _rep.BeginTransaction();
             try
@@ -62,7 +77,7 @@ namespace ForumApi.Controllers
         [Authorize]
         [BanFilter]
         [PermissionActionFilter<Post>]
-        public async Task<IActionResult> Update(int id, PostDto postDto)
+        public async Task<IActionResult> Update(int id, PostEditDto postDto)
         {
             var post = await _postService.Update(id, postDto);
             return Ok(post);
@@ -74,6 +89,24 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> DeleteAsDmin(int id)
         {
             await _postService.Delete(id);
+            return Ok();
+        }
+
+        [HttpPost("{id}/add-like")]
+        [Authorize]
+        [BanFilter]
+        public async Task<IActionResult> AddLike(int id)
+        {
+            await likeService.Like(User.GetId(), id);
+            return Ok();
+        }
+        
+        [HttpDelete("{id}/rem-like")]
+        [Authorize]
+        [BanFilter]
+        public async Task<IActionResult> RemoveLike(int id)
+        {
+            await likeService.UnLike(User.GetId(), id);
             return Ok();
         }
     }

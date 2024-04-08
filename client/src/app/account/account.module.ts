@@ -12,20 +12,35 @@ import { canActivateAdmin, canActivateModer } from "../forum/admin/role.guard";
 import { ErrorMessageListComponent } from "../error-message-list/error-message-list.component";
 import { RenameMenuComponent } from "../forum/admin/rename-menu/rename-menu.component";
 import { ChatService } from "../chat/services/chat.service";
+import { AccountTopicsComponent } from './topics/topics.component';
+import { AccountPostsComponent } from './posts/posts.component';
+import { SharedEditorModule } from "src/shared/shared-editor.module";
+import { AccountPostElementComponent } from './posts/element/element.component';
+import { PostService } from "../forum/services/post.service";
+import { SharedForumModule } from "../forum/shared.forum.module";
+import { AccountTopicElement } from './topics/element/element.component';
 
 @NgModule({
   declarations: [
     ProfileComponent,
     SettingsComponent,
+    AccountTopicsComponent,
+    AccountPostsComponent,
+    AccountPostElementComponent,
+    AccountTopicElement
   ],
   imports: [
     SharedModule,
+    SharedEditorModule,
+    SharedForumModule,
     AdminComponentsModule,
     ErrorMessageListComponent,
     RouterModule.forChild([
       {path: 'settings', component: SettingsComponent, canActivate: [canActivateSelf]},
       {path: '', component: ProfileComponent},
       {path: ':id', component: ProfileComponent, children: [
+        {path: 'topics', component: AccountTopicsComponent},
+        {path: 'posts', component: AccountPostsComponent},
         {path: 'ban-menu', component: BanMenuComponent, canActivate: [canActivateAdmin]},
         {path: 'role-menu', component: RoleMenuComponent, canActivate: [canActivateAdmin]},
         {path: 'rename-menu', component: RenameMenuComponent, canActivate: [canActivateModer]},
@@ -34,7 +49,8 @@ import { ChatService } from "../chat/services/chat.service";
   ],
   providers: [
     AccountService,
-    ChatService
+    ChatService,
+    PostService
   ]
 })
 export class AccountModule {}

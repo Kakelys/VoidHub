@@ -4,6 +4,11 @@ import { PostService } from '../../services/post.service';
 import { Roles } from 'src/shared/roles.enum';
 import Editor from 'ckeditor5/build/ckeditor';
 import { environment } from 'src/environments/environment';
+import { Post } from 'src/shared/models/post-model';
+import { PostInfo } from 'src/shared/models/post-info.model';
+import { HttpException } from 'src/shared/models/http-exception.model';
+import { ToastrService } from 'ngx-toastr';
+import { ToastrExtension } from 'src/shared/toastr.extension';
 
 @Component({
   selector: 'app-post',
@@ -15,7 +20,7 @@ export class PostElementComponent {
   resourceUrl = environment.resourceURL;
 
   @Input()
-  post;
+  post: PostInfo;
 
   @Input()
   user: User;
@@ -40,15 +45,18 @@ export class PostElementComponent {
   editMode = false;
   commentsMode = false;
 
-  constructor(private postService: PostService) {
-
+  constructor(private postService: PostService,
+    private toastr: ToastrService) {
   }
 
   onPostEdit(data) {
-    this.postService.updatePost(this.post.id, data).subscribe({
+    this.postService.updatePost(this.post.post.id, data).subscribe({
       next: (post: any) => {
         this.editMode = false;
-        this.post.content = post.content;
+        this.post.post.content = post.content;
+      },
+      error: (err: HttpException) => {
+        ToastrExtension.handleErrors(this.toastr, err.errors);
       }
     })
   }
@@ -58,21 +66,42 @@ export class PostElementComponent {
   }
 
   onAdminDelete() {
-    this.postService.deletePost(this.post.id).subscribe({
+    this.postService.deletePost(this.post.post.id).subscribe({
       next: _ => this.handleDelete(),
     });
   }
 
   handleDelete() {
-    this.onDelete.emit(this.post.id);
+    this.onDelete.emit(this.post.post.id);
   }
 
-  // comments
   toggleCommentsMode() {
     this.commentsMode = !this.commentsMode;
   }
 
   updateCommentsCounter(count) {
-    this.post.commentsCount = count;
+    this.post.post.commentsCount = count;
+  }
+
+  changeLikeState() {
+    if(!this.user)
+      return;
+
+    if(!this.post.post.isLiked) {
+      this.post.post.isLiked = true;
+      this.postService.like(this.post.post.id)
+      .subscribe({
+        next: _ => {this.post.post.likesCount++},
+        error: _ => {this.post.post.isLiked = false;}
+      })
+    }
+    else {
+      this.post.post.isLiked = false;
+      this.postService.unlike(this.post.post.id)
+      .subscribe({
+        next: _ => {this.post.post.likesCount--},
+        error: _ => {this.post.post.isLiked = true;}
+      })
+    }
   }
 }

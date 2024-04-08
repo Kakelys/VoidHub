@@ -1,9 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-delete',
   templateUrl: './delete.component.html',
-  styleUrls: ['./delete.component.css']
+  styleUrls: ['./delete.component.css'],
+  standalone: true,
+  imports: [
+    CommonModule
+  ]
 })
 export class DeleteComponent {
   @Input()

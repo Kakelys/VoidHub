@@ -75,7 +75,6 @@ export class SearchComponent {
     this.searchService.searchTopics(this.query, this.searchParams, this.searchPage)
     .subscribe({
       next: data => {
-        //console.log(data)
         this.searchResult = data;
       },
       error: (err:HttpException) => {

@@ -35,61 +35,85 @@
           </div>
         </div>
       </div>
-      <div>
-        Total posts: {{profile.postsCount}}
-      </div>
-      <div>
-        Total topics: {{profile.topicsCount}}
-      </div>
-
-      <div class="flex flex-row my-auto mt-5" *ngIf="user">
-        <div *ngIf="this.pChat; else newChat" class="btn btn-neutral min-h-fit h-8">
-          <a class=""
-            routerLink="/chats/{{this.profile.id}}"
-          >
-            Send message
-          </a>
+      <div class="stats text-xs shadow w-fit">
+        <div class="stat text-center p-2">
+          <div class="stat-title">With us</div>
+          <div class="stat-value">{{daysBetween}}</div>
+          <div class="stat-desc">days</div>
         </div>
-        <ng-template #newChat>
-          <div class="btn btn-neutral min-h-fit h-8" (click)="modalStartChat.showModal()">
-            Start chat
-          </div>
-          <dialog #modalStartChat class="modal">
-            <div class="modal-box">
-              <h3 class="font-bold text-lg">Start chat with some message</h3>
-              <p class="py-2 text-xs">Press ESC key or click outside to close</p>
-              <form #startChatForm="ngForm" (ngSubmit)="onStartChat(startChatForm)">
-                <div class="form-control">
-                  <textarea
-                    id="content"
-                    name="content"
-                    class="textarea textarea-bordered"
-                    [ngClass]="{
-                      'input-error': startChatForm.controls['content']?.touched && startChatForm.controls['content'].invalid
-                    }"
-                    placeholder="Type your message here"
-                    ngModel
-                    required
-                    maxlength="3000"
-                  >
-                  </textarea>
-                </div>
-                <div class="my-4">
-                  <app-limit-loader [limit]="1">
-                    <button class="btn btn-accent text-base-content min-h-fit h-8">
-                      Send
-                    </button>
-                  </app-limit-loader>
-                </div>
-              </form>
-            </div>
-            <form method="dialog" class="modal-backdrop">
-              <button>close</button>
-            </form>
-          </dialog>
-        </ng-template>
+        <div class="stat text-center p-2">
+          <div class="stat-title">Posts</div>
+          <div class="stat-value">{{profile.postsCount}}</div>
+          <div class="stat-desc"><pre> </pre></div>
+        </div>
 
-        <div class="flex flex-row" *ngIf="(user.role == roles.ADMIN || user.role == roles.MODER)">
+        <div class="stat text-center p-2">
+          <div class="stat-title">Topics</div>
+          <div class="stat-value">{{profile.topicsCount}}</div>
+          <div class="stat-desc"><pre> </pre></div>
+        </div>
+      </div>
+
+      <div class="flex flex-col my-auto mt-5">
+        <div class="flex flex-row">
+          <div *ngIf="user">
+            <a
+              *ngIf="this.pChat; else newChat"
+              class="btn btn-neutral min-h-fit h-8"
+              routerLink="/chats/{{this.pChat.id}}"
+            >
+              Send message
+            </a>
+            <ng-template #newChat>
+              <div class="btn btn-neutral min-h-fit h-8" (click)="modalStartChat.showModal()">
+                Start chat
+              </div>
+              <dialog #modalStartChat class="modal">
+                <div class="modal-box">
+                  <h3 class="font-bold text-lg">Start chat with some message</h3>
+                  <p class="py-2 text-xs">Press ESC key or click outside to close</p>
+                  <form #startChatForm="ngForm" (ngSubmit)="onStartChat(startChatForm)">
+                    <div class="form-control">
+                      <textarea
+                        id="content"
+                        name="content"
+                        class="textarea textarea-bordered"
+                        [ngClass]="{
+                          'input-error': startChatForm.controls['content']?.touched && startChatForm.controls['content'].invalid
+                        }"
+                        placeholder="Type your message here"
+                        ngModel
+                        required
+                        maxlength="3000"
+                      >
+                      </textarea>
+                    </div>
+                    <div class="my-4">
+                      <app-limit-loader [limit]="1">
+                        <button class="btn btn-accent text-base-content min-h-fit h-8">
+                          Send
+                        </button>
+                      </app-limit-loader>
+                    </div>
+                  </form>
+                </div>
+                <form method="dialog" class="modal-backdrop">
+                  <button>close</button>
+                </form>
+              </dialog>
+            </ng-template>
+          </div>
+
+          <a class="btn btn-neutral min-h-fit h-8" routerLinkActive="bg-base-100" routerLink="topics">
+              Last topics
+          </a>
+
+          <div class="btn btn-neutral min-h-fit h-8" routerLinkActive="bg-base-100" routerLink="posts">
+              Last posts
+          </div>
+        </div>
+
+        <div class="flex flex-row" *ngIf="user && (user.role == roles.ADMIN || user.role == roles.MODER)">
           <app-admin-panel
             [skipRouting]="true"
             [blockUserId]="true">

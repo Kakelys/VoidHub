@@ -14,6 +14,7 @@ namespace ForumApi.Data
         public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<Ban> Bans { get; set; } = null!;
         public virtual DbSet<Models.File> Files { get; set; } = null!;
+        public virtual DbSet<Like> Likes { get; set; } = null!;
 
         public virtual DbSet<Chat> Chats { get; set; } = null!;
         public virtual DbSet<ChatMember> ChatMembers { get; set; } = null!;
@@ -37,6 +38,8 @@ namespace ForumApi.Data
             new ChatConfig(builder.Entity<Chat>());
             new ChatMemberConfig(builder.Entity<ChatMember>());
             new ChatMessageConfig(builder.Entity<ChatMessage>());
+
+            new LikeConfig(builder.Entity<Like>());
 
             base.OnModelCreating(builder);
         }

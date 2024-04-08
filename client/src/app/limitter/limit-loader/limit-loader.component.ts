@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { LimitterInterceptor } from '../limitter.interceptor';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { LimitterService } from '../limitter.service';
@@ -25,7 +25,9 @@ export class LimitLoaderComponent implements OnDestroy, OnInit {
 
   private readonly destroy$ = new ReplaySubject<boolean>(1);
 
-  constructor(private limitter: LimitterService) {
+  constructor(
+    private limitter: LimitterService,
+    private cdref: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -40,6 +42,7 @@ export class LimitLoaderComponent implements OnDestroy, OnInit {
       .subscribe({
         next: activeReqs => {
           this.activeReqs = activeReqs
+          this.cdref.detectChanges();
         }
       });
   }

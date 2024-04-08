@@ -5,15 +5,15 @@
       <div class="form-control">
         <input
           type="text"
-          name="accountId"
-          id="accountId"
-          placeholder="user id"
+          name="username"
+          id="username"
+          placeholder="username"
           class="input-sm bg-neutral input input-bordered"
           [ngClass]="{
-            'input-error': banForm.controls['accountId']?.touched && banForm.controls['accountId'].invalid,
+            'input-error': banForm.controls['username']?.touched && banForm.controls['username'].invalid,
             'btn-disabled': userIdBlocked
           }"
-          [ngModel]="userId"
+          [ngModel]="username"
           required
           autocomplete="on"
         />

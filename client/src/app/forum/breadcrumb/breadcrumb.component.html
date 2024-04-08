@@ -1,0 +1,15 @@
+<div *ngIf="links.length > 0" class="text-sm breadcrumbs">
+  <ul>
+    <li *ngFor="let link of links;" [ngSwitch]="link.type">
+      <a class="link no-underline" *ngSwitchCase="'section'" routerLink="/forum/sections">
+        {{link.data.title}}
+      </a>
+      <a class="link no-underline" *ngSwitchCase="'forum'" routerLink="/forum/{{link.data.id}}">
+        {{link.data.title}}
+      </a>
+      <a class="link no-underline" *ngSwitchCase="'topic'" routerLink="/forum/topic/{{link.data.id}}">
+        {{link.data.title}}
+      </a>
+    </li>
+  </ul>
+</div>

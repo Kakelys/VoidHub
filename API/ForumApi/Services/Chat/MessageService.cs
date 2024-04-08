@@ -4,7 +4,7 @@ using ForumApi.Data.Repository.Extensions;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DChat;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 using ForumApi.Services.ChatS.Interfaces;
 using ForumApi.Utils.Exceptions;
 using Microsoft.EntityFrameworkCore;

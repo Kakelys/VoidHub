@@ -2,8 +2,17 @@
   <div class="fixed inset-x-0 top-0 z-50">
     <app-header></app-header>
   </div>
-  <div class="mt-16 pt-3 grow">
-    <router-outlet></router-outlet>
+  <div class="mt-16 pt-3 flex flex-row">
+    <div class="hidden xl:block mt-3 ms-5 max-w-[164px]">
+      <app-menu class="sticky top-20">
+      </app-menu>
+    </div>
+    <div class="grow max-w-7xl">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <div class="grow">
   </div>
 
   <footer class="footer bg-neutral text-neutral-content p-5 rounded-t mt-3">

@@ -1,6 +1,5 @@
-using ForumApi.Data.Models;
 using ForumApi.DTO.DSearch;
-using ForumApi.DTO.Page;
+using ForumApi.DTO.Utils;
 
 namespace ForumApi.Services.Utils.Interfaces
 {

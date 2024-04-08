@@ -18,7 +18,6 @@ export class DefaultAvatarComponent {
     private toastr: ToastrService) {}
 
   onDefaultClick() {
-    console.log(this.accountId)
     if(!this.accountId)
     {
       this.toastr.error('Account id not provided');

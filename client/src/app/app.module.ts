@@ -21,6 +21,8 @@ import { SignalrService } from 'src/shared/signalr.service';
 import { NotifyService } from './notify/notify.service';
 import { NewMessageListener } from './notify/new-message.listener';
 import { NewMessageComponent } from './notify/new-message/new-message.component';
+import { MenuComponent } from './menu/menu.component';
+import { SectionService } from './forum/services/section.service';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { NewMessageComponent } from './notify/new-message/new-message.component'
     HeaderComponent,
     HomeComponent,
     NewMessageComponent,
+    MenuComponent,
   ],
   imports: [
     SharedModule,
@@ -49,6 +52,7 @@ import { NewMessageComponent } from './notify/new-message/new-message.component'
     LimitterService,
     SignalrService,
     NotifyService,
+    SectionService,
     NewMessageListener,
     {
       provide: LocationStrategy,
