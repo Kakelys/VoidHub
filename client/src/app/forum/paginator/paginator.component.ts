@@ -64,8 +64,13 @@ export class PaginatorComponent {
     let min = currentPape - this.range >= this.min ? currentPape - this.range : this.min;
     let max = currentPape + this.range <= this.max ? currentPape + this.range : this.max;
 
-    if(min == max)
-      return;
+    if(min > max || min == max) {
+      if(min == 1)
+        return;
+
+      min = this.max - this.range > 0 ? this.max - this.range : 1;
+      max = this.max;
+    }
 
     for(let i = min; i <= max; i++) {
       this.pages.push(i);

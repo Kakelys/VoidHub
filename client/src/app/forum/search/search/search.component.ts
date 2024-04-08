@@ -50,13 +50,14 @@ export class SearchComponent {
         withPostContent:false,
         onlyDeleted: false
       };
+
       newSearchParams.sort = params["sort"] ?? '';
       newSearchParams.withPostContent = StringExtension.ConvertToBoolean(params["withPostContent"]) ?? false;
       newSearchParams.onlyDeleted = StringExtension.ConvertToBoolean(params["onlyDeleted"]) ?? false;
 
       let newSearchPage = new Page(
-        +params["pageNumber"] ?? this.searchPage.pageNumber,
-        +params["pageSize"] ?? this.searchPage.pageSize
+        +params["pageNumber"] ? +params["pageNumber"] : this.searchPage.pageNumber,
+        +params["pageSize"] ? +params["pageSize"] : this.searchPage.pageSize,
       );
 
       let newQuery = params["query"];

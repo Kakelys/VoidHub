@@ -53,8 +53,11 @@ namespace ForumApi.Services.ForumS
             if(prms.BelowTime != null)
                 predicate.And(t => t.CreatedAt < prms.BelowTime.Value.ToUniversalTime());
 
-            if(!prms.IncludeDeleted)
+            if(!prms.IncludeDeleted && !prms.OnlyDeleted)
                 predicate.And(t => t.DeletedAt == null);
+
+            if(prms.OnlyDeleted)
+                predicate.And(t => t.DeletedAt != null);
 
             if(prms.ByAccountId != 0)
                 predicate.And(t => t.AccountId == prms.ByAccountId);
@@ -79,11 +82,23 @@ namespace ForumApi.Services.ForumS
                 .ToListAsync();
         }
 
-        public async Task<List<TopicElement>> GetTopics(int forumId, Page page)
+        public async Task<List<TopicElement>> GetTopics(int forumId, Page page, Params prms)
         {
+            var predicate = PredicateBuilder.New<Topic>(t => t.ForumId == forumId);
+            if(prms.BelowTime != null)
+                predicate.And(t => t.CreatedAt < prms.BelowTime.Value.ToUniversalTime());
+
+            if(!prms.IncludeDeleted && !prms.OnlyDeleted)
+                predicate.And(t => t.DeletedAt == null);
+
+            if(prms.OnlyDeleted)
+                predicate.And(t => t.DeletedAt != null);
+
+            if(prms.ByAccountId != 0)
+                predicate.And(t => t.AccountId == prms.ByAccountId);
+
             return await _rep.Topic.Value
-                .FindByCondition(t => t.ForumId == forumId)
-                .AllowDeleted()
+                .FindByCondition(predicate)
                 .OrderByDescending(t => t.IsPinned)
                 .ThenByDescending(t => t.CreatedAt)
                 .Select(t => new TopicElement(t)

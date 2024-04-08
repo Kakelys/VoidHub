@@ -40,7 +40,7 @@
                 <a
                   class="link no-underline group"
                   *ngFor="let forum of sect.forums"
-                  routerLink="/forum/{{forum.id}}/1"
+                  routerLink="/forum/{{forum.id}}"
                 >
                   <div class="border-b-[1px] border-neutral group-hover:border-secondary-content mt-1 py-0.5" routerLinkActive="border-accent">
                     {{forum.title | slice:0:10}}{{forum.title.length > 10 ? '...' : ''}}

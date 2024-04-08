@@ -5,6 +5,7 @@ using ForumApi.Controllers.Filters;
 using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ForumApi.DTO.DSearch;
 
 namespace ForumApi.Controllers
 {
@@ -23,16 +24,28 @@ namespace ForumApi.Controllers
             _topicService = topicService;
         }
 
+        [Authorize]
+        [AllowAnonymous]
         [HttpGet("{forumId}")]
-        public async Task<IActionResult> GetForum(int forumId)
+        public async Task<IActionResult> GetForum(int forumId, [FromQuery] Params prms)
         {
-            return Ok(await _forumService.Get(forumId));
+            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
+            if(!isAuthed || !(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
+                prms = Params.FromUser(prms);
+            
+            return Ok(await _forumService.Get(forumId, prms));
         }
 
+        [Authorize]
+        [AllowAnonymous]
         [HttpGet("{forumId}/topics")]
-        public async Task<IActionResult> GetTopicsPage(int forumId, [FromQuery] Page page)
+        public async Task<IActionResult> GetTopicsPage(int forumId, [FromQuery] Page page, [FromQuery] Params prms)
         {
-            return Ok(await _topicService.GetTopics(forumId, page));
+            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
+            if(!isAuthed || !(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
+                prms = Params.FromUser(prms);
+
+            return Ok(await _topicService.GetTopics(forumId, page, prms));
         }
 
         [HttpPost]

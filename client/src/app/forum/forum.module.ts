@@ -31,6 +31,7 @@ import { SharedEditorModule } from "src/shared/shared-editor.module";
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { BreadcrumbService } from "./services/breadcrumb.service";
 import { SharedForumModule } from "./shared.forum.module";
+import { canActivateAdmin } from "./admin/role.guard";
 
 @NgModule({
   providers: [
@@ -80,8 +81,8 @@ import { SharedForumModule } from "./shared.forum.module";
           {path:'topic/:id', redirectTo: 'topic/:id/1', pathMatch: 'full'},
           {path:'search', loadChildren: () => import('./search/search.module').then(m => m.SearchModule)},
           {path:'admin-panel', loadChildren: () => import('./admin/admin-panel.module').then(m => m.AdminPanelModule)},
-          {path:':id', redirectTo: ':id/1', pathMatch: 'full'},
-          {path:':id/:page', component: ForumComponent},
+          {path:':id', component: ForumComponent},
+          {path:':id/deleted', component: ForumComponent, canActivate: [canActivateAdmin]},
         ]}
     ])
   ],

@@ -10,6 +10,8 @@ export const environment = {
     skipParam: 'X-Limit-Skip',
 
     topicLoad: 'topic-load',
+    forumLoad: 'forum-load',
+    topicsLoad: 'topics-load',
     sectionsLoad: 'sections-load',
     chatInfoLoad: 'chat-info-load',
     chatLoads: 'chatsLoad',

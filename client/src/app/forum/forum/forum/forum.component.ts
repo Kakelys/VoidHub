@@ -13,6 +13,7 @@ import { ToastrExtension } from 'src/shared/toastr.extension';
 import { Name } from '../../models/names.model';
 import { NameService } from '../../services/name.service';
 import { HttpException } from 'src/shared/models/http-exception.model';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -28,11 +29,12 @@ export class ForumComponent implements OnDestroy {
   private destroy$ = new ReplaySubject<boolean>(1);
 
   forumId: number = 0;
-  currentPage: number = 0;
-  topicsOnPage: number = 5;
 
   showNewTopic: boolean = false;
 
+  page = new Page(1, 5);
+
+  limitNames = environment.limitNames;
   roles = Roles;
   names: Name[] = null;
 
@@ -49,8 +51,22 @@ export class ForumComponent implements OnDestroy {
 
     route.params.subscribe(async params => {
       this.handleForumIdChange(params['id']);
-      this.handlePageChange(params['page']);
     });
+
+    let firstLoad = true;
+    route.queryParams.subscribe(params => {
+      let newPage = new Page(
+        +params["pageNumber"] ? +params["pageNumber"] : this.page.pageNumber,
+        +params["pageSize"] ? +params["pageSize"] : this.page.pageSize
+      );
+
+      let isPageChanged = !this.page.Equals(newPage);
+      this.page = newPage;
+      if(isPageChanged || firstLoad) {
+        firstLoad = false;
+        this.loadTopicsPage();
+      }
+    })
   }
 
   async handleForumIdChange(newForumId: number) {
@@ -61,7 +77,8 @@ export class ForumComponent implements OnDestroy {
       }
       this.forumId = newForumId;
 
-      this.forumService.getForum(this.forumId)
+      let loadDeleted = this.router.url.indexOf("deleted") != -1;
+      this.forumService.getForum(this.forumId, loadDeleted ? {onlyDeleted: true} : {})
         .subscribe((forum: Forum) => {
           this.forum = forum;
           if(!isFirst)
@@ -70,19 +87,14 @@ export class ForumComponent implements OnDestroy {
     }
   }
 
-  async handlePageChange(newPage: number) {
-    if(+newPage) {
-      if(this.currentPage == newPage) {
-        return;
-      }
-
-      this.currentPage = newPage;
-      this.loadTopicsPage();
-    }
-  }
-
   changePage(page: number) {
-    this.router.navigate(['../', page], {relativeTo: this.route})
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        ...new Page(page, this.page.pageSize)
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
   toggleNewTopic() {
@@ -90,13 +102,14 @@ export class ForumComponent implements OnDestroy {
   }
 
   loadTopicsPage() {
-    let page = new Page(this.currentPage, this.topicsOnPage);
     this.topics = [];
 
+    let loadDeleted = this.router.url.indexOf("deleted") != -1;
     this.forumService
-      .getForumTopics(this.forumId, page)
+      .getForumTopics(this.forumId, this.page, loadDeleted ? {onlyDeleted: true} : {})
       .subscribe((topics: Topic[]) => {
         this.topics = topics;
+        console.log(topics);
       });
   }
 

@@ -5,6 +5,8 @@ using ForumApi.DTO.DForum;
 using ForumApi.Utils.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using ForumApi.Services.ForumS.Interfaces;
+using ForumApi.DTO.Utils;
+using LinqKit;
 
 namespace ForumApi.Services.ForumS
 {
@@ -21,7 +23,7 @@ namespace ForumApi.Services.ForumS
             _mapper = mapper;
         }
 
-        public async Task<ForumResponse?> Get(int forumId)
+        public async Task<ForumResponse?> Get(int forumId, Params prms)
         {
             return await _rep.Forum.Value
                 .FindByCondition(f => f.Id == forumId && f.DeletedAt == null)
@@ -31,8 +33,8 @@ namespace ForumApi.Services.ForumS
                     Title = f.Title,
                     SectionId = f.SectionId,
                     IsClosed = f.IsClosed,
-                    PostsCount = f.Topics.Where(t => t.DeletedAt == null).SelectMany(t => t.Posts).Where(p => p.DeletedAt == null).Count(),
-                    TopicsCount = f.Topics.Where(t => t.DeletedAt == null).Count()
+                    PostsCount = f.Topics.Where(t => prms.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null).SelectMany(t => t.Posts).Where(p => p.DeletedAt == null).Count(),
+                    TopicsCount = f.Topics.Where(t => prms.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null).Count()
                 }).FirstOrDefaultAsync();
         }
 

@@ -96,7 +96,17 @@ namespace ForumApi.Controllers
                 prms.OnlyDeleted = searchParams.OnlyDeleted;
             }
 
-            return Ok(await searchService.SearchTopics(search.Query, prms, page));
+            var res = await searchService.SearchTopics(search.Query, prms, page);
+            if(isAuthed)
+            {
+                var userId = User.GetId();
+                foreach(var post in res.Data)
+                {
+                    await likeService.UpdateLikeStatus(userId, post.Post);
+                }
+            }
+
+            return Ok(res);
         }
 
         [HttpPost]
