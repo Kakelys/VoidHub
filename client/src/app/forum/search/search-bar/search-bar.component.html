@@ -11,8 +11,8 @@
       </svg>
       <input
         type="text"
-        name="search"
-        id="search"
+        name="query"
+        id="query"
         placeholder="Search..."
         class="join-item input min-h-fit h-8 focus:outline-none"
         autocomplete="search"
@@ -21,16 +21,32 @@
     </div>
 
     <div *ngIf="enableParams" class="ms-1.5 mt-2">
-      <div class="flex flex-row">
-        <input
-          type="checkbox"
-          name="withContent"
-          id="withContent"
-          class="checkbox checkbox-sm"
-          [ngModel] = "withContent"
-        />
-        <div class="ms-2 text-sm">
-          Include topic content
+      <div class="flex flex-col">
+
+        <div class="flex flex-row">
+          <input
+            type="checkbox"
+            name="withPostContent"
+            id="withPostContent"
+            class="checkbox checkbox-sm"
+            [ngModel]="searchParams?.withPostContent"
+          />
+          <div class="ms-2 text-sm">
+            Include topic content
+          </div>
+        </div>
+
+        <div class="flex flex-row mt-2" *ngIf="user && user.role == roles.ADMIN">
+          <input
+            type="checkbox"
+            name="onlyDeleted"
+            id="onlyDeleted"
+            class="checkbox checkbox-sm"
+            [ngModel]="searchParams?.onlyDeleted"
+          />
+          <div class="ms-2 text-sm">
+            Only deleted
+          </div>
         </div>
       </div>
     </div>

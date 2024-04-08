@@ -5,22 +5,22 @@
         <div class="my-auto me-2">
           <div class="avatar mt-2">
             <div class="w-12 rounded">
-              <a routerLink="/profile/{{topicInfo.sender.id}}">
-                <img src="{{resourceUrl}}/{{topicInfo.sender.avatarPath}}" loading="lazy">
+              <a routerLink="/profile/{{post.sender.id}}">
+                <img src="{{resourceUrl}}/{{post.sender.avatarPath}}" loading="lazy">
               </a>
             </div>
           </div>
         </div>
         <div class="flex flex-col">
-          <a routerLink="/forum/topic/{{topicInfo.topic.id}}" class="link no-underline text-xl">
-            {{topicInfo.topic.title}}
+          <a routerLink="/forum/topic/{{post.topic.id}}" class="link no-underline text-xl">
+            {{post.topic.title}}
           </a>
           <div class="text-sm text-secondary-content">
             <div>
-              Posted: {{topicInfo.post.createdAt | withtimezone | date: 'medium'}}
+              Posted: {{post.post.createdAt | withtimezone | date: 'medium'}}
             </div>
-            <a class="link no-underline" routerLink="/profile/{{topicInfo.sender.id}}">
-              <span class="text-secondary-content">Author:</span> {{topicInfo.sender.username}}
+            <a class="link no-underline" routerLink="/profile/{{post.sender.id}}">
+              <span class="text-secondary-content">Author:</span> {{post.sender.username}}
             </a>
           </div>
         </div>
@@ -32,7 +32,7 @@
         }"
       >
         <div class="grow">
-          <ckeditor [ngModel]="topicInfo.post.content | reducePost:200:11" [editor]="editor" [config]="{toolbar: []}" [disabled]="true" class="ck-viewer">
+          <ckeditor [ngModel]="post.post.content | reducePost:symbolLimit:tagLimit" [editor]="editor" [config]="{toolbar: []}" [disabled]="true" class="ck-viewer">
           </ckeditor>
         </div>
 
@@ -63,7 +63,7 @@
             <div class="flex flex-row mx-2">
               <div class="my-auto me-1">
                 <div>
-                  {{topicInfo.post.commentsCount}}
+                  {{post.post.commentsCount}}
                 </div>
               </div>
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 fill-none" viewBox="0 0 24 24">

@@ -4,7 +4,6 @@ import { ForumElementComponent } from "./forum/forum-element/forum-element.compo
 import { SectionListComponent } from "./section/section-list/section-list.component";
 import { SectionElementComponent } from "./section/section-element/section-element.component";
 import { TopicElementComponent } from "./topic/topic-element/topic-element.component";
-import { PostElementComponent } from "./post/post-element/post-element.component";
 import { RouterModule } from "@angular/router";
 import { MainComponent } from './main/main.component';
 import { TopicComponent } from './topic/topic/topic.component';
@@ -15,10 +14,7 @@ import { SectionService } from "./services/section.service";
 import { NewForumComponent } from './forum/new-forum/new-forum.component';
 import { ForumService } from "./services/forum.service";
 import { NewTopicComponent } from './topic/new-topic/new-topic.component';
-import { TopicService } from "./services/topic.service";
 import { PaginatorComponent } from './paginator/paginator.component';
-import { PostService } from "./services/post.service";
-import { PostEditorComponent } from './post/post-editor/post-editor.component';
 import { DeleteComponent } from './shared/delete/delete.component';
 import { TitleEditorComponent } from './title-editor/title-editor.component';
 import { ForumComponent } from "./forum/forum/forum.component";
@@ -26,19 +22,14 @@ import { PinnedIconComponent } from './shared/pinned-icon/pinned-icon.component'
 import { ClosedIconComponent } from './shared/closed-icon/closed-icon.component';
 import { AdminService } from "./admin/services/admin.service";
 import { BanService } from "./admin/services/ban.service";
-import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
-import { CommentsComponent } from './post/comments/comments.component';
 import { AccountService } from "./services/account.service";
 import { RecentComponent } from "./recent/recent.component";
 import { ReducePost } from "./recent/reduce-post.pipe";
 import { TruncatePipe } from "src/shared/truncate.pipe";
 import { NameService } from "./services/name.service";
-import { UploadImagesComponent } from './post/upload-images/upload-images.component';
-import { UploadService } from "./services/upload.service";
 import { SharedEditorModule } from "src/shared/shared-editor.module";
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { BreadcrumbService } from "./services/breadcrumb.service";
-import { RecentElementComponent } from './recent/recent-element/recent-element.component';
 import { SharedForumModule } from "./shared.forum.module";
 
 @NgModule({
@@ -65,7 +56,6 @@ import { SharedForumModule } from "./shared.forum.module";
     ForumElementComponent,
     RecentComponent,
     BreadcrumbComponent,
-    RecentElementComponent,
   ],
   imports: [
     SharedModule,

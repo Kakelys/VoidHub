@@ -12,7 +12,10 @@ import { TopicInfo } from '../../models/topic-info.model';
 export class RecentElementComponent extends PostElementComponent{
 
   @Input()
-  topicInfo: TopicInfo;
+  symbolLimit: number = 200;
+
+  @Input()
+  tagLimit: number = 11;
 
   constructor(postService: PostService, toastr: ToastrService) {
     super(postService, toastr)

@@ -79,10 +79,24 @@ namespace ForumApi.Controllers
             return Ok(topic);
         }
 
+        [Authorize]
+        [AllowAnonymous]
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromQuery] SearchDto search, [FromQuery] SearchParams searchParams, [FromQuery] Page page)
         {
-            return Ok(await searchService.SearchTopics(search.Query, searchParams, page));
+            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
+            var prms = new SearchParams
+            {
+                Sort = searchParams.Sort,
+                WithPostContent = searchParams.WithPostContent
+            };
+
+            if(isAuthed && (User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
+            {
+                prms.OnlyDeleted = searchParams.OnlyDeleted;
+            }
+
+            return Ok(await searchService.SearchTopics(search.Query, prms, page));
         }
 
         [HttpPost]

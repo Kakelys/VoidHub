@@ -2,7 +2,7 @@
   <div class="mb-3">
     <app-search-bar
       [searchQuery]="query"
-      [withContent]="searchParams.withPostContent"
+      [searchParams]="searchParams"
       (onForceSearch)="search()"
       [enableParams]="true"
     >
@@ -14,22 +14,35 @@
     </app-error-message-list>
   </div>
 
-  <app-limit-loader [limit]="1" [ignore]="searchResult">
-    <div *ngIf="searchResult">
-      <ng-template #emptySearch>
+  <div *ngIf="searchResult">
+    <ng-template #emptySearch>
+      <div class="ms-5 text-warning">
         No topics found
-      </ng-template>
-
-      <div *ngIf="searchResult.topics.length > 0; emptySearch">
+      </div>
+    </ng-template>
+    <div *ngIf="searchResult.data.length > 0; else emptySearch">
+      <div class="py-1">
         <app-paginator
           (changePage)="changePage($event)"
           [max]="searchResult.searchCount / searchPage.pageSize"
           [currentPage]="searchPage.pageNumber">
         </app-paginator>
+      </div>
 
-        <app-topic-element *ngFor="let item of searchResult.topics" [topic]="item">
-        </app-topic-element>
+      <app-recent-element
+        *ngFor="let el of searchResult.data"
+        [post]="{topic: el.topic, post: el.post, sender: el.sender}" [user]="user" [enableDeliting]="false"
+      ></app-recent-element>
+
+      <div class="py-1">
+        <app-paginator
+          (changePage)="changePage($event)"
+          [max]="searchResult.searchCount / searchPage.pageSize"
+          [currentPage]="searchPage.pageNumber">
+        </app-paginator>
       </div>
     </div>
+  </div>
+  <app-limit-loader [limit]="1">
   </app-limit-loader>
 </div>
