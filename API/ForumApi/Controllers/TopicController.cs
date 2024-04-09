@@ -24,18 +24,17 @@ namespace ForumApi.Controllers
         ILikeService likeService
     ) : ControllerBase
     {
-
         [Authorize]
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetTopics([FromQuery] Offset offset, [FromQuery] DateTime time)
         {
-            var res = await topicService.GetTopics(offset, new Params 
+            var res = await topicService.GetTopics(offset, new Params
             {
                 BelowTime = time
             });
 
-            if(User.Identity != null && User.Identity.IsAuthenticated)
+            if(User.Identity?.IsAuthenticated == true)
             {
                 var userId = User.GetId();
                 foreach(var post in res)
@@ -53,8 +52,8 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> GetTopic(int id, [FromQuery] Offset offset)
         {
             var allowDeleted = false;
-            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
-            if(isAuthed == true)
+            var isAuthed = User.Identity?.IsAuthenticated == true;
+            if(isAuthed)
             {
                 if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
                     allowDeleted = true;
@@ -63,7 +62,7 @@ namespace ForumApi.Controllers
             var topic = await topicService.GetTopic(id, allowDeleted);
             if(topic == null)
                 return NotFound();
-            
+
             topic.Posts = await postService.GetPostComments(topic.Post.Id, offset, new Params{IncludeDeleted = allowDeleted});
             if(isAuthed)
             {
@@ -84,7 +83,7 @@ namespace ForumApi.Controllers
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromQuery] SearchDto search, [FromQuery] SearchParams searchParams, [FromQuery] Page page)
         {
-            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
+            var isAuthed = User.Identity?.IsAuthenticated == true;
             var prms = new SearchParams
             {
                 Sort = searchParams.Sort,
@@ -120,8 +119,8 @@ namespace ForumApi.Controllers
                 var res = await topicService.Create(User.GetId(), topicDto);
                 // update files post ids
                 if(topicDto.FileIds.Count > 0)
-                    await fileService.Update(topicDto.FileIds.ToArray(), res.Post.Id);
-                
+                    await fileService.Update([..topicDto.FileIds], res.Post.Id);
+
                 await rep.Save();
                 await rep.Commit();
 

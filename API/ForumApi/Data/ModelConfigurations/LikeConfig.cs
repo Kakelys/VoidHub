@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations
 {
-    public class LikeConfig 
+    public class LikeConfig
     {
         public LikeConfig(EntityTypeBuilder<Like> builder)
         {

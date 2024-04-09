@@ -12,19 +12,12 @@ namespace ForumApi.Controllers
 {
     [ApiController]
     [Route("api/v1/bans")]
-    public class BanController : ControllerBase
+    public class BanController(IBanService banService) : ControllerBase
     {
-        private readonly IBanService _banService;
-
-        public BanController(IBanService banService)
-        {
-            _banService = banService;
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetBans([FromQuery] Page page)
         {
-            return Ok(await _banService.GetBans(page));
+            return Ok(await banService.GetBans(page));
         }
 
         [HttpPost]
@@ -32,7 +25,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> Create(BanEdit ban)
         {
-            return Ok(await _banService.Create(User.GetId(), ban));
+            return Ok(await banService.Create(User.GetId(), ban));
         }
 
         [HttpPut("{id}")]
@@ -40,7 +33,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> Update(int id, BanEdit ban)
         {
-            return Ok(await _banService.Update(User.GetId(), id, ban));
+            return Ok(await banService.Update(User.GetId(), id, ban));
         }
 
         [HttpDelete]
@@ -49,7 +42,7 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> Delete([FromQuery] string username)
         {
             Console.WriteLine("ban");
-            await _banService.Delete(User.GetId(), username);
+            await banService.Delete(User.GetId(), username);
             return Ok();
         }
     }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Data
 {
-    public class ForumDbContext : DbContext
+    public class ForumDbContext(DbContextOptions<ForumDbContext> options) : DbContext(options)
     {
         public virtual DbSet<Token> Tokens { get; set; } = null!;
         public virtual DbSet<Account> Accounts { get; set; } = null!;
@@ -20,26 +20,22 @@ namespace ForumApi.Data
         public virtual DbSet<ChatMember> ChatMembers { get; set; } = null!;
         public virtual DbSet<ChatMessage> ChatMessages { get; set; } = null!;
 
-        public ForumDbContext(DbContextOptions<ForumDbContext> options) 
-            : base(options)
-        {}
-        
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            new AccountConfig(builder.Entity<Account>());
-            new TokenConfig(builder.Entity<Token>());
-            new SectionConfig(builder.Entity<Section>());
-            new TopicConfig(builder.Entity<Topic>());
-            new ForumConfig(builder.Entity<Forum>());
-            new PostConfig(builder.Entity<Post>());
-            new BanConfig(builder.Entity<Ban>()) ;
-            new FileConfig(builder.Entity<Models.File>());
+            _ = new AccountConfig(builder.Entity<Account>());
+            _ = new TokenConfig(builder.Entity<Token>());
+            _ = new SectionConfig(builder.Entity<Section>());
+            _ = new TopicConfig(builder.Entity<Topic>());
+            _ = new ForumConfig(builder.Entity<Forum>());
+            _ = new PostConfig(builder.Entity<Post>());
+            _ = new BanConfig(builder.Entity<Ban>());
+            _ = new FileConfig(builder.Entity<Models.File>());
 
-            new ChatConfig(builder.Entity<Chat>());
-            new ChatMemberConfig(builder.Entity<ChatMember>());
-            new ChatMessageConfig(builder.Entity<ChatMessage>());
+            _ = new ChatConfig(builder.Entity<Chat>());
+            _ = new ChatMemberConfig(builder.Entity<ChatMember>());
+            _ = new ChatMessageConfig(builder.Entity<ChatMessage>());
 
-            new LikeConfig(builder.Entity<Like>());
+            _ = new LikeConfig(builder.Entity<Like>());
 
             base.OnModelCreating(builder);
         }

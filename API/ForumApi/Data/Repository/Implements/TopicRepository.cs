@@ -3,12 +3,8 @@ using ForumApi.Data.Repository.Interfaces;
 
 namespace ForumApi.Data.Repository.Implements
 {
-    public class TopicRepository : RepositoryBase<Topic>, ITopicRepository
+    public class TopicRepository(ForumDbContext context) : RepositoryBase<Topic>(context), ITopicRepository
     {
-        public TopicRepository(ForumDbContext context) : base(context)
-        {
-        }
-
         public override void Delete(Topic entity)
         {
             entity.DeletedAt = DateTime.UtcNow;

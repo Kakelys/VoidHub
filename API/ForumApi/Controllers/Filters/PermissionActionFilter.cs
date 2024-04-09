@@ -23,10 +23,10 @@ namespace ForumApi.Controllers.Filters
         {
             var userId = context.HttpContext.User.GetId();
 
-            if (!context.ActionArguments.ContainsKey("id"))
+            if (!context.ActionArguments.TryGetValue("id", out object? value))
                 throw new ArgumentNullException("Id is not provided");
-            
-            if(!int.TryParse(context.ActionArguments["id"]?.ToString(), out int entityId))
+
+            if(!int.TryParse(value?.ToString(), out int entityId))
                 throw new BadRequestException("Id is not valid");
 
             var db = context.HttpContext.RequestServices.GetService<ForumDbContext>()

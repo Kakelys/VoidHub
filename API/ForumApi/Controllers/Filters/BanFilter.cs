@@ -24,7 +24,7 @@ namespace ForumApi.Controllers.Filters
                 .FindByCondition(b => b.AccountId == userId && b.IsActive && b.ExpiresAt > DateTime.UtcNow)
                 .OrderByDescending(b => b.IsActive)
                 .ThenByDescending(b => b.ExpiresAt)
-                .Select(b => new BanResponse 
+                .Select(b => new BanResponse
                 {
                     Id = b.Id,
                     Reason = b.Reason,
@@ -39,6 +39,5 @@ namespace ForumApi.Controllers.Filters
 
             await next();
         }
-
     }
 }

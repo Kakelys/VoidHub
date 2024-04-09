@@ -22,7 +22,7 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> GetForumNames()
         {
             List<Name>? res = null;
-            if(User.Identity != null && User.Identity.IsAuthenticated)
+            if(User.Identity?.IsAuthenticated == true)
             {
                 if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
                     res = await namesService.GetForums(true);

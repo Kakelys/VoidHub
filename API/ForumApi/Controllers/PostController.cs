@@ -25,11 +25,12 @@ namespace ForumApi.Controllers
         [HttpGet("{id}/comments")]
         public async Task<IActionResult> GetPage(int id, [FromQuery] Offset offset, [FromQuery] Params prms)
         {
-            var res = await _postService.GetPostComments(id, offset, new Params 
+            var res = await _postService.GetPostComments(id, offset, new Params
             {
                 BelowTime = prms.BelowTime
             });
-            if(User.Identity != null && User.Identity.IsAuthenticated)
+
+            if(User.Identity?.IsAuthenticated == true)
             {
                 var userId = User.GetId();
                 foreach(var post in res)
@@ -59,8 +60,8 @@ namespace ForumApi.Controllers
                 var post = await _postService.Create(User.GetId(), postDto);
                 // update files post ids
                 if(postDto.FileIds.Count > 0)
-                    await _fileService.Update(postDto.FileIds.ToArray(), post.Id);
-                
+                    await _fileService.Update([..postDto.FileIds], post.Id);
+
                 await _rep.Save();
                 await _rep.Commit();
 
@@ -100,7 +101,7 @@ namespace ForumApi.Controllers
             await likeService.Like(User.GetId(), id);
             return Ok();
         }
-        
+
         [HttpDelete("{id}/rem-like")]
         [Authorize]
         [BanFilter]

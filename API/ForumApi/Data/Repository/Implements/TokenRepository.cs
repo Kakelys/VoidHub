@@ -4,12 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Data.Repository.Implements
 {
-    public class TokenRepository : RepositoryBase<Token>, ITokenRepository
+    public class TokenRepository(ForumDbContext context) : RepositoryBase<Token>(context), ITokenRepository
     {
-        public TokenRepository(ForumDbContext context) : base(context)
-        {
-        }
-
         public IQueryable<Token> FindByToken(string refreshToken, bool asTracking = false) => 
             FindByCondition(t => t.RefreshToken == refreshToken, asTracking);
 

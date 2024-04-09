@@ -26,7 +26,7 @@ namespace ForumApi.Controllers
         ITopicService topicService,
         IRepositoryManager rep,
         ILikeService likeService) : ControllerBase
-    {   
+    {
         private readonly ImageOptions _imageOptions = options.Value;
 
         [HttpGet("{id}")]

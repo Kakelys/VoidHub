@@ -42,6 +42,6 @@ namespace ForumApi.Data.Repository
             services.AddScoped<IRepositoryManager, RepositoryManager>();
 
             return services;
-        }        
+        }
     }
 }

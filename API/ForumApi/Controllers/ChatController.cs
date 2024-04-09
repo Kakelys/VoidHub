@@ -1,4 +1,3 @@
-using AutoMapper.Configuration.Conventions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Data.Models;
 using ForumApi.DTO.DChat;
@@ -16,8 +15,8 @@ namespace ForumApi.Controllers
     [ApiController]
     [Route("api/v1/chats")]
     public class ChatController(
-        IChatService chatService, 
-        IMessageService messageService, 
+        IChatService chatService,
+        IMessageService messageService,
         INotifyService notifyService,
         IAccountService accountService) : ControllerBase
     {
@@ -50,7 +49,7 @@ namespace ForumApi.Controllers
         {
             return Ok(await messageService.GetMesages(chatId, offset, time));
         }
-        
+
         [Authorize]
         [HttpPost("personal")]
         public async Task<IActionResult> CreatePersonal(Message dto)
@@ -100,6 +99,5 @@ namespace ForumApi.Controllers
 
             return Ok(msgRes);
         }
-
     }
 }

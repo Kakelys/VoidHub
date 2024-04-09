@@ -11,11 +11,8 @@ namespace ForumApi.Utils.Extensions
     {
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
-            services.AddFluentValidationAutoValidation(fv => 
-            {
-                fv.DisableDataAnnotationsValidation = true;
-            });
-            
+            services.AddFluentValidationAutoValidation(fv => fv.DisableDataAnnotationsValidation = true);
+
             services.AddScoped<IValidator<Page>, PageValidator>();
             services.AddScoped<IValidator<Offset>, OffsetValidator>();
 

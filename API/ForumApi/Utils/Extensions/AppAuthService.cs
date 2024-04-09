@@ -9,14 +9,14 @@ namespace ForumApi.Utils.Extensions
     {
         public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration config)
         {
-            services.AddAuthentication(options => 
+            services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(o => 
+            }).AddJwtBearer(o =>
             {
-                var jwtKey = config.GetSection(JwtOptions.Jwt).Get<JwtOptions>() ?? 
+                var jwtKey = config.GetSection(JwtOptions.Jwt).Get<JwtOptions>() ??
                     throw new NullReferenceException("JwtOptions.AccessSecret");
 
                 o.TokenValidationParameters = new TokenValidationParameters

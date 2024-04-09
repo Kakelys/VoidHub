@@ -3,10 +3,7 @@ using ForumApi.Data.Repository.Interfaces;
 
 namespace ForumApi.Data.Repository.Implements
 {
-    public class ChatMemberRepository : RepositoryBase<ChatMember>, IChatMemberRepository
+    public class ChatMemberRepository(ForumDbContext context) : RepositoryBase<ChatMember>(context), IChatMemberRepository
     {
-        public ChatMemberRepository(ForumDbContext context) : base(context)
-        {
-        }
     }
 }

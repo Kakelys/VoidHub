@@ -8,21 +8,14 @@ namespace ForumApi.Controllers
 {
     [ApiController]
     [Route("api/v1/tokens")]
-    public class TokenController : ControllerBase
+    public class TokenController(ITokenService tokenService) : ControllerBase
     {
-        private readonly ITokenService _tokenService;
-
-        public TokenController(ITokenService tokenService)
-        {
-            _tokenService = tokenService;
-        }        
-
         [HttpDelete("{token}")]
         [Authorize]
         [PermissionActionFilter<Token>]
         public async Task<IActionResult> Revoke(string token)
         {
-            await _tokenService.Revoke(token);
+            await tokenService.Revoke(token);
             return Ok();
         }
     }

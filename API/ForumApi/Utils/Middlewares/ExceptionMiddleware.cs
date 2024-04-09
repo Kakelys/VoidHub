@@ -3,24 +3,15 @@ using ForumApi.Utils.Exceptions;
 
 namespace ForumApi.Utils.Middlewares
 {
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware(
+        RequestDelegate next,
+        ILogger<ExceptionMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
-
-        public ExceptionMiddleware(
-            RequestDelegate next,
-            ILogger<ExceptionMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
-
         public async Task InvokeAsync(HttpContext context)
         {
             try
             {
-                await _next(context);
+                await next(context);
             }
             catch(ArgumentNullException ex)
             {
@@ -46,13 +37,13 @@ namespace ForumApi.Utils.Middlewares
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
+                logger.LogError(ex, ex.Message);
 
                 await HandleError(context, 500, "Internal server error.");
             }
         }
 
-        private async Task HandleError(HttpContext context, int statusCode, string message)
+        private static async Task HandleError(HttpContext context, int statusCode, string message)
         {
             context.Response.StatusCode = statusCode;
             await context.Response.WriteAsync(message);

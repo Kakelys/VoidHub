@@ -9,8 +9,7 @@ namespace ForumApi.Data.Models
         public bool IsGroup { get; set; }
 
         [JsonIgnore]
-        public virtual List<ChatMember> Members { get; set; } = new();
-        [JsonIgnore]
-        public virtual List<ChatMessage> Messages { get; set; } = new();
+        public virtual List<ChatMember> Members { get; set; } = [];
+        public virtual List<ChatMessage> Messages { get; set; } = [];
     }
 }

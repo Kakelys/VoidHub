@@ -5,7 +5,7 @@ namespace ForumApi.Options
     public class JwtOptions
     {
         public const string Jwt = "Jwt";
-        
+
         [Required]
         public string Issuer { get;set; } = "";
         [Required]
@@ -19,6 +19,6 @@ namespace ForumApi.Options
         [Range(0, int.MaxValue)]
         public int RefreshLifetimeInMinutes { get;set; } = 0;
         [Range(0, int.MaxValue)]
-        public int MaxTokenCount { get;set; } = 0;        
+        public int MaxTokenCount { get;set; } = 0;
     }
 }

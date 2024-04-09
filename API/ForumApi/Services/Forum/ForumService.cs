@@ -64,6 +64,9 @@ namespace ForumApi.Services.ForumS
                 .FindByCondition(f => f.DeletedAt == null && f.Id == forumId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException("Forum not found");
 
+            if(entity.Topics.Count() > 0)
+                throw new BadRequestException("Cannot delete forum whilte it have topics");
+
             _rep.Forum.Value.Delete(entity);
             await _rep.Save();
         }

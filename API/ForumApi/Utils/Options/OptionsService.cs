@@ -15,6 +15,6 @@ namespace ForumApi.Options
                 .ValidateOnStart();
 
             return services;
-        }        
+        }
     }
 }

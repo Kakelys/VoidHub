@@ -19,7 +19,7 @@ namespace ForumApi.Controllers
         IOptions<ImageOptions> options
     ) : ControllerBase
     {
-        private ImageOptions _imageOptions = options.Value;
+        private readonly ImageOptions _imageOptions = options.Value;
 
         [HttpPost]
         [Authorize]
@@ -37,7 +37,7 @@ namespace ForumApi.Controllers
                 Path = $"{_imageOptions.PostImageFolder}/{accountId}{Guid.NewGuid()}{_imageOptions.FileType}",
             };
 
-            return Ok(await uploadService.UploadImage(newFileDto.File, fileDto));
+            return Ok(await uploadService.UploadImage(newFileDto!.File, fileDto));
         }
 
         [HttpDelete()]

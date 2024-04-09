@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations
 {
-    public class AccountConfig 
+    public class AccountConfig
     {
         public AccountConfig(EntityTypeBuilder<Account> builder)
         {

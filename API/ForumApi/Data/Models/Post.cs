@@ -24,13 +24,13 @@ namespace ForumApi.Data.Models
         public virtual Account Author { get; set; } = null!;
 
         [JsonIgnore]
-        public virtual List<Post> Comments { get; set; } = new();
+        public virtual List<Post> Comments { get; set; } = [];
         [JsonIgnore]
-        public virtual Post? Ancestor { get; set; } = null!;
+        public virtual Post? Ancestor { get; set; }
 
         [JsonIgnore]
-        public virtual List<File> Files { get; set; } = new();
+        public virtual List<File> Files { get; set; } = [];
         [JsonIgnore]
-        public virtual List<Like> Likes { get; set; } = new();
+        public virtual List<Like> Likes { get; set; } = [];
     }
 }

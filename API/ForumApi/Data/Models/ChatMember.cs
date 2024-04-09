@@ -15,6 +15,6 @@ namespace ForumApi.Data.Models
         public virtual Chat Chat { get; set; } = null!;
 
         [JsonIgnore]
-        public virtual List<ChatMessage> Messages { get; set; } = new();
+        public virtual List<ChatMessage> Messages { get; set; } = [];
     }
 }

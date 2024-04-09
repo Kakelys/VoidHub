@@ -8,6 +8,6 @@ namespace ForumApi.Data.Repository.Interfaces
         IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool asTracking = false);
         T Create(T entity);
         void Delete(T entity);
-        void DeleteMany(IEnumerable<T> entities);        
+        void DeleteMany(IEnumerable<T> entities);
     }
 }
