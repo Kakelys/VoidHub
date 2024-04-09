@@ -30,7 +30,7 @@ export class RoleMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.userIdBlocked = this.adminService.userIdBlocked;
-    this.username = this.adminService.user.username;
+    this.username = this.adminService.user?.username ?? '';
   }
 
   onSubmit(form: NgForm) {

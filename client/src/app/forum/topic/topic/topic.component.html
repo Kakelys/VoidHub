@@ -6,7 +6,7 @@
         [reqName]="limitNames.topicLoad"
       >
         <div class="text-center text-xl">
-          Topic not found or it have been deleted
+          {{ 'lables.topic-not-found-or-deleted' | translate }}
         </div>
       </app-limit-loader>
     </ng-template>
@@ -17,7 +17,7 @@
           <div class="text-3xl font-bold">
             {{topic.topic.title}}
             <span *ngIf="topic.topic.deletedAt" class="text-error">
-              [Deleted]
+              {{ 'lables.deleted' | translate }}
             </span>
           </div>
 
@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="text-xs text-secondary-content flex flex-row">
-          <div>posts: {{topic.post.commentsCount}}</div>
+          <div>{{ 'forum.posts' | translate }}: {{topic.post.commentsCount}}</div>
         </div>
         <div class="flex flex-row my-auto" *ngIf="user && user?.role == roles.ADMIN || user?.role == roles.MODER">
           <div>
@@ -43,7 +43,7 @@
             >
               <label class="form-control w-full max-w-xs">
                 <div class="label">
-                  <span class="label-text">Changing forum</span>
+                  <span class="label-text">{{ 'lables.changing-forum' | translate }}</span>
                 </div>
                 <select
                   class="select select-bordered"
@@ -68,7 +68,7 @@
                   name="isClosed"
                   [(ngModel)]="topic.topic.isClosed"
                 >
-                <label class="label">Closed</label>
+                <label class="label">{{ 'lables.closed' | translate }}</label>
               </div>
               <div class="flex flex-row">
                 <input
@@ -78,7 +78,7 @@
                   name="isPinned"
                   [(ngModel)]="topic.topic.isPinned"
                 >
-              <label class="label">Pinned</label>
+              <label class="label">{{ 'lables.pinned' | translate }}</label>
               </div>
             </app-title-editor>
           </div>
@@ -90,7 +90,7 @@
           <div *ngIf="topic.topic.deletedAt">
             <app-confirm
               (onConfirm)="onConfirmRecover()"
-              [confirmContent]="'Confirm recover'"
+              [confirmContent]="'lables.confirm-recover' | translate"
             >
               <svg xmlns="http://www.w3.org/2000/svg"
                 [style.width]="'1.5em'"
@@ -144,7 +144,7 @@
         [topicId]="topic.topic.id"
         [ancestorId]="topic?.post.id"
         [content]="newPostContent"
-        [cancelPlaceholder]="'Clear'"
+        [cancelPlaceholder]="'forms.clear' | translate"
         (onCreate)="onPostCreate($event)">
       </app-post-editor>
     </div>

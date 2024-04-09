@@ -3,7 +3,7 @@
     <form #newSectionForm="ngForm" (ngSubmit)="onSubmit(newSectionForm)" >
       <div class="flex flex-col items-center p-5">
         <div class="select-none pt-3 text-2xl text-secondary-content">
-          New section
+          {{ 'lables.new-section' | translate }}
         </div>
         <app-error-message-list [messages]="errorMessages"></app-error-message-list>
         <div class="form-control">
@@ -12,7 +12,7 @@
             class="input-sm bg-neutral mt-2 input input-bordered "
             id="title"
             name="title"
-            placeholder="Title"
+            placeholder="{{ 'forms.title' | translate }}"
             [ngClass]="{
               'input-error': newSectionForm.controls['title']?.touched && newSectionForm.controls['title'].errors?.['required']
             }"
@@ -25,13 +25,13 @@
             <span
               class="label-text-alt text-error"
               *ngIf="newSectionForm.controls['title']?.touched && newSectionForm.controls['title'].errors?.['required']">
-              Title is required
+              {{ 'forms-errors.title-required' | translate }}
             </span>
             <span
               class="label-text-alt text-error"
               *ngIf="newSectionForm.controls['title']?.touched &&
                 (newSectionForm.controls['title'].value.length < 3 || newSectionForm.controls['title'].value.length > 255)">
-              Title length must be between 3 and 255 characters
+              {{ 'forms-errors.title-length' | translate }}
             </span>
           </label>
         </div>
@@ -42,19 +42,19 @@
             class="input-sm bg-neutral mt-2 input input-bordered "
             id="orderPosition"
             name="orderPosition"
-            placeholder="order pisition"
+            placeholder="{{ 'forms.order-position' | translate }}"
             required
             ngModel="0"
             min="0"
             >
           <label class="flex flex-col items-start label pt-0.5">
-            <span class="label-text-alt">Order position on main page</span>
-            <span class="label-text-alt">0 - on the top</span>
+            <span class="label-text-alt">{{ 'labels.order-position-on-main-page' | translate }}</span>
+            <span class="label-text-alt">{{ 'labels.0-on-the-top' | translate }}</span>
           </label>
         </div>
         <button
           class="mb-3 mt-5 btn btn-accent text-base-100 min-h-fit h-8">
-          Create
+          {{ 'forms.create' | translate }}
         </button>
       </div>
     </form>

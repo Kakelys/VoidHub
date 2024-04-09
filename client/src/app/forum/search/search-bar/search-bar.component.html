@@ -13,7 +13,7 @@
         type="text"
         name="query"
         id="query"
-        placeholder="Search..."
+        placeholder="{{ 'forms.search' | translate }}"
         class="join-item input min-h-fit h-8 focus:outline-none"
         autocomplete="search"
         [ngModel]="searchQuery"
@@ -32,7 +32,7 @@
             [ngModel]="searchParams?.withPostContent"
           />
           <div class="ms-2 text-sm">
-            Include topic content
+            {{ 'search.include-content' | translate }}
           </div>
         </div>
 
@@ -45,7 +45,7 @@
             [ngModel]="searchParams?.onlyDeleted"
           />
           <div class="ms-2 text-sm">
-            Only deleted
+            {{ 'search.only-deleted' | translate }}
           </div>
         </div>
       </div>

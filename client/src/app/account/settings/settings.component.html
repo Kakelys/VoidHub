@@ -7,7 +7,7 @@
   <div class="flex flex-row">
     <div class="flex flex-col">
       <div class="text-2xl mb-2">
-        Profile settings:
+        {{ 'profile.settings-label' | translate }}:
       </div>
       <form #accountSettings="ngForm" (ngSubmit)="onProfileSubmit(accountSettings)" >
         <div class="form-control">
@@ -15,7 +15,7 @@
             type="text"
             name="username"
             id="username"
-            placeholder="Username"
+            placeholder="{{ 'forms.username' | translate }}"
             class="input-sm bg-neutral input input-bordered"
             [ngClass]="{
               'input-error': accountSettings.controls['username']?.touched && accountSettings.controls['username'].invalid,
@@ -30,7 +30,7 @@
             type="text"
             name="email"
             id="email"
-            placeholder="Email"
+            placeholder="{{ 'forms.email' | translate }}"
             class="input-sm bg-neutral input input-bordered"
             [ngClass]="{
               'input-error': accountSettings.controls['email']?.touched && accountSettings.controls['email'].invalid,
@@ -46,7 +46,7 @@
             type="password"
             id="oldPassword"
             name="oldPassword"
-            placeholder="Old password"
+            placeholder="{{ 'forms.old-password' | translate }}"
             class="input-sm bg-neutral mt-2 input input-bordered"
             [ngClass]="{
               'input-error': accountSettings.controls['oldPassword']?.touched && accountSettings.controls['oldPassword']?.invalid
@@ -60,7 +60,7 @@
             type="password"
             id="newPassword"
             name="newPassword"
-            placeholder="New password"
+            placeholder="{{ 'forms.new-password' | translate }}"
             class="input-sm bg-neutral mt-2 input input-bordered"
             [ngClass]="{
               'input-error':
@@ -81,20 +81,20 @@
               class="label-text-alt text-error"
               *ngIf="accountSettings.controls['newPassword']?.touched && accountSettings.controls['oldPassword']?.value != '' && accountSettings.controls['oldPassword']?.value == accountSettings.controls['newPassword']?.value"
             >
-              Old and new passwords are equal
+              {{'forms-errors.password-not-equal' | translate}}
             </span>
             <span
               class="label-text-alt text-error"
               *ngIf="accountSettings.controls['newPassword']?.touched && accountSettings.controls['newPassword']?.value?.length < 8 && accountSettings.controls['newPassword']?.value != ''"
             >
-              Password must be at least 8 characters
+              {{ 'forms-errors.password-required' | translate }}
             </span>
           </label>
         </div>
         <div>
           <app-limit-loader [limit]="1">
             <button class="btn btn-success min-h-min h-8">
-              Save
+              {{ 'forms.save' | translate }}
             </button>
           </app-limit-loader>
         </div>
@@ -103,14 +103,14 @@
 
     <div class="flex flex-col ms-12">
       <div class="text-2xl">
-        Change avatar:
+        {{ 'profile.change-avatar-label' | translate }}:
       </div>
-      Current:
+      {{ 'profile.current' | translate }}:
 
       <div>
         <div class="avatar">
           <div class="w-20 rounded" *ngIf="avatarUrl; else avatarSkeleton">
-            <img src="{{avatarUrl}}?v={{urlDynamicParam}}" alt="avatar" loading="lazy"/>
+            <img src="{{avatarUrl}}?v={{urlDynamicParam}}" alt="{{ 'profile.avatar' | translate }}" loading="lazy"/>
           </div>
         </div>
 
@@ -119,11 +119,11 @@
         </ng-template>
       </div>
       <div *ngIf="activeReq == 0 || !fileToUpload; else fileUploadingProgress">
-        Choose new:
+        {{ 'profile.choose-new' | translate }}:
       </div>
       <ng-template #fileUploadingProgress>
         <div>
-          Uploading...
+          {{ 'profile.uploading' | translate }}...
         </div>
         <div>
           <progress class="progress progress-success w-56" [value]="avatarProgress" max="100"></progress>
@@ -149,7 +149,7 @@
           <div>
             <app-limit-loader [limit]="1" [ignore]="!fileToUpload">
               <button class="btn btn-success min-h-min h-8 mt-2">
-                Save
+                {{ 'forms.save' | translate }}
               </button>
             </app-limit-loader>
           </div>

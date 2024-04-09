@@ -7,6 +7,7 @@ import { PostEditorComponent } from "src/app/forum/post/post-editor/post-editor.
 import { LimitLoaderComponent } from "src/app/limitter/limit-loader/limit-loader.component";
 import { TimezonePipe } from "./timemezone.pipe";
 import { ConfirmComponent } from "src/app/shared/confirm/confirm.component";
+import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { ConfirmComponent } from "src/app/shared/confirm/confirm.component";
     RouterModule,
     LimitLoaderComponent,
     TimezonePipe,
-    ConfirmComponent
+    ConfirmComponent,
   ]
 })
 export class  SharedModule{}

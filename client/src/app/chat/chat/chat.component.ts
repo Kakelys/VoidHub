@@ -10,11 +10,12 @@ import { HttpException } from 'src/shared/models/http-exception.model';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
 import { ChatInfo } from '../models/chat-info.model';
 import { environment as env} from 'src/environments/environment';
-import { ReplaySubject, debounceTime, fromEvent, takeUntil } from 'rxjs';
+import { ReplaySubject, debounceTime, fromEvent, take, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/shared/models/user.model';
 import { NotifyService } from 'src/app/notify/notify.service';
 import { NewMessageNotification } from 'src/app/notify/new-message-notification.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chat',
@@ -44,6 +45,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private destroy$ = new ReplaySubject<boolean>(1);
 
+  private savedMessageStr = "";
+
   @ViewChild('messagesContainer', {static: true})
   messagesContainer:ElementRef;
 
@@ -53,10 +56,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     private toastr: ToastrService,
     private chatService: ChatService,
     private auth: AuthService,
-    private notifyService: NotifyService) {
+    private notifyService: NotifyService,
+    private trans: TranslateService) {
   }
 
   ngOnInit(): void {
+    this.trans.get("chat.saved")
+    .pipe(take(1))
+    .subscribe(str => {
+      this.savedMessageStr = str;
+    })
+
     this.route.params.subscribe(params => {
       this.handleChatId(params["id"]);
     })
@@ -86,7 +96,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     let newChatId = chatId
 
     if(!Number(newChatId)) {
-      this.toastr.error("Wrong chat id");
+
+      this.trans.get("chat.wrongid")
+      .subscribe(msg => {
+        this.toastr.error(msg);
+      })
       this.router.navigate(['/chats']);
 
       return;
@@ -143,7 +157,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         else {
           const anotherUser = chat.members.find(m => m.id != this.user.id);
           this.profileId = anotherUser?.id ?? this.user.id;
-          this.chatName = anotherUser?.username ?? "Saved Messages";
+          this.chatName = anotherUser?.username ?? this.savedMessageStr;
         }
 
         this.loadMessages();

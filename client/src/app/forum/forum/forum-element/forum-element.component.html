@@ -27,7 +27,7 @@
             {{forum.lastTopic.updatedAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
           </div>
           <div>
-            <span class="text-secondary-content text-xs">topic: </span>
+            <span class="text-secondary-content text-xs">{{ 'forum.topic' | translate }}: </span>
             <a class="link no-underline"
               routerLink="/forum/topic/{{forum.lastTopic.id}}"
             >
@@ -35,7 +35,7 @@
             </a>
           </div>
           <div>
-            <span class="text-secondary-content text-xs">author: </span>
+            <span class="text-secondary-content text-xs">{{ 'forum.author' | translate }}: </span>
             <a class="link no-underline"
               routerLink="/profile/{{forum.lastTopic.user.id}}"
             >

@@ -8,6 +8,7 @@ import { User } from '../../../../shared/models/user.model';
 import { Roles } from 'src/shared/roles.enum';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SearchParams } from '../../models/search-params.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @Component({
@@ -17,7 +18,8 @@ import { SearchParams } from '../../models/search-params.model';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    TranslateModule
   ]
 })
 export class SearchBarComponent {

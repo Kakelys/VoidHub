@@ -1,23 +1,24 @@
 <div class="flex flex-col items-center">
   <div class="text-3xl">
-    Welcome <span *ngIf="authService.user$ | async">back</span> to Void<span class="text-accent">Hub</span>
+    {{'home.welcome' | translate}} <span *ngIf="user">{{'home.back'|translate}}</span> {{'home.to'|translate}} Void<span class="text-accent">Hub</span>
   </div>
   <div class="py-8 flex flex-col items-center text-2xl">
     <div>
-      Check out <a class="link link-hover" routerLink="/forum">sectins page</a> to see all sections
+      {{'home.check'|translate}} <a class="link link-hover" routerLink="/forum">{{'home.sections'|translate}}</a> {{'home.sections-see'|translate}}
     </div>
     <div>
-      Or <a class="link link-hover" routerLink="/forum/recent">recent topics</a> to see what's new
+      {{'home.or'|translate}} <a class="link link-hover" routerLink="/forum/recent">{{'home.recent'|translate}}</a> {{'home.recent-see'|translate}}
     </div>
   </div>
-  <div class="flex flex-col items-center text-2xl" *ngIf="!(authService.user$ | async)">
-    Not have account yet?
+  <div class="flex flex-col items-center text-2xl" *ngIf="!(user)">
+    {{'home.no-account'|translate}}
     <a routerLink="/register">
-      <a class="link link-hover">Sign up</a> to create account
+      <span class="link link-hover">{{'signup' | translate}}</span> {{'home.create'|translate}}
     </a>
-    or
+    {{'home.or'|translate}}
     <a routerLink="/login">
-      <a class="link link-hover">Login</a> to your account
+      <span class="link link-hover">{{'signin'|translate}}</span> {{'home.signin'|translate}}
+      {{ 'signup'|translate}}
     </a>
   </div>
 </div>

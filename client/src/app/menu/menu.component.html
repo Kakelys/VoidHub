@@ -1,9 +1,9 @@
 <div class="flex flex-col">
   <a class="btn btn-ghost min-h-8 h-8 my-1" routerLinkActive="bg-neutral" routerLink="/forum/sections">
-    Main
+    {{ 'menu.main' | translate}}
   </a>
   <a class="btn btn-ghost min-h-8 h-8 my-1" routerLinkActive="bg-neutral" routerLink="/forum/recent">
-    Recent
+    {{ 'menu.recent' | translate}}
   </a>
   <a
     class="btn btn-ghost min-h-8 h-8 my-1"
@@ -11,7 +11,7 @@
     routerLink="/chats"
     *ngIf="user"
   >
-    Chats
+  {{ 'menu.chats' | translate}}
   </a>
   <a
     class="btn btn-ghost min-h-8 h-8 my-1"
@@ -19,14 +19,14 @@
     routerLink="/forum/admin-panel"
     *ngIf="user && (user.role == roles.ADMIN || user.role == roles.MODER)"
   >
-    Admin panel
+  {{ 'menu.admin-panel' | translate}}
   </a>
 
   <div class="mt-5">
     <div class="collapse collapse-arrow">
       <input type="checkbox" name="shortcutItem"/>
       <div class="collapse-title font-medium">
-        Sections
+        {{ 'menu.sections' | translate}}
       </div>
       <div class="collapse-content">
         <div class="join join-vertical">

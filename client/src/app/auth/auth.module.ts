@@ -5,6 +5,7 @@ import { RegisterComponent } from "./register/register.component";
 import { RouterModule } from "@angular/router";
 import { SharedModule } from "src/shared/shared.module";
 import { ErrorMessageListComponent } from "../error-message-list/error-message-list.component";
+import { TranslateModule } from "@ngx-translate/core";
 
 function onAppLoad(authService: AuthService): () => Promise<any> {
   return async () => {
@@ -31,6 +32,7 @@ function onAppLoad(authService: AuthService): () => Promise<any> {
   imports: [
     SharedModule,
     ErrorMessageListComponent,
+    TranslateModule.forChild(),
     RouterModule.forChild([
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent}

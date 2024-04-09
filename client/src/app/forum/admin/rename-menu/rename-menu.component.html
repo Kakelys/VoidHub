@@ -7,7 +7,7 @@
         type="text"
         name="currentUsername"
         id="currentUsername"
-        placeholder="username"
+        placeholder="{{'forms.username'|translate}}"
         class="input-sm bg-neutral input input-bordered"
         [ngClass]="{
           'input-error': renameForm.controls['username']?.touched && renameForm.controls['username'].invalid,
@@ -24,7 +24,7 @@
         class="input-sm bg-neutral input min-h-min h-8"
         id="username"
         name="username"
-        placeholder="new username"
+        placeholder="{{'forms.new-username'|translate}}"
         [ngClass]="{
           'input-error': renameForm.controls['username']?.touched && renameForm.controls['username'].invalid,
           'select-bordered': !(renameForm.controls['username']?.touched && renameForm.controls['username'].invalid)
@@ -37,10 +37,10 @@
     <div class="mt-2 flex flex-row">
       <app-limit-loader [limit]="1">
         <button class="btn btn-success min-h-fit h-8">
-          Save
+          {{'forms.save'|translate}}
         </button>
         <button type="button" class="ms-3 btn btn-error min-h-fit  h-8" (click)="onCancelClick()">
-          Cancel
+          {{'forms.cancel'|translate}}
         </button>
       </app-limit-loader>
     </div>

@@ -7,7 +7,7 @@
         type="text"
         name="username"
         id="username"
-        placeholder="username"
+        placeholder="{{'forms.username'|translate}}"
         class="input-sm bg-neutral input input-bordered"
         [ngClass]="{
           'input-error': roleChangeForm.controls['username']?.touched && roleChangeForm.controls['username'].invalid,
@@ -27,20 +27,20 @@
           'input-error': roleChangeForm.controls['roleName']?.touched && roleChangeForm.controls['roleName'].invalid,
           'select-bordered': !(roleChangeForm.controls['roleName']?.touched && roleChangeForm.controls['roleName'].invalid)
         }"
-        [ngModel]="'Pick role'"
+        [ngModel]="'forms.pick-role'|translate"
       >
-        <option disabled selected>Pick role</option>
-        <option *ngFor="let role of roles" [value]="role">{{role}}</option>
+        <option disabled selected>{{ 'forms.pick-role'|translate }}</option>
+        <option *ngFor="let role of roles" [value]="role">{{'roles.' + role | lowercase | translate}}</option>
       </select>
     </div>
 
     <div class="mt-2 flex flex-row">
       <app-limit-loader [limit]="1">
         <button class="btn btn-success min-h-fit h-8">
-          Save
+          {{'forms.save'|translate}}
         </button>
         <button type="button" class="ms-3 btn btn-error min-h-fit  h-8" (click)="onCancelClick()">
-          Cancel
+          {{'forms.cancel'|translate}}
         </button>
       </app-limit-loader>
     </div>

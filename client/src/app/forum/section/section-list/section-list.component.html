@@ -1,7 +1,7 @@
 <app-limit-loader [limit]="1" [containerClasses]="'flex flex-col items-center'">
   <div class="flex flex-col">
     <div routerLink="../new-section" *ngIf="user && user?.role == roles.ADMIN" class="mb-3 btn btn-neutral w-fit min-h-fit h-8">
-      Add new section
+      {{ 'lables.add-new-section' | translate }}
     </div>
     <app-section class="pb-5" *ngFor="let el of sections" [data]="el" [user]="user">
     </app-section>

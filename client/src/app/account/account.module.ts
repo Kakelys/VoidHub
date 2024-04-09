@@ -19,6 +19,7 @@ import { AccountPostElementComponent } from './posts/element/element.component';
 import { PostService } from "../forum/services/post.service";
 import { SharedForumModule } from "../forum/shared.forum.module";
 import { AccountTopicElement } from './topics/element/element.component';
+import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { AccountTopicElement } from './topics/element/element.component';
     SharedEditorModule,
     SharedForumModule,
     AdminComponentsModule,
+    TranslateModule.forChild(),
     ErrorMessageListComponent,
     RouterModule.forChild([
       {path: 'settings', component: SettingsComponent, canActivate: [canActivateSelf]},

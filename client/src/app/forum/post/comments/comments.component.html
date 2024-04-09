@@ -21,8 +21,8 @@
     <app-post-editor
       [ancestorId]="postId"
       [topicId]="topicId"
-      [submitPlaceholder]="'Answer'"
-      [cancelPlaceholder]="'Close'"
+      [submitPlaceholder]="'forms.answer' | translate"
+      [cancelPlaceholder]="'forms.close' | translate"
       [content]="editorContent"
       (onCreate)="onPostCreate($event)"
       (onCancel)="onCloseClicked()"

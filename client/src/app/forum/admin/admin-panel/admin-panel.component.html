@@ -1,13 +1,13 @@
 <div class="flex flex-col">
   <div class="mb-2 flex flex-row">
     <div class="btn btn-neutral min-h-fit h-8" routerLink="ban-menu" routerLinkActive="bg-base-100">
-       Ban menu
+      {{'menu.ban'|translate}}
     </div>
     <div class="btn btn-neutral min-h-fit h-8 ms-3" routerLink="role-menu" *ngIf="user?.role == roles.ADMIN" routerLinkActive="bg-base-100">
-      Role menu
+      {{'menu.role'|translate}}
     </div>
     <div class="btn btn-neutral min-h-fit h-8 ms-3" routerLink="rename-menu" *ngIf="user?.role == roles.MODER || user?.role == roles.ADMIN" routerLinkActive="bg-base-100">
-      Rename menu
+      {{'menu.rename'|translate}}
     </div>
   </div>
   <div class="w-fit" *ngIf="!skipRouting">

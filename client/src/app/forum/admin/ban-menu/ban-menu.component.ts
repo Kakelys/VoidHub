@@ -14,7 +14,7 @@ import { HttpException } from 'src/shared/models/http-exception.model';
 export class BanMenuComponent implements OnInit {
 
   @Input()
-  username: string;
+  username: string = '';
 
   userIdBlocked = false;
 
@@ -41,7 +41,7 @@ export class BanMenuComponent implements OnInit {
 
   ngOnInit(): void {
     this.userIdBlocked = this.adminService.userIdBlocked;
-    this.username = this.adminService.user.username;
+    this.username = this.adminService.user?.username ?? '';
   }
 
   onBanSubmit(form: NgForm) {

@@ -11,6 +11,7 @@ import { UploadService } from "./services/upload.service";
 import { TopicService } from "./services/topic.service";
 import { RecentElementComponent } from "./recent/recent-element/recent-element.component";
 import { ReducePost } from "./recent/reduce-post.pipe";
+import { TranslateModule } from "@ngx-translate/core";
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { ReducePost } from "./recent/reduce-post.pipe";
     DeleteComponent,
     SharedEditorModule,
     SharedModule,
+    TranslateModule.forChild(),
     ReducePost
   ],
   exports: [

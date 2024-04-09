@@ -17,10 +17,10 @@
           </a>
           <div class="text-sm text-secondary-content">
             <div>
-              Posted: {{post.post.createdAt | withtimezone | date: 'medium'}}
+              {{ 'lables.posted-date' | translate }}: {{post.post.createdAt | withtimezone | date: 'medium'}}
             </div>
             <a class="link no-underline" routerLink="/profile/{{post.sender.id}}">
-              <span class="text-secondary-content">Author:</span> {{post.sender.username}}
+              <span class="text-secondary-content">{{ 'lables.author' | translate }}:</span> {{post.sender.username}}
             </a>
           </div>
         </div>
@@ -77,7 +77,7 @@
           </div>
           <div class="text-xs" *ngIf="user && user?.id == post?.sender.id">
             <div class="btn btn-neutral min-h-min h-6" (click)="setEditMode(true)">
-              Edit
+              {{ 'forms.edit' | translate }}
             </div>
           </div>
         </div>
@@ -88,7 +88,7 @@
           [postId]="post.post.id"
           [topicId]="post.post.topicId"
           [content]="post.post.content"
-          [submitPlaceholder]="'Save'"
+          [submitPlaceholder]="'forms.save' | translate"
           (onCreate)="onPostEdit($event)"
           (onCancel)="setEditMode(false)">
         </app-post-editor>

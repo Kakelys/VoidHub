@@ -10,6 +10,7 @@ import { TopicElementComponent } from "../topic/topic-element/topic-element.comp
 import { RouterModule } from "@angular/router";
 import { SharedForumModule } from "../shared.forum.module";
 import { SharedEditorModule } from "src/shared/shared-editor.module";
+import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SharedEditorModule } from "src/shared/shared-editor.module";
     SharedModule,
     SharedEditorModule,
     SharedForumModule,
+    TranslateModule.forChild(),
     SearchBarComponent,
     ErrorMessageListComponent,
     PaginatorComponent,

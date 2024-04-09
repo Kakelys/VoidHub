@@ -25,6 +25,8 @@
     "@ckeditor/ckeditor5-utils": "^40.0.0",
     "@ckeditor/ckeditor5-watchdog": "^40.0.0",
     "@microsoft/signalr": "^8.0.0",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
     "ckeditor5-custom-build": "file:ckeditor5",
     "jwt-decode": "^4.0.0",
     "ngx-toastr": "^17.0.2",

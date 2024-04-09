@@ -2,7 +2,7 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import { HeaderComponent } from './header/header.component';
 import { FormsModule } from '@angular/forms';
 import { AuthModule } from './auth/auth.module';
@@ -23,6 +23,13 @@ import { NewMessageListener } from './notify/new-message.listener';
 import { NewMessageComponent } from './notify/new-message/new-message.component';
 import { MenuComponent } from './menu/menu.component';
 import { SectionService } from './forum/services/section.service';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { LocalizeInterceptor } from 'src/shared/localize.interceptor';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -40,6 +47,14 @@ import { SectionService } from './forum/services/section.service';
     AuthModule,
     SearchBarComponent,
     BrowserAnimationsModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'en',
+      loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+      }
+    }),
     ToastrModule.forRoot({
       preventDuplicates: true,
       countDuplicates: true,
@@ -79,6 +94,11 @@ import { SectionService } from './forum/services/section.service';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LocalizeInterceptor,
       multi: true,
     },
   ],

@@ -32,6 +32,7 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { BreadcrumbService } from "./services/breadcrumb.service";
 import { SharedForumModule } from "./shared.forum.module";
 import { canActivateAdmin } from "./admin/role.guard";
+import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
   providers: [
@@ -62,6 +63,7 @@ import { canActivateAdmin } from "./admin/role.guard";
     SharedModule,
     SharedEditorModule,
     SharedForumModule,
+    TranslateModule,
     DeleteComponent,
     ErrorMessageListComponent,
     PaginatorComponent,
