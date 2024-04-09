@@ -24,7 +24,9 @@ namespace ForumApi.DTO.DAccount
                 .NotEmpty()
                 .WithMessage("Username must not be empty")
                 .Length(3, 32)
-                .WithMessage("Username must be between 3 and 20 characters");
+                .WithMessage("Username must be between 3 and 20 characters")
+                .Matches(@"^[a-zA-Z\d!@#$%^&*()\-_=+{}:,<.>]+$")
+                .WithMessage("Username can only contain letters, numbers and special characters");
 
             RuleFor(x => x.OldPassword)
                 .NotEmpty()
