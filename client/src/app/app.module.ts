@@ -28,7 +28,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizeInterceptor } from 'src/shared/localize.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, "./assets/i18n/l.", '.json');
 }
 
 @NgModule({

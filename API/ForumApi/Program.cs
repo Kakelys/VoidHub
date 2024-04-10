@@ -5,9 +5,6 @@ using ForumApi.Utils.Middlewares;
 using ForumApi.Options;
 using Microsoft.OpenApi.Models;
 using ForumApi.Hubs;
-using System.Text;
-using AspNetCore.Localizer.Json.Extensions;
-using System.Globalization;
 
 //need to be checked before create builder
 if (!Directory.Exists("wwwroot"))
@@ -105,34 +102,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddLocalization(options =>
-{
-  options.ResourcesPath ="";
-});
-
-var supportedCultures = new List<CultureInfo>
-{
-  new ("en"),
-  new ("ru")
-};
-
-builder.Services.AddJsonLocalization(options => {
-    options.CacheDuration = TimeSpan.FromMinutes(15);
-    options.ResourcesPath = "Locales";
-    options.LocalizationMode = AspNetCore.Localizer.Json.JsonOptions.LocalizationMode.I18n;
-    options.FileEncoding = Encoding.GetEncoding("utf-8");
-    options.UseBaseName = false;
-    options.SupportedCultureInfos = [..supportedCultures];
-    options.DefaultCulture = new("en");
-    options.DefaultUICulture = new("en");
-});
-
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-   options.DefaultRequestCulture =
-      new Microsoft.AspNetCore.Localization.RequestCulture("en");
-   options.SupportedUICultures = supportedCultures;
-});
+builder.Services.ConfigureLocalization();
 
 var app = builder.Build();
 

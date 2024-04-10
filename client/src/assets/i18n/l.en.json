@@ -70,7 +70,9 @@
     "recent-see": "to see what's new",
     "no-account": "Not have account yet?",
     "create": "to create account",
-    "signin": "to your account"
+    "signin-after": "to your account",
+    "signup": "Sign up",
+    "signin": "Sign in"
   },
   "chat": {
     "not-found": "Chat not found",
