@@ -9,27 +9,24 @@ using ForumApi.Utils.Exceptions;
 using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using LinqKit;
+using AspNetCore.Localizer.Json.Localizer;
 
 namespace ForumApi.Services.ForumS
 {
-    public class SectionService : ISectionService
+    public class SectionService(
+        IRepositoryManager repositoryManager,
+        IMapper mapper,
+        IJsonStringLocalizer locale) : ISectionService
     {
 
-        private readonly IRepositoryManager _rep;
-        private readonly IMapper _mapper;
+        private readonly IRepositoryManager _rep = repositoryManager;
+        private readonly IMapper _mapper = mapper;
 
-        public SectionService(
-            IRepositoryManager repositoryManager,
-            IMapper mapper)
-        {
-            _rep = repositoryManager;
-            _mapper = mapper;
-        }
         public async Task<List<SectionResponse>> GetSections(bool includeHidden = false)
         {
             var predicate = PredicateBuilder.New<Section>(s => true);
             if(!includeHidden)
-                predicate.And(s => s.IsHidden == false);
+                predicate.And(s => !s.IsHidden);
 
             return await _rep.Section.Value
                 .FindByCondition(predicate)
@@ -47,7 +44,7 @@ namespace ForumApi.Services.ForumS
                             Id = ff.Forum.Id,
                             Title = ff.Forum.Title,
                             TopicsCount = ff.Topics.Count(),
-                            PostsCount = ff.Topics.SelectMany(t => t.Posts).Where(p=> p.DeletedAt == null).Count(),
+                            PostsCount = ff.Topics.SelectMany(t => t.Posts).Count(p=> p.DeletedAt == null),
                             LastTopic = ff.Topics
                                 .OrderByDescending(t => t.Posts.Where(p => p.DeletedAt == null).Max(p => p.CreatedAt))
                                 .Select(t => new {
@@ -75,7 +72,7 @@ namespace ForumApi.Services.ForumS
         {
             var predicate = PredicateBuilder.New<Section>(s => true);
             if(!includeHidden)
-                predicate.And(s => s.IsHidden == false);
+                predicate.And(s => !s.IsHidden);
 
             return await _rep.Section.Value
                 .FindByCondition(predicate)
@@ -86,9 +83,9 @@ namespace ForumApi.Services.ForumS
                 }).ToListAsync();
         }
 
-        public async Task<Section> Create(SectionEdit sectionDto)
+        public async Task<Section> Create(SectionEdit section)
         {
-            var newSection = _rep.Section.Value.Create(_mapper.Map<Section>(sectionDto));
+            var newSection = _rep.Section.Value.Create(_mapper.Map<Section>(section));
 
             await _rep.Save();
 
@@ -99,7 +96,7 @@ namespace ForumApi.Services.ForumS
         {
             var entity = await _rep.Section.Value
                 .FindByCondition(s => s.Id == sectionId, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Section not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-section"]);
 
             _mapper.Map(section, entity);
             await _rep.Save();

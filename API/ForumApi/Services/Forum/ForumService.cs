@@ -6,26 +6,18 @@ using ForumApi.Utils.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.DTO.Utils;
-using LinqKit;
+using AspNetCore.Localizer.Json.Localizer;
 
 namespace ForumApi.Services.ForumS
 {
-    public class ForumService : IForumService
+    public class ForumService(
+        IRepositoryManager rep,
+        IMapper mapper,
+        IJsonStringLocalizer locale) : IForumService
     {
-        private readonly IRepositoryManager _rep;
-        private readonly IMapper _mapper;
-
-        public ForumService(
-            IRepositoryManager rep,
-            IMapper mapper)
-        {
-            _rep = rep;
-            _mapper = mapper;
-        }
-
         public async Task<ForumResponse?> Get(int forumId, Params prms)
         {
-            return await _rep.Forum.Value
+            return await rep.Forum.Value
                 .FindByCondition(f => f.Id == forumId && f.DeletedAt == null)
                 .Select(f => new ForumResponse
                 {
@@ -33,42 +25,42 @@ namespace ForumApi.Services.ForumS
                     Title = f.Title,
                     SectionId = f.SectionId,
                     IsClosed = f.IsClosed,
-                    PostsCount = f.Topics.Where(t => prms.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null).SelectMany(t => t.Posts).Where(p => p.DeletedAt == null).Count(),
-                    TopicsCount = f.Topics.Where(t => prms.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null).Count()
+                    PostsCount = f.Topics.Where(t => prms.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null).SelectMany(t => t.Posts).Count(p => p.DeletedAt == null),
+                    TopicsCount = f.Topics.Count(t => prms.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null)
                 }).FirstOrDefaultAsync();
         }
 
         public async Task<Forum> Create(ForumEdit forumDto)
         {
-            var forum = _rep.Forum.Value.Create(_mapper.Map<Forum>(forumDto));
-            await _rep.Save();
+            var forum = rep.Forum.Value.Create(mapper.Map<Forum>(forumDto));
+            await rep.Save();
             
             return forum;
         }
 
         public async Task<Forum> Update(int forumId, ForumEdit forumDto)
         {
-            var entity = await _rep.Forum.Value
+            var entity = await rep.Forum.Value
                 .FindByCondition(f => f.Id == forumId && f.DeletedAt == null, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Forum not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-forum"]);
 
-            _mapper.Map(forumDto, entity);
-            await _rep.Save();
+            mapper.Map(forumDto, entity);
+            await rep.Save();
 
             return entity;
         }
 
         public async Task Delete(int forumId)
         {
-            var entity = await _rep.Forum.Value
+            var entity = await rep.Forum.Value
                 .FindByCondition(f => f.DeletedAt == null && f.Id == forumId, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Forum not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-forum"]);
 
-            if(entity.Topics.Count() > 0)
-                throw new BadRequestException("Cannot delete forum whilte it have topics");
+            if(entity.Topics.Where(t => t.DeletedAt == null).Any())
+                throw new BadRequestException(locale["errors.delete-forums-with-topics"]);
 
-            _rep.Forum.Value.Delete(entity);
-            await _rep.Save();
+            rep.Forum.Value.Delete(entity);
+            await rep.Save();
         }
     }
 }

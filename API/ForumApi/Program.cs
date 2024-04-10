@@ -5,6 +5,9 @@ using ForumApi.Utils.Middlewares;
 using ForumApi.Options;
 using Microsoft.OpenApi.Models;
 using ForumApi.Hubs;
+using System.Text;
+using AspNetCore.Localizer.Json.Extensions;
+using System.Globalization;
 
 //need to be checked before create builder
 if (!Directory.Exists("wwwroot"))
@@ -15,13 +18,12 @@ if (!Directory.Exists("wwwroot"))
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLogging();
-//builder.Logging.AddConsole();
 
 builder.Services.AddAppOptions(builder.Configuration);
 
 var imageSettings = builder.Configuration
   .GetSection(ImageOptions.Image)
-  .Get<ImageOptions>() ?? throw new NullReferenceException("ImageOptions");
+  .Get<ImageOptions>() ?? throw new ArgumentNullException("ImageOptions");
 
 //check for folders
 if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.AvatarFolder}"))
@@ -81,18 +83,20 @@ builder.Services.AddJwtAuth(builder.Configuration);
 builder.Services.AddSignalR();
 
 var frontCorsPolicy = "frontCorsPolicy";
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
 {
   options.AddPolicy(
-    name : frontCorsPolicy, 
-    policy => 
+    name : frontCorsPolicy,
+    policy =>
     {
-
       var clients = builder.Configuration.GetSection("Clients").Get<List<string>>();
 
-      if(clients != null && clients.Any())
-      foreach(var client in clients) {
-        policy.WithOrigins(client);
+      if(clients?.Count != 0)
+      {
+        foreach (var client in clients!)
+        {
+          policy.WithOrigins(client);
+        }
       }
 
       policy.AllowAnyHeader()
@@ -101,7 +105,38 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddLocalization(options =>
+{
+  options.ResourcesPath ="";
+});
+
+var supportedCultures = new List<CultureInfo>
+{
+  new ("en"),
+  new ("ru")
+};
+
+builder.Services.AddJsonLocalization(options => {
+    options.CacheDuration = TimeSpan.FromMinutes(15);
+    options.ResourcesPath = "Locales";
+    options.LocalizationMode = AspNetCore.Localizer.Json.JsonOptions.LocalizationMode.I18n;
+    options.FileEncoding = Encoding.GetEncoding("utf-8");
+    options.UseBaseName = false;
+    options.SupportedCultureInfos = [..supportedCultures];
+    options.DefaultCulture = new("en");
+    options.DefaultUICulture = new("en");
+});
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+   options.DefaultRequestCulture =
+      new Microsoft.AspNetCore.Localization.RequestCulture("en");
+   options.SupportedUICultures = supportedCultures;
+});
+
 var app = builder.Build();
+
+app.UseRequestLocalization();
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<QueryTokenMiddleware>();

@@ -1,8 +1,6 @@
 namespace ForumApi.Utils.Middlewares
 {
-    public class QueryTokenMiddleware(
-        RequestDelegate next,
-        ILogger<QueryTokenMiddleware> logger)
+    public class QueryTokenMiddleware(RequestDelegate next)
     {
         public async Task InvokeAsync(HttpContext context)
         {

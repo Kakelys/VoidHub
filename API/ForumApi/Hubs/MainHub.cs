@@ -7,11 +7,6 @@ namespace ForumApi.Hubs
 {
     public class MainHub(ISessionStorage sessionStorage) : Hub
     {
-        public async Task SomeMethod()
-        {
-            Console.WriteLine("Some method");
-        }
-
         #region conenction overrides
 
         [Authorize]
@@ -24,7 +19,7 @@ namespace ForumApi.Hubs
                 return;
             }
 
-            var userId = Context.User.GetId();
+            var userId = Context!.User!.GetId();
             sessionStorage.Add(Context.ConnectionId, userId);
             Console.WriteLine($"add user: {userId} {Context.ConnectionId}");
             

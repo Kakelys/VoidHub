@@ -1,4 +1,6 @@
 using System.Text.Json;
+using AspNetCore.Localizer.Json.Localizer;
+using ForumApi.Locales;
 using ForumApi.Utils.Exceptions;
 
 namespace ForumApi.Utils.Middlewares
@@ -7,7 +9,7 @@ namespace ForumApi.Utils.Middlewares
         RequestDelegate next,
         ILogger<ExceptionMiddleware> logger)
     {
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IJsonStringLocalizer locale)
         {
             try
             {
@@ -15,7 +17,7 @@ namespace ForumApi.Utils.Middlewares
             }
             catch(ArgumentNullException ex)
             {
-                await HandleError(context, 400, $"{ex.Message} is empty");
+                await HandleError(context, 400, $"{ex.Message} {locale["errors.is-empty"]}");
             }
             catch(BadRequestException ex)
             {
@@ -39,7 +41,7 @@ namespace ForumApi.Utils.Middlewares
             {
                 logger.LogError(ex, ex.Message);
 
-                await HandleError(context, 500, "Internal server error.");
+                await HandleError(context, 500, locale["errors.internal-server-error"]);
             }
         }
 

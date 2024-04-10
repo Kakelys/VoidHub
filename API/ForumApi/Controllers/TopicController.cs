@@ -53,10 +53,9 @@ namespace ForumApi.Controllers
         {
             var allowDeleted = false;
             var isAuthed = User.Identity?.IsAuthenticated == true;
-            if(isAuthed)
+            if(isAuthed && (User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
             {
-                if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
-                    allowDeleted = true;
+                allowDeleted = true;
             }
 
             var topic = await topicService.GetTopic(id, allowDeleted);

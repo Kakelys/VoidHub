@@ -1,3 +1,4 @@
+using AspNetCore.Localizer.Json.Localizer;
 using AutoMapper;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
@@ -11,13 +12,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services.ChatS
 {
-    public class MessageService(IRepositoryManager rep, IMapper mapper) : IMessageService
+    public class MessageService(
+        IRepositoryManager rep, 
+        IMapper mapper,
+        IJsonStringLocalizer locale) : IMessageService
     {
         public async Task<List<MessageResponse>> GetMesages(int chatId, Offset offset, DateTime time)
         {
-            var chat = await rep.Chat.Value
+            _ = await rep.Chat.Value
                 .FindByCondition(c => c.Id == chatId)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Chat not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-chat"]);
 
             return await rep.ChatMessage.Value
                 .FindByCondition(c => c.ChatId == chatId && c.CreatedAt < time.ToUniversalTime())
@@ -34,11 +38,11 @@ namespace ForumApi.Services.ChatS
         {
             var chat = await rep.Chat.Value
                 .FindByCondition(c => c.Id == chatId, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Chat not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-chat"]);
 
             var chatMember = chat.Members
-                .FirstOrDefault(m => m.AccountId == accountId)
-                ?? throw new NotFoundException("Chat member not found");
+                .Find(m => m.AccountId == accountId)
+                ?? throw new NotFoundException(locale["errors.no-chat-member"]);
 
             var newMessage = new ChatMessage() 
             {

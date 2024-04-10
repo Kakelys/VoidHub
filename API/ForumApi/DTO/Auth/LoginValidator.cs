@@ -1,18 +1,19 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 
 namespace ForumApi.DTO.Auth
 {
     public class LoginValidator : AbstractValidator<Login>
     {
-        public LoginValidator()
+        public LoginValidator(IJsonStringLocalizer locale)
         {
             RuleFor(l => l.LoginName)
                 .NotEmpty()
-                .WithMessage("Login name must not be empty");
+                .WithMessage(locale["validators.login-required"]);
 
             RuleFor(l => l.Password)
                 .NotEmpty()
-                .WithMessage("Password must not be empty");
+                .WithMessage(locale["validators.password-required"]);
         } 
     }
 }

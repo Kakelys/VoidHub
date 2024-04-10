@@ -17,7 +17,7 @@ namespace ForumApi.Utils.Extensions
             }).AddJwtBearer(o =>
             {
                 var jwtKey = config.GetSection(JwtOptions.Jwt).Get<JwtOptions>() ??
-                    throw new NullReferenceException("JwtOptions.AccessSecret");
+                    throw new ArgumentNullException("JwtOptions.AccessSecret");
 
                 o.TokenValidationParameters = new TokenValidationParameters
                 {

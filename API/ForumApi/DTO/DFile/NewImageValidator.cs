@@ -1,3 +1,4 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 using ForumApi.Options;
 using Microsoft.Extensions.Options;
@@ -8,22 +9,22 @@ namespace ForumApi.DTO.DFile
     {
         private readonly string[] _extensions = {".jpg", ".jpeg", ".png", ".gif", ".bmp"};
 
-        public NewImageValidator(IOptions<ImageOptions> imageOptions) 
+        public NewImageValidator(IOptions<ImageOptions> imageOptions, IJsonStringLocalizer locale) 
         {
             var imgOptions = imageOptions.Value;
 
             RuleFor(r => r.PostId)
                 .Must(id => id == null || id > 0)
-                .WithMessage("PostId must be greated than 0 or null");
+                .WithMessage(locale["validators.postid-invalid"]);
 
             RuleFor(r => r.File)
                 .Configure(c => c.CascadeMode = CascadeMode.Stop)
                 .Must(i => i != null)
-                .WithMessage("Image cannot be empty")
+                .WithMessage(locale["validators.image-required"])
                 .Must(i => _extensions.Contains(Path.GetExtension(i.FileName)))
-                .WithMessage($"Image must be in one of the following formats: {string.Join(", ", _extensions)}")
+                .WithMessage($"{locale["validators.image-format"]}: {string.Join(", ", _extensions)}")
                 .Must(i => i.Length < imgOptions.ImageMaxSize)
-                .WithMessage($"Image too heavy, must be less than {imgOptions.ImageMaxSize / 1024} KB");
+                .WithMessage($"{locale["validators.image-size"]} {imgOptions.ImageMaxSize / 1024} KB");
         }
     }
 }

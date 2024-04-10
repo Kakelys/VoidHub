@@ -11,37 +11,32 @@ using ForumApi.Utils.Exceptions;
 using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using LinqKit;
+using AspNetCore.Localizer.Json.Localizer;
 
 namespace ForumApi.Services.ForumS
 {
-    public class TopicService : ITopicService
+    public class TopicService(
+        IMapper mapper, 
+        IRepositoryManager rep, 
+        IJsonStringLocalizer locale) : ITopicService
     {
-        private readonly IMapper _mapper;
-        private readonly IRepositoryManager _rep;
-
-        public TopicService(IMapper mapper, IRepositoryManager rep)
-        {
-            _mapper = mapper;
-            _rep = rep;
-        }
-
         public async Task<TopicResponse?> GetTopic(int id, bool allowDeleted = false)
         {
-            var firstPost = await _rep.Post.Value
+            var firstPost = await rep.Post.Value
                 .FindByCondition(p => p.TopicId == id)
                 .AllowDeletedWithTopic(allowDeleted)
                 .Include(p => p.Author)
                 .OrderBy(p => p.CreatedAt)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-topic"]);
 
-            return await _rep.Topic.Value
+            return await rep.Topic.Value
                 .FindByCondition(t => t.Id == id)
                 .AllowDeleted(allowDeleted)
                 .Select(t => new TopicResponse
                 {
-                    Topic = _mapper.Map<TopicDto>(t),
-                    Post = _mapper.Map<PostDto>(firstPost),
-                    Sender = _mapper.Map<User>(firstPost.Author),
+                    Topic = mapper.Map<TopicDto>(t),
+                    Post = mapper.Map<PostDto>(firstPost),
+                    Sender = mapper.Map<User>(firstPost.Author),
                 })
                 .FirstOrDefaultAsync();
         }
@@ -62,7 +57,7 @@ namespace ForumApi.Services.ForumS
             if(prms.ByAccountId != 0)
                 predicate.And(t => t.AccountId == prms.ByAccountId);
 
-            return await _rep.Topic.Value
+            return await rep.Topic.Value
                 .FindByCondition(predicate)
                 .OrderByDescending(t => t.CreatedAt)
                 .TakeOffset(offset)
@@ -75,9 +70,9 @@ namespace ForumApi.Services.ForumS
                 })
                 .Select(t => new TopicInfoResponse
                 {
-                    Topic = _mapper.Map<TopicDto>(t.Topic),
-                    Sender = _mapper.Map<User>(t.Topic.Author),
-                    Post = _mapper.Map<PostDto>(t.FirstPost),
+                    Topic = mapper.Map<TopicDto>(t.Topic),
+                    Sender = mapper.Map<User>(t.Topic.Author),
+                    Post = mapper.Map<PostDto>(t.FirstPost),
                 })
                 .ToListAsync();
         }
@@ -97,13 +92,13 @@ namespace ForumApi.Services.ForumS
             if(prms.ByAccountId != 0)
                 predicate.And(t => t.AccountId == prms.ByAccountId);
 
-            return await _rep.Topic.Value
+            return await rep.Topic.Value
                 .FindByCondition(predicate)
                 .OrderByDescending(t => t.IsPinned)
                 .ThenByDescending(t => t.CreatedAt)
                 .Select(t => new TopicElement(t)
                 {
-                    Author = _mapper.Map<User>(t.Author),
+                    Author = mapper.Map<User>(t.Author),
                     LastPost = t.Posts
                         .Where(p => p.DeletedAt == null)
                         .OrderByDescending(p => p.CreatedAt)
@@ -111,7 +106,7 @@ namespace ForumApi.Services.ForumS
                         {
                             Id = p.Id,
                             CreatedAt = p.CreatedAt,
-                            Author = _mapper.Map<User>(p.Author)
+                            Author = mapper.Map<User>(p.Author)
                         }).FirstOrDefault()
                 })
                 .TakePage(page)
@@ -120,14 +115,14 @@ namespace ForumApi.Services.ForumS
 
         public async Task<TopicInfoResponse> Create(int authorId, TopicNew topicDto)
         {
-            var forum = await _rep.Forum.Value
+            var forum = await rep.Forum.Value
                 .FindByCondition(f => f.Id == topicDto.ForumId)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Forum not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-forum"]);
 
             if(forum.IsClosed)
-                throw new BadRequestException("Forum is closed");
+                throw new BadRequestException(locale["errors.forum-closed"]);
 
-            var topic = _mapper.Map<Topic>(topicDto);
+            var topic = mapper.Map<Topic>(topicDto);
             topic.AccountId = authorId;
 
             var post = new Post
@@ -138,63 +133,63 @@ namespace ForumApi.Services.ForumS
 
             topic.Posts.Add(post);
 
-            _rep.Topic.Value.Create(topic);
-            await _rep.Save();
+            rep.Topic.Value.Create(topic);
+            await rep.Save();
             return new  TopicInfoResponse{
-                Topic = _mapper.Map<TopicDto>(topic),
-                Post = _mapper.Map<PostDto>(post)
+                Topic = mapper.Map<TopicDto>(topic),
+                Post = mapper.Map<PostDto>(post)
             };
         }
 
         public async Task<TopicDto> Update(int topicId, TopicEdit topicDto)
         {
-            var entity = await _rep.Topic.Value
+            var entity = await rep.Topic.Value
                 .FindByCondition(t => t.Id == topicId && t.DeletedAt == null, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-topic"]);
 
-            _mapper.Map(topicDto, entity);
-            await _rep.Save();
+            mapper.Map(topicDto, entity);
+            await rep.Save();
 
-            return _mapper.Map<TopicDto>(entity);
+            return mapper.Map<TopicDto>(entity);
         }
 
         public async Task Delete(int topicId)
         {
-            var topicEntity = await _rep.Topic.Value
+            var topicEntity = await rep.Topic.Value
                 .FindByCondition(t => t.Id == topicId, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-topic"]);
 
             if(topicEntity.DeletedAt != null)
-                throw new BadRequestException("Topic already deleted");
+                throw new BadRequestException(locale["errors.topic-already-deleted"]);
 
-            _rep.Topic.Value.Delete(topicEntity);
+            rep.Topic.Value.Delete(topicEntity);
 
             // also delete posts
             // use same time as in topic, so it can be easy recover after
-            _rep.Post.Value.DeleteMany(
-                _rep.Post.Value
+            rep.Post.Value.DeleteMany(
+                rep.Post.Value
                     .FindByCondition(p => p.TopicId == topicEntity.Id && p.DeletedAt == null, true)
                     .ToList(), 
                 topicEntity.DeletedAt
             );
 
-            await _rep.Save();
+            await rep.Save();
         }
 
         public async Task<TopicDto> Recover(int topicId) 
         {
-            var topic = await _rep.Topic.Value
+            var topic = await rep.Topic.Value
                 .FindByCondition(t => t.Id == topicId, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-topic"]);
 
             if(topic.DeletedAt == null)
-                throw new BadRequestException("Topic not deleted");
+                throw new BadRequestException(locale["errors.topic-not-deleted"]);
 
             var deletedPosts = topic.Posts
                 .Where(p => p.DeletedAt == topic.DeletedAt)
                 .ToList();
 
-            await _rep.BeginTransaction();
+            await rep.BeginTransaction();
             try 
             {
                 topic.DeletedAt = null;
@@ -203,16 +198,16 @@ namespace ForumApi.Services.ForumS
                     p.DeletedAt = null;
                 });
 
-                await _rep.Save();
-                await _rep.Commit();
+                await rep.Save();
+                await rep.Commit();
             }
             catch
             {
-                await _rep.Rollback();
+                await rep.Rollback();
                 throw;
             }
 
-            return _mapper.Map<TopicDto>(topic);
+            return mapper.Map<TopicDto>(topic);
         }
     }
 }

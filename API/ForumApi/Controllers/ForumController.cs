@@ -5,7 +5,6 @@ using ForumApi.Controllers.Filters;
 using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ForumApi.DTO.DSearch;
 
 namespace ForumApi.Controllers
 {

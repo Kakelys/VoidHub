@@ -41,7 +41,6 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> Delete([FromQuery] string username)
         {
-            Console.WriteLine("ban");
             await banService.Delete(User.GetId(), username);
             return Ok();
         }

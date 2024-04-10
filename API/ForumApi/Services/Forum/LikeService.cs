@@ -1,3 +1,4 @@
+using AspNetCore.Localizer.Json.Localizer;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DPost;
@@ -7,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services.ForumS
 {
-    public class LikeService(IRepositoryManager rep) : ILikeService
+    public class LikeService(
+        IRepositoryManager rep,
+        IJsonStringLocalizer locale) : ILikeService
     {
         public async Task UpdateLikeStatus(int accountId, PostDto post)
         {
@@ -37,11 +40,11 @@ namespace ForumApi.Services.ForumS
         {
             var user = await rep.Account.Value
                 .FindById(accountId)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Account not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
 
             var post = await rep.Post.Value
                 .FindByCondition(p => p.Id == postId && p.DeletedAt == null, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Post not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-post"]);
 
             if(await rep.Like.Value.FindByCondition(l => l.AccountId == accountId && l.PostId == postId).AnyAsync())
                 return;
@@ -61,11 +64,11 @@ namespace ForumApi.Services.ForumS
         {
             var user = await rep.Account.Value
                 .FindById(accountId)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Account not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
 
             var post = await rep.Post.Value
                 .FindByCondition(p => p.Id == postId && p.DeletedAt == null, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Post not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-post"]);
 
             var like = await rep.Like.Value.FindByCondition(l => l.AccountId == accountId && l.PostId == postId)
                 .FirstOrDefaultAsync();

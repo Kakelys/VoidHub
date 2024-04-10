@@ -1,3 +1,4 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 
 namespace ForumApi.DTO.DAccount
@@ -7,18 +8,18 @@ namespace ForumApi.DTO.DAccount
     /// </summary>
     public class AccountDtoAdminUsernameValidator : AbstractValidator<AccountDto> 
     {
-        public AccountDtoAdminUsernameValidator() 
+        public AccountDtoAdminUsernameValidator(IJsonStringLocalizer locale)
         {
             RuleFor(x => x.Username)
                 .NotEmpty()
-                .WithMessage("Username must be specified")
+                .WithMessage(locale["validators.username-required"])
                 .MaximumLength(32)
-                .WithMessage("Username must be less than 32 characters");
+                .WithMessage(locale["validators.username-length"]);
 
             // admin change only user's usrname
             RuleFor(x => x.Role)
                 .Must(x => x == Data.Models.RoleEnum.None)
-                .WithMessage("Role cannot be changed");
+                .WithMessage(locale["validators.no-role"]);
             RuleFor(r => r.Email).Null();
             RuleFor(r => r.OldPassword).Null();
             RuleFor(r => r.NewPassword).Null();

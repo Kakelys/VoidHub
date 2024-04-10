@@ -1,6 +1,6 @@
 namespace ForumApi.DTO.DSearch
 {
-    public class SearchParamNames
+    public static class SearchParamNames
     {
         public static string WordTitle => "WordTitle";
         public static string WordContent => "WorldContent";

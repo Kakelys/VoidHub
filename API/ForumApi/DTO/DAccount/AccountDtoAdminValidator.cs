@@ -1,3 +1,4 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 using ForumApi.Data.Models;
 
@@ -8,11 +9,11 @@ namespace ForumApi.DTO.DAccount
         /// <summary>
         /// for admin to change user's role
         /// </summary>
-        public AccountDtoAdminValidator() 
+        public AccountDtoAdminValidator(IJsonStringLocalizer locale) 
         {
             RuleFor(x => x.Role)
                 .Must(x => x != RoleEnum.None)
-                .WithMessage("Role must be specified")
+                .WithMessage(locale["validators.role-required"])
                 .IsInEnum();
 
             // admin change only user's role

@@ -1,4 +1,6 @@
+using System.Data;
 using System.Linq.Dynamic.Core;
+using AspNetCore.Localizer.Json.Localizer;
 using ForumApi.Data;
 using ForumApi.Data.Repository.Extensions;
 using ForumApi.Utils.Exceptions;
@@ -23,19 +25,22 @@ namespace ForumApi.Controllers.Filters
         {
             var userId = context.HttpContext.User.GetId();
 
+            var locale = context.HttpContext.RequestServices.GetService<IJsonStringLocalizer>()
+                ?? throw new NoNullAllowedException("JsonStringLocalizer");
+
             if (!context.ActionArguments.TryGetValue("id", out object? value))
-                throw new ArgumentNullException("Id is not provided");
+                throw new BadRequestException(locale["errors.id-not-provided"]);
 
             if(!int.TryParse(value?.ToString(), out int entityId))
-                throw new BadRequestException("Id is not valid");
+                throw new BadRequestException(locale["errors.id-not-valid"]);
 
             var db = context.HttpContext.RequestServices.GetService<ForumDbContext>()
-                ?? throw new Exception("Can't get db context");
+                ?? throw new ArgumentNullException(locale["errors.no-db-context"]);
 
             _ = await db.Set<T>()
                 .EnableAsTracking(false)
                 .Where($"Id == {entityId} and {_columnName} == {userId}")
-                .FirstOrDefaultAsync() ?? throw new ForbiddenException("You don't have permission to do this action");
+                .FirstOrDefaultAsync() ?? throw new ForbiddenException(locale["errors.no-permission"]);
 
             await next();
         }

@@ -11,83 +11,76 @@ using System.Linq.Dynamic.Core;
 using ForumApi.DTO.DTopic;
 using LinqKit;
 using ForumApi.Data.Repository.Extensions;
+using AspNetCore.Localizer.Json.Localizer;
 
 
 namespace ForumApi.Services.ForumS
 {
-    public class PostService : IPostService
+    public class PostService(
+        IRepositoryManager rep,
+        IMapper mapper,
+        IJsonStringLocalizer locale) : IPostService
     {
-        private readonly IRepositoryManager _rep;
-        private readonly IMapper _mapper;
-
-        public PostService(
-            IRepositoryManager rep,
-            IMapper mapper)
-        {
-            _rep = rep;
-            _mapper = mapper;
-        }
-
         public async Task<Post> Create(int accountId, PostEditDto postDto)
         {
-            if(!_rep.IsInTransaction)
-                throw new DatabaseException("Function runs outside the transaction");
+            if(!rep.IsInTransaction)
+                throw new DatabaseException(locale["errors.out-of-transaction"]);
 
-            var topicEntity = await _rep.Topic.Value
+            var topicEntity = await rep.Topic.Value
                 .FindByCondition(t => t.Id == postDto.TopicId, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Topic not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-topic"]);
 
             if(topicEntity.IsClosed)
-                throw new BadRequestException("Topic is closed");
+                throw new BadRequestException(locale["errors.topic-closed"]);
 
             if(topicEntity.DeletedAt != null)
-                throw new BadRequestException("Topic currently deleted; creating new posts unavailable");
+                throw new BadRequestException($"{locale["errors.topic-deleted"]} {locale["errors.creating-post-unavailable"]}");
 
-            var post = _mapper.Map<Post>(postDto);
+            var post = mapper.Map<Post>(postDto);
             post.AccountId = accountId;
 
-            var entity = _rep.Post.Value.Create(post);
-            await _rep.Save();
+            var entity = rep.Post.Value.Create(post);
+            await rep.Save();
         
             // update ancestors comments counter
-            await _rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, 1);
+            await rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, 1);
 
             // upd topic posts counter, if it not comment
-            if(postDto.AncestorId != null && entity.Ancestor.AncestorId == null)
+            if(postDto.AncestorId != null && entity.Ancestor?.AncestorId == null)
                 topicEntity.PostsCount++;
 
-            await _rep.Save();
+            await rep.Save();
 
             return post;
         }
 
         public async Task Delete(int postId)
         {
-            var entity = await _rep.Post.Value
+            var entity = await rep.Post.Value
                 .FindByCondition(p => p.Id == postId && p.DeletedAt == null, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Post not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-post"]);
 
-            var topicFirstPost = await _rep.Post.Value
+            var topicFirstPost = await rep.Post.Value
                 .FindByCondition(p => p.TopicId == entity.TopicId && p.DeletedAt == null)
                 .OrderBy(p => p.CreatedAt)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Post not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-post"]);
 
             var topic = entity.Topic;
 
             if (entity.Id == topicFirstPost.Id)
-                throw new BadRequestException("You can't delete main post");
+                throw new BadRequestException(locale["errors.delete-main-post"]);
 
             if(topic.DeletedAt != null)
-                throw new BadRequestException("Topic currently deleted; deleting posts unavailable");
+                throw new BadRequestException($"{locale["errors.topic-deleted"]}; {locale["errors.deleting-post-inavailable"]}");
 
-            await _rep.BeginTransaction();
+            await rep.BeginTransaction();
             try
             {
-                var deleted = _rep.Post.Value.Delete(entity);
-                await _rep.Save();
+                var deleted = rep.Post.Value.Delete(entity);
+                await rep.Save();
 
                 // update ancestors comments counter
-                await _rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, -deleted);
+                await rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, -deleted);
 
                 // upd topic posts counter, if it not comment
                 if(entity.AncestorId == topicFirstPost.Id)
@@ -95,12 +88,12 @@ namespace ForumApi.Services.ForumS
                     topic.PostsCount--;
                 }
 
-                await _rep.Save();
-                await _rep.Commit();
+                await rep.Save();
+                await rep.Commit();
             }
             catch
             {
-                await _rep.Rollback();
+                await rep.Rollback();
                 throw;
             }
         }
@@ -114,7 +107,7 @@ namespace ForumApi.Services.ForumS
             if(prms.ByAccountId != 0)
                 predicate.And(p => p.AccountId == prms.ByAccountId);
 
-            var posts = await _rep.Post.Value
+            var posts = await rep.Post.Value
                 .FindByCondition(predicate)
                 .AllowDeletedWithTopic(prms.IncludeDeleted)
                 .OrderBy(p => p.CreatedAt)
@@ -122,8 +115,8 @@ namespace ForumApi.Services.ForumS
                 .TakeOffset(page)
                 .Select(p => new PostResponse
                 {
-                    Post = _mapper.Map<PostDto>(p),
-                    Sender = _mapper.Map<User>(p.Author)
+                    Post = mapper.Map<PostDto>(p),
+                    Sender = mapper.Map<User>(p.Author)
                 })
                 .ToListAsync();
 
@@ -143,7 +136,7 @@ namespace ForumApi.Services.ForumS
             if(prms.ByAccountId != 0)
                 predicate.And(t => t.AccountId == prms.ByAccountId);
 
-            return await _rep.Post.Value
+            return await rep.Post.Value
             .FindByCondition(predicate)
             .OrderBy(prms.OrderBy)
             .Include(p => p.Author)
@@ -151,24 +144,24 @@ namespace ForumApi.Services.ForumS
             .TakeOffset(offset)
             .Select(p => new PostInfoResponse
             {
-                Post = _mapper.Map<PostDto>(p),
-                Topic = _mapper.Map<TopicDto>(p.Topic), 
-                Sender = _mapper.Map<User>(p.Author)
+                Post = mapper.Map<PostDto>(p),
+                Topic = mapper.Map<TopicDto>(p.Topic), 
+                Sender = mapper.Map<User>(p.Author)
             })
             .ToListAsync();
         }
 
         public async Task<Post> Update(int postId, PostEditDto postDto)
         {
-            var entity = await _rep.Post.Value
+            var entity = await rep.Post.Value
                 .FindByCondition(p => p.Id == postId && p.DeletedAt == null, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Post not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-post"]);
 
             if(entity.Topic.DeletedAt != null)
-                throw new BadRequestException("Topic currently deleted; updating posts unavailable");
+                throw new BadRequestException($"{locale["errors.topic-deleted"]}; {locale["errors.updating-post-unavailable"]} ");
 
             entity.Content = postDto.Content;
-            await _rep.Save();
+            await rep.Save();
 
             return entity;
         }

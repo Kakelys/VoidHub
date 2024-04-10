@@ -1,3 +1,4 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 using ForumApi.Controllers.Filters;
 using ForumApi.DTO.DFile;
@@ -16,7 +17,8 @@ namespace ForumApi.Controllers
     public class UploadImageController(
         IUploadService uploadService,
         IFileService fileService,
-        IOptions<ImageOptions> options
+        IOptions<ImageOptions> options,
+        IJsonStringLocalizer locale
     ) : ControllerBase
     {
         private readonly ImageOptions _imageOptions = options.Value;
@@ -26,7 +28,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> UploadImage(NewFileDto newFileDto)
         {
-            var validator = new NewImageValidator(options);
+            var validator = new NewImageValidator(options, locale);
             await validator.ValidateAndThrowAsync(newFileDto);
 
             var accountId = User.GetId();
@@ -37,7 +39,7 @@ namespace ForumApi.Controllers
                 Path = $"{_imageOptions.PostImageFolder}/{accountId}{Guid.NewGuid()}{_imageOptions.FileType}",
             };
 
-            return Ok(await uploadService.UploadImage(newFileDto!.File, fileDto));
+            return Ok(await uploadService.UploadImage(newFileDto!.File!, fileDto));
         }
 
         [HttpDelete()]
@@ -45,14 +47,14 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> DeteleImages([FromQuery] int[] ids)
         {
             if(ids.Length == 0)
-                throw new BadRequestException("File ids not provided");
+                throw new BadRequestException(locale["errors.file-ids-not-provided"]);
 
             var accountId = User.GetId();
 
             // check permission for delition
             var files = await fileService.Get(ids);
             if(files.Count(f => f.AccountId == accountId) != files.Count)
-                throw new ForbiddenException("You don't have permission to do this action");
+                throw new ForbiddenException(locale["errors.no-permission"]);
 
             await uploadService.DeleteImages(ids);
 

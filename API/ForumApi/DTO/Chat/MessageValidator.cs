@@ -1,14 +1,15 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 
 namespace ForumApi.DTO.DChat
 {
     public class MessageValidator : AbstractValidator<Message>
     {
-        public MessageValidator()
+        public MessageValidator(IJsonStringLocalizer locale)
         {
             RuleFor(x => x.Content)
-            .NotEmpty().WithMessage("Message required")
-            .MaximumLength(3000).WithMessage("Too much characters");
+            .NotEmpty().WithMessage(locale["validators.message-required"])
+            .MaximumLength(3000).WithMessage(locale["validators.message-length"]);
         }
     }
 }

@@ -4,6 +4,6 @@ namespace ForumApi.Services.Utils.Interfaces
 {
     public interface INotifyService
     {
-        Task Notify(int accountId, NotificationBase notif);        
+        Task Notify(int accountId, NotificationBase notification);
     }
 }

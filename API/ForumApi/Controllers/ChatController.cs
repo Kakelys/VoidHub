@@ -85,13 +85,13 @@ namespace ForumApi.Controllers
                  {
                     Type = "newMessage",
                     Message = msgRes.Message,
-                    Chat = chat.Chat,
+                    Chat = chat!.Chat,
                     Sender = msgRes.Sender
                 };
 
                 chat.Members.ToList().ForEach(m => {
                     if(!chat.Chat.IsGroup)
-                        notification.AnotherUser = chat.Members.FirstOrDefault(cm => cm.Id != m.Id);
+                        notification.AnotherUser = chat.Members.Find(cm => cm.Id != m.Id);
 
                     notifyService.Notify(m.Id, notification);
                 });

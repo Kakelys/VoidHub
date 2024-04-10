@@ -15,10 +15,7 @@ namespace ForumApi.Controllers.Filters
             var userId = context.HttpContext.User.GetId();
 
             var banRepo = context.HttpContext.RequestServices.GetService<Lazy<IBanRepository>>()
-                ?? throw new Exception("Can't get IBanRepository");
-
-            var mapper = context.HttpContext.RequestServices.GetService<IMapper>()
-                ?? throw new Exception("Can't get IMapper");
+                ?? throw new ArgumentNullException("Can't get IBanRepository");
 
             var userBan = await banRepo.Value
                 .FindByCondition(b => b.AccountId == userId && b.IsActive && b.ExpiresAt > DateTime.UtcNow)

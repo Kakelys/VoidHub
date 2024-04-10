@@ -32,7 +32,7 @@ namespace ForumApi.Services.Utils
             var predicators = new Dictionary<string, Expression<Func<Topic, bool>>>
             {
                 [SearchParamNames.WordTitle] = t => t.SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)),
-                [SearchParamNames.WordContent] = t => t.Posts.Where(p => p.AncestorId == null).First().SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)),
+                [SearchParamNames.WordContent] = t => t.Posts.First(p => p.AncestorId == null).SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)),
                 [SearchParamNames.PartialTitle] = t => EF.Functions.ILike(t.Title, $"%{query}%"),
                 [SearchParamNames.PartialContent] = t => EF.Functions.ILike(t.Posts.OrderByDescending(p => p.CreatedAt).First().Content ?? "", $"%{query}%"),
             };

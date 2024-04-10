@@ -8,40 +8,31 @@ using ForumApi.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ForumApi.Services.Auth.Interfaces;
+using AspNetCore.Localizer.Json.Localizer;
 
 namespace ForumApi.Services.Auth
 {
-    public class AuthService : IAuthService
+    public class AuthService(
+        IRepositoryManager rep,
+        ITokenService tokenService,
+        IOptions<JwtOptions> jwtOptions,
+        IMapper mapper,
+        IJsonStringLocalizer locale) : IAuthService
     {
-        private readonly IRepositoryManager _rep;
-        private readonly ITokenService _tokenService;
-        private readonly JwtOptions _jwtOptions;
-        private readonly IMapper _mapper;
+        private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
-        public AuthService(
-            IRepositoryManager rep,
-            ITokenService tokenService,
-            IOptions<JwtOptions> jwtOptions,
-            IMapper mapper)
-        {
-            _rep = rep;
-            _tokenService = tokenService;
-            _jwtOptions = jwtOptions.Value;
-            _mapper = mapper;
-        }
-        
         public async Task<AuthResponse> RefreshPair(string refreshToken)
         {
-            var tokenEntity = await _rep.Token.Value.FindByTokenWithAccount(refreshToken, true)
-                .FirstOrDefaultAsync() ??  throw new NotFoundException("Invalid refresh token");
+            var tokenEntity = await rep.Token.Value.FindByTokenWithAccount(refreshToken, true)
+                .FirstOrDefaultAsync() ??  throw new NotFoundException(locale["errors.no-token"]);
 
             if(tokenEntity.Account.DeletedAt != null)
-                throw new BadRequestException("You cannot refresh token for deleted account");
+                throw new BadRequestException(locale["errors.no-refresh-for-deleted-account"]);
 
             if(tokenEntity.ExpiresAt < DateTime.UtcNow)
-                throw new BadRequestException("Refresh token expired");
+                throw new BadRequestException(locale["errors.expired-token"]);
 
-            var pair = _tokenService.CreatePair(tokenEntity.Account);
+            var pair = tokenService.CreatePair(tokenEntity.Account);
 
             // fix accidental multiple update
             // what a meme :D
@@ -56,32 +47,32 @@ namespace ForumApi.Services.Auth
             //update last logged date
             tokenEntity.Account.LastLoggedAt = DateTime.UtcNow;
 
-            await _rep.Save();
+            await rep.Save();
 
             return new AuthResponse
             {
                 Tokens = pair,
-                User = _mapper.Map<AuthUser>(tokenEntity.Account)
+                User = mapper.Map<AuthUser>(tokenEntity.Account)
             };
         }
 
         public async Task<AuthResponse> Login(Login auth)
         {
-            var account = await _rep.Account.Value
+            var account = await rep.Account.Value
                 .FindByCondition(a => a.LoginName == auth.LoginName && a.DeletedAt == null, true)
-                .FirstOrDefaultAsync() ?? throw new BadRequestException("Invalid login or password");
+                .FirstOrDefaultAsync() ?? throw new BadRequestException(locale["errors.invalid-login-or-password"]);
 
             if(!PasswordHelper.Verify(auth.Password, account.PasswordHash))
-                throw new BadRequestException("Invalid login or password");
+                throw new BadRequestException(locale["errors.invalid-login-or-password"]);
 
             //check max tokens count and update
             if(account.Tokens.Count > _jwtOptions.MaxTokenCount)
             {
                 var token = account.Tokens.OrderBy(t => t.ExpiresAt).First();
-                _rep.Token.Value.Delete(token);
+                rep.Token.Value.Delete(token);
             }
 
-            var newPair = _tokenService.CreatePair(account);
+            var newPair = tokenService.CreatePair(account);
 
             account.Tokens.Add(new Token
             {
@@ -92,25 +83,25 @@ namespace ForumApi.Services.Auth
 
             account.LastLoggedAt = DateTime.UtcNow;
 
-            await _rep.Save();
+            await rep.Save();
 
             return new AuthResponse
             {
                 Tokens = newPair,
-                User = _mapper.Map<AuthUser>(account)
+                User = mapper.Map<AuthUser>(account)
             };
         }
 
         public async Task<AuthResponse> Register(Register auth)
         {
-            if(await _rep.Account.Value.FindByLogin(auth.LoginName).AnyAsync())
-                throw new BadRequestException("User with such login already exists");
+            if(await rep.Account.Value.FindByLogin(auth.LoginName).AnyAsync())
+                throw new BadRequestException(locale["errors.same-login"]);
 
-            if(await _rep.Account.Value.FindByUsername(auth.Username).AnyAsync())
-                throw new BadRequestException("User with such username already exists");
+            if(await rep.Account.Value.FindByUsername(auth.Username).AnyAsync())
+                throw new BadRequestException(locale["errors.same-username"]);
 
-            if(await _rep.Account.Value.FindByEmail(auth.Email).AnyAsync())
-                throw new BadRequestException("User with such email already exists");
+            if(await rep.Account.Value.FindByEmail(auth.Email).AnyAsync())
+                throw new BadRequestException(locale["errors.same-email"]);
 
             var account = new Account()
             {
@@ -122,13 +113,13 @@ namespace ForumApi.Services.Auth
             };
 
             //transaction needed for token generation, because neeeds account id
-            await _rep.BeginTransaction();
+            await rep.BeginTransaction();
             try 
             {
-                _rep.Account.Value.Create(account);
-                await _rep.Save();
+                rep.Account.Value.Create(account);
+                await rep.Save();
 
-                var pair = _tokenService.CreatePair(account);
+                var pair = tokenService.CreatePair(account);
 
                 account.Tokens.Add(new Token
                 {
@@ -137,18 +128,18 @@ namespace ForumApi.Services.Auth
                     ExpiresAt = DateTime.UtcNow.AddMinutes(_jwtOptions.RefreshLifetimeInMinutes)
                 });
 
-                await _rep.Save();
-                await _rep.Commit();
+                await rep.Save();
+                await rep.Commit();
 
                 return new AuthResponse
                 {
                     Tokens = pair,
-                    User = _mapper.Map<AuthUser>(account)
+                    User = mapper.Map<AuthUser>(account)
                 };
             } 
             catch 
             {
-                await _rep.Rollback();
+                await rep.Rollback();
                 throw; 
             }
         }
