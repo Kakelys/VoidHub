@@ -4,6 +4,7 @@ export const environment = {
   baseAPIUrl: 'http://localhost:5000/api',
   resourceURL: 'http://localhost:5000',
   production: false,
+  localizationPrefix: "./assets/i18n/l.",
   limitNames: {
     limitParam: 'X-Limit-Param',
     nameParam: 'X-Name-Param',

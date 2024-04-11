@@ -13,12 +13,11 @@
   <div class="flex flex-col items-center text-2xl" *ngIf="!(user)">
     {{'home.no-account'|translate}}
     <a routerLink="/register">
-      <span class="link link-hover">{{'signup' | translate}}</span> {{'home.create'|translate}}
+      <span class="link link-hover">{{ 'home.signup' | translate }}</span> {{'home.create'|translate}}
     </a>
     {{'home.or'|translate}}
     <a routerLink="/login">
-      <span class="link link-hover">{{'signin'|translate}}</span> {{'home.signin'|translate}}
-      {{ 'signup'|translate}}
+      <span class="link link-hover">{{ 'home.signin' | translate }}</span> {{'home.signin-after'|translate}}
     </a>
   </div>
 </div>

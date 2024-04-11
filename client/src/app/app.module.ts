@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,20 +16,27 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LimitterInterceptor } from 'src/app/limitter/limitter.interceptor';
 import { LimitterService } from './limitter/limitter.service';
 import { SearchBarComponent } from './forum/search/search-bar/search-bar.component';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { HashLocationStrategy, LocationStrategy, registerLocaleData } from '@angular/common';
 import { SignalrService } from 'src/shared/signalr.service';
 import { NotifyService } from './notify/notify.service';
 import { NewMessageListener } from './notify/new-message.listener';
 import { NewMessageComponent } from './notify/new-message/new-message.component';
 import { MenuComponent } from './menu/menu.component';
 import { SectionService } from './forum/services/section.service';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizeInterceptor } from 'src/shared/localize.interceptor';
+import { environment } from 'src/environments/environment';
+import ruLocale from '@angular/common/locales/ru';
+import jaLocale from '@angular/common/locales/ja';
+import { AuthService } from './auth/auth.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, "./assets/i18n/l.", '.json');
+  return new TranslateHttpLoader(http, environment.localizationPrefix, '.json');
 }
+
+registerLocaleData(ruLocale);
+registerLocaleData(jaLocale);
 
 @NgModule({
   declarations: [
@@ -43,18 +50,17 @@ export function HttpLoaderFactory(http: HttpClient) {
     SharedModule,
     HttpClientModule,
     AppRoutingModule,
-    FormsModule,
-    AuthModule,
-    SearchBarComponent,
-    BrowserAnimationsModule,
     TranslateModule.forRoot({
-      defaultLanguage: 'en',
       loader: {
           provide: TranslateLoader,
           useFactory: HttpLoaderFactory,
           deps: [HttpClient]
       }
     }),
+    FormsModule,
+    AuthModule,
+    SearchBarComponent,
+    BrowserAnimationsModule,
     ToastrModule.forRoot({
       preventDuplicates: true,
       countDuplicates: true,
@@ -74,6 +80,9 @@ export function HttpLoaderFactory(http: HttpClient) {
       useClass: HashLocationStrategy
     },
     {
+      provide: LOCALE_ID,
+      useFactory: () => localStorage.getItem('locale') ?? 'en'},
+    {
       provide: APP_INITIALIZER,
       useFactory: (ns: NotifyService, nml: NewMessageListener) => () => {},
       deps: [NotifyService, NewMessageListener],
@@ -82,7 +91,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpExceptionInterceptor,
-      deps: [ToastrService],
+      deps: [ToastrService, TranslateService],
       multi: true,
     },
     {
@@ -94,6 +103,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      deps: [TranslateService],
       multi: true,
     },
     {

@@ -77,7 +77,15 @@
   "labels": {
     "0-on-the-top": "0 - сверху",
     "order-position-on-main-page": "Позиция заказа на главной странице",
-    "cancel": "Отменить"
+    "cancel": "Отменить",
+    "access-denied": "Доступ запрещен",
+    "connection-refused": "Соединение прервано",
+    "fail-request": "Не удалось отправить запрос",
+    "reason": "причина",
+    "session-expired": "Время сеанса истекло. Пожалуйста, войдите снова",
+    "something-went-wrong": "Что-то пошло не так",
+    "you-banned-until": "Вы забанены до",
+    "no-page-access-permission": "У вас нет разрешения на доступ к этой странице"
   },
   "lables": {
     "add-new-section": "Добавить новый раздел",
@@ -99,7 +107,8 @@
     "pinned": "Закреплено",
     "posted-date": "Опубликовано",
     "topic-not-found-or-deleted": "Тема не найдена или удалена",
-    "uploading-images": "Загрузка изображений"
+    "uploading-images": "Загрузка изображений",
+    "internal-error": "Внутренняя ошибка сервера"
   },
   "menu": {
     "admin-panel": "Панель администратора",

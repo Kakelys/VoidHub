@@ -110,7 +110,8 @@
     "changing-forum": "Changing forum",
     "closed": "Closed",
     "pinned": "Pinned",
-    "confirm-recover": "Confirm recover"
+    "confirm-recover": "Confirm recover",
+    "internal-error": "Internal server error"
   },
   "profile": {
     "not-found": "Profile not found",
@@ -148,6 +149,14 @@
   "labels": {
     "order-position-on-main-page": "Order position on main page",
     "0-on-the-top": "0 - on the top",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "session-expired": "Your session has expired. Please login again",
+    "you-banned-until": "You are banned until",
+    "reason": "reason",
+    "access-denied": "Access denied",
+    "fail-request": "Failed to send request",
+    "connection-refused": "Connection refused",
+    "something-went-wrong": "Something went wrong",
+    "no-page-access-permission": "You don't have permission to access this page"
   }
 }

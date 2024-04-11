@@ -1,13 +1,18 @@
 import { Injectable } from "@angular/core";
 import { AuthService } from "./auth.service";
 import { HttpErrorResponse, HttpHandler, HttpRequest } from "@angular/common/http";
-import { catchError, switchMap, throwError } from "rxjs";
+import { catchError, switchMap, take, throwError } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 import { HttpException } from "src/shared/models/http-exception.model";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable()
 export class AuthInterceptor {
-  constructor(private authService: AuthService, private toastr: ToastrService) {}
+  constructor(
+    private authService: AuthService,
+    private toastr: ToastrService,
+    private trans: TranslateService
+  ) {}
 
   intercept (
     req: HttpRequest<any>,
@@ -67,7 +72,12 @@ export class AuthInterceptor {
   }
 
   handleLogout() {
-    this.toastr.error("Your session has expired. Please login again.");
+    this.trans.get('labels.session-expired')
+    .pipe(take(1))
+    .subscribe(str => {
+      this.toastr.error(str);
+    })
+
     this.authService.logout();
   }
 }

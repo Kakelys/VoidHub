@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -13,6 +13,8 @@ export class AppComponent {
     let savedLocale = localStorage.getItem('locale');
     if(savedLocale)
       trans.use(savedLocale);
+    else
+    localStorage.setItem('locale', 'en');
   }
 
   changeLanguage(code: string) {
