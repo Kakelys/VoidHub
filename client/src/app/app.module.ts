@@ -29,7 +29,6 @@ import { LocalizeInterceptor } from 'src/shared/localize.interceptor';
 import { environment } from 'src/environments/environment';
 import ruLocale from '@angular/common/locales/ru';
 import jaLocale from '@angular/common/locales/ja';
-import { AuthService } from './auth/auth.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.localizationPrefix, '.json');

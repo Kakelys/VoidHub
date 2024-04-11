@@ -20,24 +20,24 @@ namespace ForumApi.Data
         public virtual DbSet<ChatMember> ChatMembers { get; set; } = null!;
         public virtual DbSet<ChatMessage> ChatMessages { get; set; } = null!;
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            _ = new AccountConfig(builder.Entity<Account>());
-            _ = new TokenConfig(builder.Entity<Token>());
-            _ = new SectionConfig(builder.Entity<Section>());
-            _ = new TopicConfig(builder.Entity<Topic>());
-            _ = new ForumConfig(builder.Entity<Forum>());
-            _ = new PostConfig(builder.Entity<Post>());
-            _ = new BanConfig(builder.Entity<Ban>());
-            _ = new FileConfig(builder.Entity<Models.File>());
+            _ = new AccountConfig(modelBuilder.Entity<Account>());
+            _ = new TokenConfig(modelBuilder.Entity<Token>());
+            _ = new SectionConfig(modelBuilder.Entity<Section>());
+            _ = new TopicConfig(modelBuilder.Entity<Topic>());
+            _ = new ForumConfig(modelBuilder.Entity<Forum>());
+            _ = new PostConfig(modelBuilder.Entity<Post>());
+            _ = new BanConfig(modelBuilder.Entity<Ban>());
+            _ = new FileConfig(modelBuilder.Entity<Models.File>());
 
-            _ = new ChatConfig(builder.Entity<Chat>());
-            _ = new ChatMemberConfig(builder.Entity<ChatMember>());
-            _ = new ChatMessageConfig(builder.Entity<ChatMessage>());
+            _ = new ChatConfig(modelBuilder.Entity<Chat>());
+            _ = new ChatMemberConfig(modelBuilder.Entity<ChatMember>());
+            _ = new ChatMessageConfig(modelBuilder.Entity<ChatMessage>());
 
-            _ = new LikeConfig(builder.Entity<Like>());
+            _ = new LikeConfig(modelBuilder.Entity<Like>());
 
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

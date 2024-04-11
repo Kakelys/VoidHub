@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using ForumApi.Data.Models;
 
 namespace ForumApi.Utils.Extensions
 {
@@ -12,5 +13,12 @@ namespace ForumApi.Utils.Extensions
 
             return int.Parse(sub.Value);
         }
+
+        public static bool IsAdminOrModer(this ClaimsPrincipal user) =>
+            user.Identity?.IsAuthenticated == true &&
+            (user.IsInRole(Role.Admin) || user.IsInRole(Role.Moder));
+
+        public static bool IsAuthed(this ClaimsPrincipal user) =>
+            user.Identity?.IsAuthenticated == true;
     }
 }

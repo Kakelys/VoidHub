@@ -34,7 +34,7 @@ namespace ForumApi.Services.ForumS
         {
             var forum = rep.Forum.Value.Create(mapper.Map<Forum>(forumDto));
             await rep.Save();
-            
+
             return forum;
         }
 
@@ -56,7 +56,7 @@ namespace ForumApi.Services.ForumS
                 .FindByCondition(f => f.DeletedAt == null && f.Id == forumId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-forum"]);
 
-            if(entity.Topics.Where(t => t.DeletedAt == null).Any())
+            if(entity.Topics.Any(t => t.DeletedAt == null))
                 throw new BadRequestException(locale["errors.delete-forums-with-topics"]);
 
             rep.Forum.Value.Delete(entity);

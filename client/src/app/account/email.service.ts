@@ -12,6 +12,7 @@ export class EmailService {
     const headers = new HttpHeaders().set(environment.limitNames.nameParam, environment.limitNames.confirmEmail);
 
     return this.http.get(this.baseUrl + "/confirm", {
+      headers: headers,
       params: {
         base64Token: token
       }

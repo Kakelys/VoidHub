@@ -20,8 +20,8 @@ namespace ForumApi.Controllers
     [ApiController]
     [Route("api/v1/accounts")]
     public class AccountController(
-        IAccountService accountService, 
-        IOptions<ImageOptions> options, 
+        IAccountService accountService,
+        IOptions<ImageOptions> options,
         IImageService imageService,
         IPostService postService,
         ITopicService topicService,
@@ -43,13 +43,12 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> GetAccountPosts(int id, [FromQuery] Offset offset, [FromQuery] DateTime belowTime)
         {
             var includeDeleted = false;
-            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
-            if(isAuthed && (User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
+            if(User.IsAdminOrModer())
             {
                 includeDeleted = true;
             }
 
-            var prms = new Params() 
+            var prms = new Params()
             {
                 BelowTime = belowTime,
                 IncludeDeleted = includeDeleted,
@@ -58,7 +57,7 @@ namespace ForumApi.Controllers
             };
 
             var res = await postService.GetPosts(offset, prms);
-            if(isAuthed)
+            if(User.IsAuthed())
             {
                 var userId = User.GetId();
                 foreach(var post in res)
@@ -76,13 +75,12 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> GetAccountTopics(int id, [FromQuery] Offset offset, [FromQuery] DateTime belowTime)
         {
             var includeDeleted = false;
-            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
-            if(isAuthed && (User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
+            if(User.IsAdminOrModer())
             {
                 includeDeleted = true;
             }
 
-            var prms = new Params() 
+            var prms = new Params()
             {
                 BelowTime = belowTime,
                 IncludeDeleted = includeDeleted,
@@ -91,7 +89,7 @@ namespace ForumApi.Controllers
             };
 
             var res = await topicService.GetTopics(offset, prms);
-            if(isAuthed)
+            if(User.IsAuthed())
             {
                 var userId = User.GetId();
                 foreach(var data in res)
@@ -118,7 +116,7 @@ namespace ForumApi.Controllers
         [HttpPatch("avatar")]
         [Authorize]
         [BanFilter]
-        public async Task<IActionResult> UpdateImageSelf(AccountDto accountDto, [FromQuery] string currentPath)
+        public async Task<IActionResult> UpdateImageSelf(AccountDto accountDto)
         {
             var validator = new AccountDtoImageValidator(options, locale);
             await validator.ValidateAndThrowAsync(accountDto);
@@ -178,9 +176,9 @@ namespace ForumApi.Controllers
         [HttpDelete("{id}")]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]
-        public async Task<IActionResult> DeleteAccount(int id) 
+        public async Task<IActionResult> DeleteAccount(int id)
         {
-            await accountService.Delete(User.GetId());
+            await accountService.Delete(id);
             return Ok();
         }
 

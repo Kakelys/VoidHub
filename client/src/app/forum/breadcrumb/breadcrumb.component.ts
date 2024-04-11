@@ -1,6 +1,5 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input} from '@angular/core';
 import { BreadcrumbService } from '../services/breadcrumb.service';
-import { ReplaySubject } from 'rxjs';
 import { Link } from '../models/link.model';
 
 @Component({
@@ -8,7 +7,7 @@ import { Link } from '../models/link.model';
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.css']
 })
-export class BreadcrumbComponent implements OnInit, OnDestroy {
+export class BreadcrumbComponent {
 
   @Input()
   from: string;
@@ -37,17 +36,6 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     {type: 'topic', data: 'name3'},
   ]
 
-  private destroy$ = new ReplaySubject<boolean>(1);
 
-  constructor(private bcService: BreadcrumbService) {
-
-  }
-
-  ngOnInit(): void {
-
-  }
-
-  ngOnDestroy(): void {
-
-  }
+  constructor(private bcService: BreadcrumbService) {}
 }

@@ -79,7 +79,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     fromEvent(this.messagesContainer.nativeElement, 'scroll')
     .pipe(takeUntil(this.destroy$),debounceTime(300))
     .subscribe((e:any) => {
-      var dif = e.target.scrollTop - e.target.clientHeight;
+      let dif = e.target.scrollTop - e.target.clientHeight;
 
       if((dif + dif * 0.3) * -1 > e.target.scrollHeight)
         this.loadMessages();
