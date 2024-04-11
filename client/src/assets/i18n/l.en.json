@@ -157,6 +157,13 @@
     "fail-request": "Failed to send request",
     "connection-refused": "Connection refused",
     "something-went-wrong": "Something went wrong",
-    "no-page-access-permission": "You don't have permission to access this page"
+    "no-page-access-permission": "You don't have permission to access this page",
+    "confirm-email": "Confirm email",
+    "email-confirmed": "Your email confirmed",
+    "email-not-confirmed": "Email not confirmed",
+    "resend-confirm-email": "Resend email",
+    "done-check-email": "Done. Check email",
+    "thank-for-confirming-email": "Thank you for confirming email",
+    "back-to-home-page": "Back to home page"
   }
 }

@@ -118,7 +118,7 @@
           <div class="motion-safe:animate-pulse w-20 rounded bg-neutral"></div>
         </ng-template>
       </div>
-      <div *ngIf="activeReq == 0 || !fileToUpload; else fileUploadingProgress">
+      <div *ngIf="!fileUploading; else fileUploadingProgress">
         {{ 'profile.choose-new' | translate }}:
       </div>
       <ng-template #fileUploadingProgress>
@@ -139,7 +139,7 @@
               class="file-input file-input-bordered file-input-xs w-full text-sm"
               [ngClass]="{
                 'input-error': avatarForm.controls['img']?.touched && avatarForm.controls['img']?.invalid,
-                'hidden': activeReq > 0 && fileToUpload
+                'hidden': fileUploading
               }"
               ngModel
               required
@@ -155,6 +155,24 @@
           </div>
         </form>
       </div>
+    </div>
+    <div class="ms-12">
+      <div class="text-2xl">
+        {{ 'labels.confirm-email' | translate }}:
+      </div>
+      <div *ngIf="user.isEmailConfirmed; else emailNotConfirmed" class="text-accent">
+        {{ 'labels.email-confirmed' | translate }}
+      </div>
+      <ng-template #emailNotConfirmed>
+        <div class="text-error">
+          {{ 'labels.email-not-confirmed' | translate }}
+        </div>
+        <app-limit-loader [limit]="1">
+          <div class="btn btn-info min-h-min h-8 my-2" (click)="onResendClick()">
+            {{ 'labels.resend-confirm-email' | translate }}
+          </div>
+        </app-limit-loader>
+      </ng-template>
     </div>
   </div>
 </div>

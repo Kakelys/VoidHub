@@ -44,7 +44,10 @@
     "no-section": "Section not found",
     "forum-closed": "Forum is closed",
     "topic-already-deleted": "Topic already deleted",
-    "topic-not-deleted": "Topic not deleted"
+    "topic-not-deleted": "Topic not deleted",
+    "invalid-token": "Invalid token",
+    "email-already-confirmed": "Email already confirmed",
+    "confirm-token-expired": "Confirm token expired"
   },
   "validators": {
     "login-required": "Login name must not be empty",
@@ -79,5 +82,12 @@
     "offsetnumber-invalid": "Invalid offset number",
     "offsetlimit-size": "Limit must be greater than 0 and less than or equal to 100",
     "query-length": "Query must be between 1 and 255 characters"
+  },
+  "email": {
+    "confirm-email": "Confirm Email",
+    "confirm-ask-for-confirm-line": "Hello, pls confirm your email by visiting our site through link below.",
+    "link-will-be-valid": "The link will be valid for the next",
+    "hours": "hours",
+    "not-for-smap": "We will not use it for spam"
   }
 }

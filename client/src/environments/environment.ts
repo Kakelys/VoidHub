@@ -19,6 +19,7 @@ export const environment = {
     chatLoadMsgs: 'chatLoadMsgs',
     loadProfilePosts: 'loadProfilePosts',
     loadProfileTopics: 'loadProfileTopics',
-    loadComments: 'loadComments'
+    loadComments: 'loadComments',
+    confirmEmail: 'confirmEmail'
   },
 }

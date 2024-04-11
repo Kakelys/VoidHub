@@ -20,6 +20,8 @@ import { PostService } from "../forum/services/post.service";
 import { SharedForumModule } from "../forum/shared.forum.module";
 import { AccountTopicElement } from './topics/element/element.component';
 import { TranslateModule } from "@ngx-translate/core";
+import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
+import { EmailService } from "./email.service";
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { TranslateModule } from "@ngx-translate/core";
     AccountTopicsComponent,
     AccountPostsComponent,
     AccountPostElementComponent,
-    AccountTopicElement
+    AccountTopicElement,
+    ConfirmEmailComponent
   ],
   imports: [
     SharedModule,
@@ -39,6 +42,7 @@ import { TranslateModule } from "@ngx-translate/core";
     ErrorMessageListComponent,
     RouterModule.forChild([
       {path: 'settings', component: SettingsComponent, canActivate: [canActivateSelf]},
+      {path: 'confirm-email/:token', component: ConfirmEmailComponent},
       {path: '', component: ProfileComponent},
       {path: ':id', component: ProfileComponent, children: [
         {path: 'topics', component: AccountTopicsComponent},
@@ -52,7 +56,8 @@ import { TranslateModule } from "@ngx-translate/core";
   providers: [
     AccountService,
     ChatService,
-    PostService
+    PostService,
+    EmailService
   ]
 })
 export class AccountModule {}

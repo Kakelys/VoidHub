@@ -1,3 +1,5 @@
+using ForumApi.Utils.Options;
+
 namespace ForumApi.Options
 {
     public static class OptionsService
@@ -11,6 +13,11 @@ namespace ForumApi.Options
 
             services.AddOptions<ImageOptions>()
                 .Bind(config.GetSection(ImageOptions.Image))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
+            services.AddOptions<EmailOptions>()
+                .Bind(config.GetSection(EmailOptions.Email))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 

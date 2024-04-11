@@ -36,13 +36,15 @@ namespace ForumApi.Services.Auth
 
             // fix accidental multiple update
             // what a meme :D
-            if(tokenEntity.ExpiresAt.AddDays(1) < DateTime.UtcNow)
+            if (tokenEntity.ExpiresAt.AddDays(1) < DateTime.UtcNow)
             {
                 tokenEntity.RefreshToken = pair.RefreshToken;
                 tokenEntity.ExpiresAt = DateTime.UtcNow.AddMinutes(_jwtOptions.RefreshLifetimeInMinutes);
             }
             else
+            {
                 pair.RefreshToken = tokenEntity.RefreshToken;
+            }
 
             //update last logged date
             tokenEntity.Account.LastLoggedAt = DateTime.UtcNow;

@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { ReplaySubject, take, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/shared/models/user.model';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
@@ -8,8 +8,10 @@ import { AccountService } from '../account.service';
 import { ToastrService } from 'ngx-toastr';
 import { environment as env } from 'src/environments/environment';
 import { HttpEvent } from '@angular/common/http';
-import { LimitterService } from 'src/app/limitter/limitter.service';
 import { HttpException } from 'src/shared/models/http-exception.model';
+import { Router } from '@angular/router';
+import { EmailService } from '../email.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-settings',
@@ -22,8 +24,8 @@ export class SettingsComponent implements OnDestroy {
   avatarUrl: string = null;
   urlDynamicParam: string = Date.now().toString();
   fileToUpload: File | null = null;
+  fileUploading = false;
   avatarProgress: number = 0;
-  activeReq: number = 0;
 
   user: User;
   private destroy$ = new ReplaySubject<boolean>(1);
@@ -31,21 +33,24 @@ export class SettingsComponent implements OnDestroy {
   constructor(
     private authService: AuthService,
     private accountService: AccountService,
+    private emailService: EmailService,
     private toastr: ToastrService,
-    private limitterService: LimitterService
+    private router: Router,
+    private trans: TranslateService
   ) {
     authService.user$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(user => {
-        this.user = user
-        if(user)
-          this.urlDynamicParam = Date.now().toString();
-          this.avatarUrl = `${env.resourceURL}/${user.avatarPath}`;
-      });
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(user => {
+      if(!user)
+      {
+        this.router.navigate(['/']);
+        return;
+      }
 
-    limitterService.activeReq$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(activeReq => this.activeReq = activeReq);
+      this.user = user
+      this.urlDynamicParam = Date.now().toString();
+      this.avatarUrl = `${env.resourceURL}/${user.avatarPath}`;
+    });
   }
 
   onProfileSubmit(form: NgForm) {
@@ -96,6 +101,8 @@ export class SettingsComponent implements OnDestroy {
       return;
     }
 
+    this.fileUploading = true;
+
     let formData = new FormData();
     formData.append('img', this.fileToUpload);
     this.accountService.updAvatar(formData, this.user.avatarPath).subscribe({
@@ -115,6 +122,25 @@ export class SettingsComponent implements OnDestroy {
         }
       },
       error: (err: HttpException) => {
+        this.errorMessages = err.errors;
+      },
+      complete: () => {
+        this.fileUploading = false;
+      }
+    })
+  }
+
+  onResendClick() {
+    this.emailService.resendConfirmEmail()
+    .subscribe({
+      next: _ => {
+        this.trans.get('labels.done-check-email')
+        .pipe(take(1))
+        .subscribe(str => {
+          this.toastr.success(str);
+        })
+      },
+      error: (err:HttpException) => {
         this.errorMessages = err.errors;
       }
     })

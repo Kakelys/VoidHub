@@ -19,6 +19,8 @@ namespace ForumApi.Data.ModelConfigurations
                     .IsRequired();
                 builder.Property(a => a.Email)
                     .IsRequired();
+                builder.Property(a => a.IsEmailConfirmed)
+                    .HasDefaultValue(false);
                 builder.Property(a => a.PasswordHash)
                     .IsRequired();
                 builder.Property(a => a.LastLoggedAt)

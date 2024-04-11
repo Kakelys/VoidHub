@@ -16,6 +16,7 @@ namespace ForumApi.Data.Models
         public DateTime LastLoggedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public string AvatarPath { get; set; } = null!;
+        public bool IsEmailConfirmed { get; set; }
 
         [JsonIgnore]
         public virtual List<Token> Tokens { get; set; } = [];
