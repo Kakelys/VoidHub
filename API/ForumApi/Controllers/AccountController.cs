@@ -13,6 +13,7 @@ using ForumApi.DTO.Utils;
 using ForumApi.Data.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using ForumApi.Utils.Exceptions;
+using AspNetCore.Localizer.Json.Localizer;
 
 namespace ForumApi.Controllers
 {
@@ -25,8 +26,9 @@ namespace ForumApi.Controllers
         IPostService postService,
         ITopicService topicService,
         IRepositoryManager rep,
-        ILikeService likeService) : ControllerBase
-    {   
+        ILikeService likeService,
+        IJsonStringLocalizer locale) : ControllerBase
+    {
         private readonly ImageOptions _imageOptions = options.Value;
 
         [HttpGet("{id}")]
@@ -42,10 +44,9 @@ namespace ForumApi.Controllers
         {
             var includeDeleted = false;
             var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
-            if(isAuthed)
+            if(isAuthed && (User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
             {
-                if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
-                    includeDeleted = true;
+                includeDeleted = true;
             }
 
             var prms = new Params() 
@@ -76,10 +77,9 @@ namespace ForumApi.Controllers
         {
             var includeDeleted = false;
             var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
-            if(isAuthed)
+            if(isAuthed && (User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
             {
-                if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
-                    includeDeleted = true;
+                includeDeleted = true;
             }
 
             var prms = new Params() 
@@ -108,7 +108,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> UpdateSelf([FromBody] AccountDto accountDto)
         {
-            var validator = new AccountDtoValidator();
+            var validator = new AccountDtoValidator(locale);
             await validator.ValidateAndThrowAsync(accountDto);
 
             var senderId = User.GetId();
@@ -120,7 +120,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> UpdateImageSelf(AccountDto accountDto, [FromQuery] string currentPath)
         {
-            var validator = new AccountDtoImageValidator(options);
+            var validator = new AccountDtoImageValidator(options, locale);
             await validator.ValidateAndThrowAsync(accountDto);
 
             var avatarPath = $"{_imageOptions.AvatarFolder}/{User.GetId()}{_imageOptions.FileType}";
@@ -139,7 +139,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> ChangeRole(string username, [FromBody] AccountDto accountDto)
         {
-            var validator = new AccountDtoAdminValidator();
+            var validator = new AccountDtoAdminValidator(locale);
             await validator.ValidateAndThrowAsync(accountDto);
 
             var user = await rep.Account.Value
@@ -164,12 +164,12 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> RenameAccount(string username, [FromBody] AccountDto accountDto)
         {
-            var validator = new AccountDtoAdminUsernameValidator();
+            var validator = new AccountDtoAdminUsernameValidator(locale);
             await validator.ValidateAndThrowAsync(accountDto);
 
             var user = await rep.Account.Value
                 .FindByUsername(username)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
 
             await accountService.Update(user.Id, User.GetId(), accountDto);
             return Ok();
@@ -185,6 +185,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpDelete]
+        [BanFilter]
         [Authorize]
         public async Task<IActionResult> DeleteSelf()
         {

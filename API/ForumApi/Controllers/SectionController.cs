@@ -9,25 +9,18 @@ namespace ForumApi.Controllers
 {
     [ApiController]
     [Route("api/v1/sections")]
-    public class SectionController : ControllerBase
+    public class SectionController(
+        ISectionService sectionService) : ControllerBase
     {
-        private readonly ISectionService _sectionService;
-
-        public SectionController(
-            ISectionService sectionService)
-        {
-            _sectionService = sectionService;
-        }
-
         [HttpGet]
         [Authorize]
         [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
-            if(User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole(Role.Admin))
-                return Ok(await _sectionService.GetSections(true));   
+            if(User.Identity?.IsAuthenticated == true && User.IsInRole(Role.Admin))
+                return Ok(await sectionService.GetSections(true));
             else
-                return Ok(await _sectionService.GetSections());
+                return Ok(await sectionService.GetSections());
         }
 
         [HttpGet("short")]
@@ -35,10 +28,10 @@ namespace ForumApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetShort()
         {
-            if(User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole(Role.Admin))
-                return Ok(await _sectionService.GetDtoSections(true));   
+            if(User.Identity?.IsAuthenticated == true && User.IsInRole(Role.Admin))
+                return Ok(await sectionService.GetDtoSections(true));
             else
-                return Ok(await _sectionService.GetDtoSections());
+                return Ok(await sectionService.GetDtoSections());
         }
 
         [HttpPost]
@@ -46,7 +39,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> Create(SectionEdit sectionDto)
         {
-            var section = await _sectionService.Create(sectionDto);
+            var section = await sectionService.Create(sectionDto);
             return Ok(section);
         }
 
@@ -55,7 +48,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> Update(int id, SectionEdit sectionDto)
         {
-            var section = await _sectionService.Update(id, sectionDto);
+            var section = await sectionService.Update(id, sectionDto);
             return Ok(section);
         }
     }

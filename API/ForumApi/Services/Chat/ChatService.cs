@@ -1,4 +1,5 @@
 using System.Linq.Dynamic.Core;
+using AspNetCore.Localizer.Json.Localizer;
 using AutoMapper;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
@@ -13,20 +14,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services.ChatS
 {
-    public class ChatService(IRepositoryManager rep, IMapper mapper) : IChatService
+    public class ChatService(
+        IRepositoryManager rep, 
+        IMapper mapper,
+        IJsonStringLocalizer locale) : IChatService
     {
         public async Task<(ChatDto, MessageDto)> CreatePersonal(int senderId, int targetId, string message)
         {
-            var sender = await rep.Account.Value
-                .FindById(senderId).FirstOrDefaultAsync() ?? throw new NotFoundException("Sender not found");
-            var target = await rep.Account.Value
-                .FindById(targetId).FirstOrDefaultAsync() ?? throw new NotFoundException("Account not found");
+            _ = await rep.Account.Value
+                .FindById(senderId).FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-sender"]);
+            _ = await rep.Account.Value
+                .FindById(targetId).FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
 
             // check for doubles
             var doublesCondition = rep.Chat.Value.FindByCondition(c => !c.IsGroup && c.Members.Count(m => m.AccountId == senderId || m.AccountId == targetId) == 2);
             if(senderId == targetId && doublesCondition.Any() ||
                senderId != targetId && doublesCondition.Where(c => c.Members.GroupBy(m => m.AccountId).Count() == 2).Any())
-                throw new BadRequestException("Chat alredy exist");
+                throw new BadRequestException(locale["errors.chat-exist"]);
 
             var chat = new Chat();
             ChatMessage firstMessage;
@@ -76,12 +80,12 @@ namespace ForumApi.Services.ChatS
 
         public async Task<List<ChatResponse>> Get(int accountId, Offset offset, DateTime time)
         {
-            var acc = rep.Account.Value
+            _ = rep.Account.Value
                 .FindById(accountId, true)
-                .FirstOrDefault() ?? throw new NotFoundException("Account not found");
+                .FirstOrDefault() ?? throw new NotFoundException(locale["errors.no-user"]);
 
             var tmp = await rep.Chat.Value
-                .FindByCondition(c => c.Members.Where(m => m.AccountId == accountId).Any())
+                .FindByCondition(c => c.Members.Any(m => m.AccountId == accountId))
                 .Select(c => new {
                     Chat = c,
                     LastMessage = c.Messages
@@ -95,7 +99,7 @@ namespace ForumApi.Services.ChatS
                     Chat = mapper.Map<ChatDto>(c.Chat),
                     LastMessage = mapper.Map<MessageDto>(c.LastMessage),
                     Sender = mapper.Map<User>(c.LastMessage.Member.Account),
-                    AnotherUser = c.Chat.IsGroup ? default : mapper.Map<User>(c.Chat.Members.Where(m => m.AccountId != accountId).First().Account)
+                    AnotherUser = c.Chat.IsGroup ? default : mapper.Map<User>(c.Chat.Members.First(m => m.AccountId != accountId).Account)
                 })
                 .ToListAsync();
 
@@ -107,7 +111,7 @@ namespace ForumApi.Services.ChatS
             Console.WriteLine($"{accountId} {targetId}");
             var predicate = PredicateBuilder.New<Chat>(c => !c.IsGroup);
             if(accountId == targetId)
-                predicate.And(c => c.Members.Where(m => m.AccountId == accountId).Count() == 2);
+                predicate.And(c => c.Members.Count(m => m.AccountId == accountId) == 2);
             else
                 predicate.And(c => c.Members.Where(m => m.AccountId == accountId || m.AccountId == targetId).GroupBy(m => m.AccountId).Count() == 2);
 
@@ -126,7 +130,7 @@ namespace ForumApi.Services.ChatS
                     Chat = mapper.Map<ChatDto>(c),
                     Members = mapper.Map<List<User>>(c.Members.Select(c => c.Account).ToList())
                 })
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Chat not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-chat"]);
         }
     }
 }

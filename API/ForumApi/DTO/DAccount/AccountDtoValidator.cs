@@ -1,3 +1,4 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 
 namespace ForumApi.DTO.DAccount
@@ -7,43 +8,43 @@ namespace ForumApi.DTO.DAccount
         /// <summary>
         /// for user to change their own account
         /// </summary>
-        public AccountDtoValidator() 
+        public AccountDtoValidator(IJsonStringLocalizer locale)
         {
             // restrict user from changing their own role
             RuleFor(x => x.Role)
                 .Must(x => x == Data.Models.RoleEnum.None)
-                .WithMessage("Role cannot be changed");
+                .WithMessage(locale["validators.no-role"]);
 
             RuleFor(r => r.Email)
                 .NotEmpty()
-                .WithMessage("Email must not be empty")
+                .WithMessage(locale["validators.email-required"])
                 .EmailAddress()
-                .WithMessage("Email must be a valid email address");
+                .WithMessage(locale["validators.email-valid"]);
 
             RuleFor(r => r.Username)
                 .NotEmpty()
-                .WithMessage("Username must not be empty")
+                .WithMessage(locale["validators.username-required"])
                 .Length(3, 32)
-                .WithMessage("Username must be between 3 and 20 characters");
+                .WithMessage(locale["forms-errors.username-length"])
+                .Matches(@"^[a-zA-Z\d!@#$%^&*()\-_=+{}:,<.>]+$")
+                .WithMessage(locale["validators.username-characters"]);
 
             RuleFor(x => x.OldPassword)
                 .NotEmpty()
-                .WithMessage("Old password must not be empty")
+                .WithMessage(locale["validators.old-password-required"])
                 .When(x => !string.IsNullOrEmpty(x.NewPassword));
 
             RuleFor(x => x.NewPassword).NotEmpty()
-                .WithMessage("New password must not be empty")
+                .WithMessage(locale["validators.new-password-required"])
                 .When(x => !string.IsNullOrEmpty(x.OldPassword));
 
             RuleFor(r => r.NewPassword)
                 .NotEmpty()
-                .WithMessage("Password must not be empty")
-                .MinimumLength(8)
-                .WithMessage("Password must be at least 8 characters long")
-                .MaximumLength(32)
-                .WithMessage("Password must be at most 32 characters long")
+                .WithMessage(locale["validators.password-required"])
+                .Length(8, 32)
+                .WithMessage(locale["forms-errors.password-length"])
                 .Matches(@"^[a-zA-Z\d!@#$%^&*()\-_=+{}:,<.>]+$")
-                .WithMessage("Password can only contain letters, numbers and special characters")
+                .WithMessage(locale["validators.password-characters"])
                 .When(x => !string.IsNullOrEmpty(x.NewPassword));
         }        
     }

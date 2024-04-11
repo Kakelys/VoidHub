@@ -2,6 +2,8 @@ using ForumApi.Services.Auth;
 using ForumApi.Services.Auth.Interfaces;
 using ForumApi.Services.ChatS;
 using ForumApi.Services.ChatS.Interfaces;
+using ForumApi.Services.Email;
+using ForumApi.Services.Email.Interfaces;
 using ForumApi.Services.FileS;
 using ForumApi.Services.FileS.Interfaces;
 using ForumApi.Services.ForumS;
@@ -42,6 +44,9 @@ namespace ForumApi.Utils.Extensions
             services.AddScoped<IMessageService, MessageService>();
 
             services.AddScoped<INotifyService, NotifyService>();
+
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IConfirmService, ConfirmService>();
 
             return services;
         }

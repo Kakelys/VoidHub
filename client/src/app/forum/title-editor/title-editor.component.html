@@ -28,7 +28,7 @@
         class="form-control"
         id="title"
         name="title"
-        placeholder="Title"
+        placeholder="{{ 'forms.title' | translate }}"
         class="input-sm bg-neutral mt-2 input input-bordered"
         [ngClass]="{
           'input-error': titleEditForm.controls['title']?.touched && titleEditForm.controls['title'].invalid
@@ -42,7 +42,7 @@
             class="label-text-alt text-error"
             *ngIf="titleEditForm.controls['title']?.touched && titleEditForm.controls['title'].errors?.['required']"
           >
-            Title is required
+            {{ 'forms-errors.title-required' | translate }}
           </span>
         </label>
     </div>
@@ -52,10 +52,10 @@
 
     <div>
       <button type="submit" class="btn btn-success min-h-min h-8">
-        Save
+        {{ 'forms.save' | translate }}
       </button>
       <button type="button" class="btn btn-info min-h-min h-8 ms-3" (click)="setEditMode(false)">
-        Cancel
+        {{ 'forms.cancel' | translate }}
       </button>
     </div>
   </form>

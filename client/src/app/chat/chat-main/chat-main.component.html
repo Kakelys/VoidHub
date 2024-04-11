@@ -20,7 +20,7 @@
                   </div>
                   <ng-template #localChat>
                     <div>
-                      Saved messages
+                      {{'chat.saved'|translate}}
                     </div>
                   </ng-template>
                 </div>
@@ -53,7 +53,7 @@
   <div class="basis-3/4">
     <div class="">
       <div class="px-3 py-2" *ngIf="!chatId">
-        Choose chat or start new from profile page
+        {{'chat.choose-or-start'|translate}}
       </div>
 
       <router-outlet></router-outlet>

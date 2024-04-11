@@ -1,3 +1,4 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 using ForumApi.Options;
 using Microsoft.Extensions.Options;
@@ -11,18 +12,18 @@ namespace ForumApi.DTO.DAccount
     {
         private readonly string[] _extensions = {".jpg", ".jpeg", ".png", ".gif", ".bmp"};
 
-        public AccountDtoImageValidator(IOptions<ImageOptions> imageOptions)
+        public AccountDtoImageValidator(IOptions<ImageOptions> imageOptions, IJsonStringLocalizer locale)
         {
             var imgOptions = imageOptions.Value;
 
             RuleFor(r => r.Img)
                 .Configure(c => c.CascadeMode = CascadeMode.Stop)
                 .Must(i => i != null)
-                .WithMessage("Image cannot be empty")
+                .WithMessage(locale["validators.image-required"])
                 .Must(i => _extensions.Contains(Path.GetExtension(i.FileName)))
-                .WithMessage($"Image must be in one of the following formats: {string.Join(", ", _extensions)}")
+                .WithMessage($"{locale["validators.image-format"]}: {string.Join(", ", _extensions)}")
                 .Must(i => i.Length < imgOptions.ImageMaxSize)
-                .WithMessage($"Image too heavy, must be less than {imgOptions.ImageMaxSize / 1024} KB");
+                .WithMessage($"{locale["validators.image-size"]} {imgOptions.ImageMaxSize / 1024} KB");
         }        
     }
 }

@@ -4,6 +4,7 @@ import { SharedModule } from "src/shared/shared.module";
 import { ChatMainComponent } from "./chat-main/chat-main.component";
 import { ChatComponent } from "./chat/chat.component";
 import { ChatService } from "./services/chat.service";
+import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { ChatService } from "./services/chat.service";
   ],
   imports: [
     SharedModule,
+    TranslateModule.forChild(),
     RouterModule.forChild([
       {path: '', component: ChatMainComponent, children: [
         {path: ':id', component: ChatComponent},

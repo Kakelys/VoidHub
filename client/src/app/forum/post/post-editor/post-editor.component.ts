@@ -10,6 +10,8 @@ import { FileModel } from '../../models/file.model';
 import { UploadService } from '../../services/upload.service';
 import { ToastrExtension } from 'src/shared/toastr.extension';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
+import { pipe, take } from 'rxjs';
 
 @Component({
   selector: 'app-post-editor',
@@ -30,11 +32,11 @@ export class PostEditorComponent {
   content = '';
 
   @Input()
-  submitPlaceholder: string = 'Create';
+  submitPlaceholder: string = '';
   @Input()
-  cancelPlaceholder: string = 'Cancel';
+  cancelPlaceholder: string = '';
   @Input()
-  inputPlaceholder: string = 'Topic message';
+  inputPlaceholder: string = '';
   @Input()
   cancelClassesReplacement: string | null;
 
@@ -50,8 +52,27 @@ export class PostEditorComponent {
   constructor(
     private http: HttpClient,
     private uploadService: UploadService,
-    private toastr: ToastrService
-    ) {}
+    private toastr: ToastrService,
+    trans: TranslateService
+    ) {
+      trans.get('forms.create')
+      .pipe(take(1))
+      .subscribe(str => {
+        this.submitPlaceholder = str;
+      });
+
+      trans.get('labels.cancel')
+      .pipe(take(1))
+      .subscribe(str => {
+        this.cancelPlaceholder = str;
+      });
+
+      trans.get('forms.new-message')
+      .pipe(take(1))
+      .subscribe(str => {
+        this.inputPlaceholder = str;
+      })
+    }
 
   onEditorReady(instace: ClassicEditor): void {
     this.editorInstance = instace;

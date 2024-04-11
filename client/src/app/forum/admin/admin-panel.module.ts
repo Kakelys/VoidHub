@@ -8,12 +8,14 @@ import { RoleMenuComponent } from "./role-menu/role-menu.component";
 import { canActivateAdmin } from './role.guard';
 import { AdminService } from './services/admin.service';
 import { RenameMenuComponent } from './rename-menu/rename-menu.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     declarations: [],
     imports: [
       SharedModule,
       AdminComponentsModule,
+      TranslateModule.forChild(),
       RouterModule.forChild([
         {path: "", canActivate: [canActivateAdmin], component: AdminPanelComponent, children: [
           {path:'ban-menu', component: BanMenuComponent},

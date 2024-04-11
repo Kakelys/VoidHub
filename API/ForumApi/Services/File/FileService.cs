@@ -1,3 +1,4 @@
+using AspNetCore.Localizer.Json.Localizer;
 using AutoMapper;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DFile;
@@ -7,7 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Services.FileS
 {
-    public class FileService(IRepositoryManager rep, IMapper mapper) : IFileService
+    public class FileService(
+        IRepositoryManager rep, 
+        IMapper mapper,
+        IJsonStringLocalizer locale) : IFileService
     {
         public async Task<List<FileDto>> Get(int? postId)
         {
@@ -43,7 +47,7 @@ namespace ForumApi.Services.FileS
         public async Task<FileDto> Delete(int id)
         {
             var entity = await rep.File.Value.FindByCondition(f => f.Id == id)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("File not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-file"]);
 
             rep.File.Value.Delete(entity);
             await rep.Save();
@@ -57,7 +61,7 @@ namespace ForumApi.Services.FileS
             var entities = await rep.File.Value.FindByCondition(f => set.Contains(f.Id)).ToListAsync();
             
             if(set.Count != entities.Count)
-                throw new BadRequestException("Failed to find one or more files");
+                throw new BadRequestException(locale["errors.no-files"]);
 
             rep.File.Value.DeleteMany(entities);
             await rep.Save();
@@ -71,7 +75,7 @@ namespace ForumApi.Services.FileS
             var entities = await rep.File.Value.FindByCondition(f => set.Contains(f.Id), true).ToListAsync();
             
             if(set.Count != entities.Count)
-                throw new BadRequestException("Failed to find one or more files");
+                throw new BadRequestException(locale["errors.no-files"]);
 
             foreach(var el in entities)
             {

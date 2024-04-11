@@ -1,7 +1,7 @@
 <div class="flex-col bg-base-100 rounded my-2">
   <div class="ms-3">
     <div class="text-error" *ngIf="post.topic.deletedAt">
-      [Deleted]
+      {{ 'lables.deleted' | translate }}
     </div>
     <div class="flex flex-row my-2">
       <div class="avatar">
@@ -70,7 +70,7 @@
       </div>
       <div class="text-xs" *ngIf="user && user?.id == post?.sender.id">
         <div class="btn btn-ghost min-h-min h-6" (click)="setEditMode(true)">
-          Edit
+          {{ 'forms.edit' | translate }}
         </div>
       </div>
     </div>

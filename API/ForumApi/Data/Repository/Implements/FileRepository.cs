@@ -2,10 +2,7 @@ using ForumApi.Data.Repository.Interfaces;
 
 namespace ForumApi.Data.Repository.Implements
 {
-    public class FileRepository : RepositoryBase<Models.File>, IFileRepository
+    public class FileRepository(ForumDbContext context) : RepositoryBase<Models.File>(context), IFileRepository
     {
-        public FileRepository(ForumDbContext context) : base(context)
-        {
-        }
     }
 }

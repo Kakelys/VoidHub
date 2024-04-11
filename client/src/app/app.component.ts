@@ -1,8 +1,24 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {}
+export class AppComponent {
+
+  constructor(private trans: TranslateService) {
+    trans.setDefaultLang('en');
+    let savedLocale = localStorage.getItem('locale');
+    if(savedLocale)
+      trans.use(savedLocale);
+    else
+    localStorage.setItem('locale', 'en');
+  }
+
+  changeLanguage(code: string) {
+    this.trans.use(code);
+    localStorage.setItem('locale', code);
+  }
+}

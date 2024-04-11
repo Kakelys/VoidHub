@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { pipe, take } from 'rxjs';
 
 @Component({
   selector: 'app-delete',
@@ -7,12 +9,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./delete.component.css'],
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    TranslateModule
   ]
 })
 export class DeleteComponent {
   @Input()
-  confirmContent: string = 'Are you sure?';
+  confirmContent: string = '';
 
   @Output()
   onConfirm = new EventEmitter();
@@ -23,7 +26,13 @@ export class DeleteComponent {
   @Input()
   width: string = '20px';
 
-  constructor() {}
+  constructor(trans: TranslateService) {
+    trans.get('lables.are-you-sure')
+    .pipe(take(1))
+    .subscribe(str => {
+      this.confirmContent = str;
+    })
+  }
 
   confirmClick() {
     this.onConfirm.emit();

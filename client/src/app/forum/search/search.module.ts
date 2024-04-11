@@ -8,6 +8,9 @@ import { SharedModule } from "src/shared/shared.module";
 import { PaginatorComponent } from "../paginator/paginator.component";
 import { TopicElementComponent } from "../topic/topic-element/topic-element.component";
 import { RouterModule } from "@angular/router";
+import { SharedForumModule } from "../shared.forum.module";
+import { SharedEditorModule } from "src/shared/shared-editor.module";
+import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
   declarations: [
@@ -15,6 +18,9 @@ import { RouterModule } from "@angular/router";
   ],
   imports: [
     SharedModule,
+    SharedEditorModule,
+    SharedForumModule,
+    TranslateModule.forChild(),
     SearchBarComponent,
     ErrorMessageListComponent,
     PaginatorComponent,

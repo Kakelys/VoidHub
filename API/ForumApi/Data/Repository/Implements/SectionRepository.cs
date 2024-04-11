@@ -3,10 +3,7 @@ using ForumApi.Data.Repository.Interfaces;
 
 namespace ForumApi.Data.Repository.Implements
 {
-    public class SectionRepository : RepositoryBase<Section>, ISectionRepository
+    public class SectionRepository(ForumDbContext context) : RepositoryBase<Section>(context), ISectionRepository
     {
-        public SectionRepository(ForumDbContext context) : base(context)
-        {
-        }
     }
 }

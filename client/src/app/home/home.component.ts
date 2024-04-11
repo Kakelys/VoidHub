@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { User } from 'src/shared/models/user.model';
 
 @Component({
   selector: 'app-home',
@@ -8,6 +10,14 @@ import { AuthService } from '../auth/auth.service';
 })
 export class HomeComponent {
 
-  constructor(public authService: AuthService){}
+  user: User;
+
+  constructor(authService: AuthService) {
+    authService.user$
+    .pipe(takeUntilDestroyed())
+    .subscribe(user => {
+      this.user = user;
+    })
+  }
 
 }

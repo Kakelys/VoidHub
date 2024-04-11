@@ -4,13 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Data.Repository.Implements
 {
-    public class AccountRepository : RepositoryBase<Account>, IAccountRepository
+    public class AccountRepository(ForumDbContext context) : RepositoryBase<Account>(context), IAccountRepository
     {
-        public AccountRepository(ForumDbContext context) : base(context)
-        {
-        }
-
-        public IQueryable<Account> FindById(int id, bool asTracking = false) => 
+        public IQueryable<Account> FindById(int id, bool asTracking = false) =>
             FindByCondition(a => a.Id == id, asTracking);
 
         public IQueryable<Account> FindByEmail(string email, bool asTracking = false) =>

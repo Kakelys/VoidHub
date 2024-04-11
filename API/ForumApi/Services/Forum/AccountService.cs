@@ -10,6 +10,7 @@ using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;
+using AspNetCore.Localizer.Json.Localizer;
 
 namespace ForumApi.Services.ForumS
 {
@@ -17,7 +18,8 @@ namespace ForumApi.Services.ForumS
         (
             IRepositoryManager rep, 
             IMapper mapper, 
-            IOptions<ImageOptions> imageOptions
+            IOptions<ImageOptions> imageOptions,
+            IJsonStringLocalizer locale
         ) : IAccountService
     {
         private readonly ImageOptions _imageOptions = imageOptions.Value;
@@ -41,7 +43,7 @@ namespace ForumApi.Services.ForumS
                         .Select(b => mapper.Map<BanEdit>(b))
                         .FirstOrDefault()
                 })
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("User with such id doesn't exist");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
         }
 
         
@@ -49,7 +51,7 @@ namespace ForumApi.Services.ForumS
         {
             var account = await rep.Account.Value
                 .FindById(id)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
 
             return mapper.Map<User>(account);
         }
@@ -58,7 +60,7 @@ namespace ForumApi.Services.ForumS
         {
             var account = await rep.Account.Value
                 .FindByCondition(a => a.Id == id, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("User with such id doesn't exist");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
 
             rep.Account.Value.Delete(account);
             account.Tokens.Clear();
@@ -69,12 +71,12 @@ namespace ForumApi.Services.ForumS
         public async Task<AuthUser> Update(int targetId, int senderId, AccountDto accountDto)
         {
             var user = await rep.Account.Value.FindById(targetId, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("User with such id doesn't exist");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
 
             if(!string.IsNullOrEmpty(accountDto.Username) && accountDto.Username != user.Username)
             {
                 if(await rep.Account.Value.FindByUsername(accountDto.Username).AnyAsync())
-                    throw new BadRequestException("User with such username already exists");
+                    throw new BadRequestException(locale["errors.username-exist"]);
 
                 user.Username = accountDto.Username;
             }
@@ -82,7 +84,7 @@ namespace ForumApi.Services.ForumS
             if(!string.IsNullOrEmpty(accountDto.Email) && accountDto.Email != user.Email)
             {
                 if(await rep.Account.Value.FindByEmail(accountDto.Email).AnyAsync())
-                    throw new BadRequestException("User with such email already exists");
+                    throw new BadRequestException(locale["errors.email-exist"]);
 
                 user.Email = accountDto.Email;
             }
@@ -90,7 +92,7 @@ namespace ForumApi.Services.ForumS
             if(accountDto.Role != Data.Models.RoleEnum.None)
             {
                 if(targetId == senderId)
-                    throw new BadRequestException("You cannot change your own role");
+                    throw new BadRequestException(locale["errors.self-role"]);
 
                 user.Role = accountDto.Role.ToString();
             }
@@ -98,10 +100,10 @@ namespace ForumApi.Services.ForumS
             if(!string.IsNullOrEmpty(accountDto.OldPassword) && !string.IsNullOrEmpty(accountDto.NewPassword))
             {
                 if(accountDto.OldPassword == accountDto.NewPassword)
-                    throw new BadRequestException("New password is the same as old");
+                    throw new BadRequestException(locale["errors.same-new-password"]);
 
                 if(!PasswordHelper.Verify(accountDto.OldPassword, user.PasswordHash))
-                    throw new BadRequestException("Old password is incorrect");
+                    throw new BadRequestException(locale["errors.wrong-old-password"]);
 
                 user.PasswordHash = PasswordHelper.Hash(accountDto.NewPassword);
             }
@@ -114,7 +116,7 @@ namespace ForumApi.Services.ForumS
         public async Task<AuthUser> UpdateImg(int accountId, string newPath)
         {
             var user = await rep.Account.Value.FindById(accountId, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("User not found");
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
 
             await rep.BeginTransaction();
             try

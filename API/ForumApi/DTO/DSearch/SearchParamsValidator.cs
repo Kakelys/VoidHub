@@ -7,7 +7,8 @@ namespace ForumApi.DTO.DSearch
         public SearchParamsValidator() 
         {
             RuleFor(x => x.Sort)
-                .Must(x => x == "asc" || x == "desc" || x == "").WithMessage("Sort must be asc, desc or empty");
+                .Must(x => x == "asc" || x == "desc" || x == "")
+                .WithMessage("Sort must be asc, desc or empty");
         }
     }
 }

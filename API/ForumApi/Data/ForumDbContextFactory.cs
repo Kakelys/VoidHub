@@ -18,7 +18,7 @@ namespace ForumApi.Data
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile($"{workingDirectory}\\appsettings.json")
             .AddUserSecrets<Program>();
-            
+
             IConfigurationRoot config = builder.Build();
 
             string? connectionString = config.GetConnectionString("ForumDb");

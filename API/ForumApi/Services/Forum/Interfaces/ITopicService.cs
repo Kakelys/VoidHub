@@ -13,7 +13,7 @@ namespace ForumApi.Services.ForumS.Interfaces
         /// <summary>
         /// Load topics on forum
         /// </summary>
-        Task<List<TopicElement>> GetTopics(int forumId, Page page);
+        Task<List<TopicElement>> GetTopics(int forumId, Page page, Params prms);
         /// <summary>
         /// Get topics info and first post
         /// </summary>

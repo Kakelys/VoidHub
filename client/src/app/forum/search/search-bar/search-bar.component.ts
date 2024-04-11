@@ -1,8 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SharedModule } from 'src/shared/shared.module';
+import { ReplaySubject } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
+import { User } from '../../../../shared/models/user.model';
+import { Roles } from 'src/shared/roles.enum';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SearchParams } from '../../models/search-params.model';
+import { TranslateModule } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'app-search-bar',
@@ -11,7 +18,8 @@ import { SharedModule } from 'src/shared/shared.module';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    TranslateModule
   ]
 })
 export class SearchBarComponent {
@@ -20,7 +28,7 @@ export class SearchBarComponent {
   searchQuery = '';
 
   @Input()
-  withContent:boolean = false;
+  searchParams: SearchParams;
 
   @Input()
   enableParams = false;
@@ -28,26 +36,38 @@ export class SearchBarComponent {
   @Output()
   onForceSearch = new EventEmitter();
 
+  roles = Roles;
+  user: User;
+
   constructor(
     private router: Router,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    auth: AuthService
+  ) {
+    auth.user$
+    .pipe(takeUntilDestroyed())
+    .subscribe((user: User) => {
+      this.user = user;
+    })
+  }
 
   onSubmit(form: NgForm) {
-    let params = this.route.snapshot.queryParamMap
-    if( params.get('query') == form.value.search &&
-      params.get('withPostContent') == form.value.withContent+'') {
-      this.onForceSearch.emit();
-      return;
-    }
+    // let params = this.route.snapshot.queryParamMap
+    // if( params.get('query') == form.value.search &&
+    //   params.get('withPostContent') == form.value.withContent+'') {
+    //   this.onForceSearch.emit();
+    //   return;
+    // }
 
     this.router.navigate(["/forum/search"],
     {
       queryParams: {
         query: form.value.search,
-        withPostContent: form.value.withContent ?? this.withContent
+        ...form.value,
+        v: new Date().getMilliseconds()
       },
       queryParamsHandling: 'merge'
     });
   }
 }
+

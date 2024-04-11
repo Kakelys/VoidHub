@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Page } from "src/shared/page.model";
 import { environment as env } from "src/environments/environment";
@@ -11,16 +11,26 @@ export class ForumService {
 
   constructor(private http: HttpClient) {}
 
-  getForum(forumId) {
-    return this.http.get(`${this.baseUrl}/${forumId}`);
+  getForum(forumId, params) {
+    let headers = new HttpHeaders().set(env.limitNames.nameParam, env.limitNames.forumLoad);
+
+    return this.http.get(`${this.baseUrl}/${forumId}`, {
+      headers: headers,
+      params: {
+        ...params
+      }
+    });
   }
 
-  getForumTopics(forumId, page: Page) {
+  getForumTopics(forumId, page: Page, params) {
+    let headers = new HttpHeaders().set(env.limitNames.nameParam, env.limitNames.topicsLoad);
+
     return this.http.get(`${this.baseUrl}/${forumId}/topics`, {
-      headers: {
-        'X-Limit-Param' : '2'
-      },
-      params: {...page}
+      headers: headers,
+      params: {
+        ...page,
+        ...params
+      }
     });
   }
 

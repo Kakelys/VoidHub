@@ -3,14 +3,9 @@ using ForumApi.Data.Repository.Interfaces;
 
 namespace ForumApi.Data.Repository
 {
-    public class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    public class RepositoryBase<T>(ForumDbContext context) : IRepositoryBase<T> where T : class
     {
-        protected readonly ForumDbContext _context;
-
-        public RepositoryBase(ForumDbContext context)
-        {
-            _context = context;
-        }
+        protected readonly ForumDbContext _context = context;
 
         public virtual T Create(T entity) =>
             _context.Set<T>().Add(entity).Entity;
@@ -21,7 +16,7 @@ namespace ForumApi.Data.Repository
         public virtual void DeleteMany(IEnumerable<T> entities) =>
             _context.Set<T>().RemoveRange(entities);
 
-        public IQueryable<T> FindAll(bool asTracking) => 
+        public IQueryable<T> FindAll(bool asTracking) =>
             _context.Set<T>()
             .EnableAsTracking(asTracking);
 

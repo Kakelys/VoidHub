@@ -1,19 +1,20 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 
 namespace ForumApi.DTO.Utils
 {
     public class OffsetValidator : AbstractValidator<Offset>
     {
-        public OffsetValidator()
+        public OffsetValidator(IJsonStringLocalizer locale)
         {
             RuleFor(p => p.OffsetNumber)
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("Offset number must be greater than or equal to 0");
+                .WithMessage(locale["validators.offsetnumber-invalid"]);
 
             RuleFor(p => p.Limit)
                 .GreaterThan(0)
                 .LessThanOrEqualTo(100)
-                .WithMessage("Limit must be greater than 0 and less than or equal to 100");
+                .WithMessage(locale["validators.offsetlimit-size"]);
         }
     }
 }

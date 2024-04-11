@@ -1,9 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SearchParams } from '../../models/search-params.model';
 import { Page } from 'src/shared/page.model';
 import { SearchService } from '../../services/search.service';
 import { HttpException } from 'src/shared/models/http-exception.model';
+import { SearchResponse } from '../../models/search-response.model';
+import { AuthService } from 'src/app/auth/auth.service';
+import { User } from 'src/shared/models/user.model';
+import { ReplaySubject, takeUntil } from 'rxjs';
+import { StringExtension } from 'src/shared/string.extension';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-search',
@@ -12,69 +18,83 @@ import { HttpException } from 'src/shared/models/http-exception.model';
 })
 export class SearchComponent {
 
-  searchResult: any;
+  searchResult: SearchResponse | null;
 
-  searchParams : SearchParams = new SearchParams("", "false");
+  searchParams : SearchParams;
   searchPage: Page = new Page(1);
   query = '';
 
   currentPage = 1;
   errorMessages = [];
 
+  user: User;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private searchService: SearchService
+    private searchService: SearchService,
+    auth: AuthService
     ) {
+
+    auth.user$
+    .pipe(takeUntilDestroyed())
+    .subscribe(user => {
+      this.user = user;
+    })
+
     this.activatedRoute
-      .queryParams.subscribe(params => {
-        let newSearchParams = new SearchParams(
-          params["sort"],
-          params["withPostContent"]
-        );
+    .queryParams.subscribe(params => {
+      // mb just use ...params instead
+      let newSearchParams: SearchParams = {
+        sort:'',
+        withPostContent:false,
+        onlyDeleted: false
+      };
 
-        let newSearchPage = new Page(
-          params["pageNumber"],
-          params["pageSize"]
-        );
+      newSearchParams.sort = params["sort"] ?? '';
+      newSearchParams.withPostContent = StringExtension.ConvertToBoolean(params["withPostContent"]) ?? false;
+      newSearchParams.onlyDeleted = StringExtension.ConvertToBoolean(params["onlyDeleted"]) ?? false;
 
-        let newQuery = params["query"] ;
+      let newSearchPage = new Page(
+        +params["pageNumber"] ? +params["pageNumber"] : this.searchPage.pageNumber,
+        +params["pageSize"] ? +params["pageSize"] : this.searchPage.pageSize,
+      );
 
-        let isParamsChanged = !this.searchParams.Equals(newSearchParams);
-        let isPageChanged = !this.searchPage.Equals(newSearchPage);
-        let isQueryChanged = !(this.query == newQuery)
+      let newQuery = params["query"];
 
-        if(isParamsChanged || isPageChanged || isQueryChanged) {
-          this.query = newQuery ?? "";
-          this.searchParams = newSearchParams;
+      let isParamsChanged = this.searchParams+'' != newSearchParams+'';
+      let isQueryChanged = this.query != newQuery;
+      let isPageChanged = !this.searchPage.Equals(newSearchPage);
 
-          // go to 1 page if search changed
-          if(!isPageChanged && this.searchPage.pageNumber != 1) {
-            this.router.navigate([], {
-              relativeTo: this.activatedRoute,
-              queryParams: {
-                ...{query: this.query},
-                ...new Page(1, this.searchPage.pageSize),
-                ...this.searchParams
-              },
-              queryParamsHandling: 'merge'
-            });
-          }
-          else {
-            this.searchPage = newSearchPage
-            this.search();
-          }
-        }
-      });
+      this.query = newQuery ?? "";
+      this.searchParams = newSearchParams;
+      this.searchPage = newSearchPage;
+
+      // go to 1 page if search changed
+      if((isParamsChanged || isQueryChanged) && !isPageChanged && this.searchPage.pageNumber != 1) {
+        this.router.navigate([], {
+          relativeTo: this.activatedRoute,
+          queryParams: {
+            ...{query: this.query},
+            ...this.searchParams,
+            ...new Page(1, this.searchPage.pageSize)
+          },
+          queryParamsHandling: 'merge'
+        });
+      }
+      else {
+        this.search();
+      }
+    });
   }
 
   search() {
     this.errorMessages = [];
     this.searchResult = null;
-    //console.log(this.query, this.searchParams, this.searchPage);
+
     this.searchService.searchTopics(this.query, this.searchParams, this.searchPage)
     .subscribe({
-      next: data => {
+      next: (data: SearchResponse) => {
         this.searchResult = data;
       },
       error: (err:HttpException) => {
@@ -88,8 +108,8 @@ export class SearchComponent {
       relativeTo: this.activatedRoute,
       queryParams: {
         ...{query: this.query},
-        ...new Page(newPage, this.searchPage.pageSize),
-        ...this.searchParams
+        ...this.searchParams,
+        ...new Page(newPage, this.searchPage.pageSize)
       },
       queryParamsHandling: 'merge'
     });

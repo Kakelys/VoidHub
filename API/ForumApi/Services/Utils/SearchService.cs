@@ -8,23 +8,21 @@ using ForumApi.DTO.Utils;
 using ForumApi.Services.Utils.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using LinqKit;
+using ForumApi.DTO.DTopic;
+using AutoMapper;
+using ForumApi.DTO.Auth;
+using ForumApi.DTO.DPost;
 
 namespace ForumApi.Services.Utils
 {
-    public class SearchService : ISearchService
+    public class SearchService(IRepositoryManager rep, IMapper mapper) : ISearchService
     {
-        private readonly IRepositoryManager _rep;
-
-        public SearchService(IRepositoryManager rep)
-        {
-            _rep = rep;
-        }
-
         public async Task<SearchResponse> SearchTopics(string query, SearchParams search, Page page)
         {
             query = query.Trim();
 
-            var predicate = PredicateBuilder.New<Topic>(t => t.DeletedAt == null);
+            var basePredicate = PredicateBuilder.New<Topic>(t => search.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null);
+            var orPredicate = PredicateBuilder.New<Topic>(t => true);
 
             // configure tsquery search
             var forTsQuery = query.Split(' ')
@@ -34,19 +32,18 @@ namespace ForumApi.Services.Utils
             var predicators = new Dictionary<string, Expression<Func<Topic, bool>>>
             {
                 [SearchParamNames.WordTitle] = t => t.SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)),
-                [SearchParamNames.WordContent] = t => t.Posts.Where(p => p.AncestorId == null).First().SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)),
-                [SearchParamNames.PartialTitle] = t => EF.Functions.Like(t.Title, $"%{query.ToLower()}%"),
-                [SearchParamNames.PartialContent] = t => EF.Functions.Like(t.Posts.First().Content ?? "", $"%{query.ToLower()}%"),
+                [SearchParamNames.WordContent] = t => t.Posts.First(p => p.AncestorId == null).SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)),
+                [SearchParamNames.PartialTitle] = t => EF.Functions.ILike(t.Title, $"%{query}%"),
+                [SearchParamNames.PartialContent] = t => EF.Functions.ILike(t.Posts.OrderByDescending(p => p.CreatedAt).First().Content ?? "", $"%{query}%"),
             };
 
-            predicate = predicate.And(predicators[SearchParamNames.WordTitle]);
+            orPredicate.And(predicators[SearchParamNames.WordTitle]);
 
             if(search.WithPostContent)
-                predicate = predicate.Or(predicators[SearchParamNames.WordContent]);
-            
-            // do search
-            var q = _rep.Topic.Value.FindByCondition(predicate);
+                orPredicate.Or(predicators[SearchParamNames.WordContent]);
 
+            // do search
+            var q = rep.Topic.Value.FindByCondition(basePredicate, true).Where(orPredicate);
 
             q = q.OrderByDescending(t => t.SearchVector.Rank( 
                 EF.Functions.ToTsQuery("english", forTsQuery)
@@ -55,7 +52,7 @@ namespace ForumApi.Services.Utils
             //apply sort
             if(string.IsNullOrEmpty(search.Sort))
             {
-                q = ((IOrderedQueryable<Topic>)q).ThenBy(t => t.CreatedAt);
+                q = ((IOrderedQueryable<Topic>)q).ThenByDescending(t => t.CreatedAt);
             }
             else
             {
@@ -66,7 +63,12 @@ namespace ForumApi.Services.Utils
             var searchRes = new SearchResponse
             {
                 SearchCount = q.Count(),
-                Topics = await q.TakePage(page).ToListAsync()
+                Data = await q.TakePage(page).Select(t => new TopicInfoResponse 
+                {
+                    Sender = mapper.Map<User>(t.Author),
+                    Topic = mapper.Map<TopicDto>(t),
+                    Post = mapper.Map<PostDto>(t.Posts.OrderByDescending(p => p.CreatedAt).First())
+                }).ToListAsync()
             };
             
             return searchRes;

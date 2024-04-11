@@ -50,6 +50,5 @@ namespace ForumApi.Controllers
 
             return Ok(links);
         }
-
     }
 }

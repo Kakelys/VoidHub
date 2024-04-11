@@ -49,6 +49,11 @@ namespace ForumApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsEmailConfirmed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<DateTime>("LastLoggedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")

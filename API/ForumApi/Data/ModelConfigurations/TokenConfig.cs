@@ -5,7 +5,7 @@ namespace ForumApi.Data.ModelConfigurations
 {
     public class TokenConfig
     {
-        public TokenConfig(EntityTypeBuilder<Token> builder)   
+        public TokenConfig(EntityTypeBuilder<Token> builder)
         {
             builder.HasKey(t => t.Id);
 

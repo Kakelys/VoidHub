@@ -9,6 +9,7 @@ import { AdminPanelComponent } from "./admin-panel/admin-panel.component";
 import { AccountService } from "../services/account.service";
 import { DefaultAvatarComponent } from "./default-avatar/default-avatar.component";
 import { RenameMenuComponent } from "./rename-menu/rename-menu.component";
+import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { RenameMenuComponent } from "./rename-menu/rename-menu.component";
   ],
   imports: [
     SharedModule,
-    ErrorMessageListComponent
+    ErrorMessageListComponent,
+    TranslateModule.forChild()
   ],
   providers: [
     AccountService,

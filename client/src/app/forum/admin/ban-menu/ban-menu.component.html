@@ -7,10 +7,10 @@
           type="text"
           name="username"
           id="username"
-          placeholder="username"
+          placeholder="{{'forms.username'|translate}}"
           class="input-sm bg-neutral input input-bordered"
           [ngClass]="{
-            'input-error': banForm.controls['username']?.touched && banForm.controls['username'].invalid,
+            'input-error': banForm.controls['username']?.touched && banForm.controls['username']?.invalid,
             'btn-disabled': userIdBlocked
           }"
           [ngModel]="username"
@@ -23,7 +23,7 @@
           type="text"
           name="reason"
           id="reason"
-          placeholder="ban reason"
+          placeholder="{{'forms.ban-reason'|translate}}"
           class="input-sm bg-neutral input input-bordered"
           [ngClass]="{
             'input-error': banForm.controls['reason']?.touched && banForm.controls['reason'].invalid
@@ -33,6 +33,7 @@
           autocomplete="on"
         />
       </div>
+      {{'forms.ban-time-label'|translate}}
       <div class="form-control mt-2">
         <input
           type="datetime-local"
@@ -47,13 +48,13 @@
       <div class="flex flex-row mt-2">
         <app-limit-loader [limit] = 1>
           <button class="btn btn-success min-h-fit h-8">
-            Ban
+            {{'forms.ban'|translate}}
           </button>
           <button type="button" class="ms-3 btn btn-error min-h-fit h-8" (click)="onCancelClick()">
-            Cancel
+            {{'forms.cancel'|translate}}
           </button>
           <button type="button" class="ms-3 btn btn-success min-h-fit h-8" (click)="onUnbanSubmit(banForm)">
-            Unban
+            {{'forms.unban'|translate}}
           </button>
         </app-limit-loader>
       </div>

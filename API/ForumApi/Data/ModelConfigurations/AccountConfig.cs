@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations
 {
-    public class AccountConfig 
+    public class AccountConfig
     {
         public AccountConfig(EntityTypeBuilder<Account> builder)
         {
@@ -19,6 +19,8 @@ namespace ForumApi.Data.ModelConfigurations
                     .IsRequired();
                 builder.Property(a => a.Email)
                     .IsRequired();
+                builder.Property(a => a.IsEmailConfirmed)
+                    .HasDefaultValue(false);
                 builder.Property(a => a.PasswordHash)
                     .IsRequired();
                 builder.Property(a => a.LastLoggedAt)

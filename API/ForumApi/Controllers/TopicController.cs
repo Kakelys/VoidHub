@@ -24,18 +24,17 @@ namespace ForumApi.Controllers
         ILikeService likeService
     ) : ControllerBase
     {
-
         [Authorize]
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetTopics([FromQuery] Offset offset, [FromQuery] DateTime time)
         {
-            var res = await topicService.GetTopics(offset, new Params 
+            var res = await topicService.GetTopics(offset, new Params
             {
                 BelowTime = time
             });
 
-            if(User.Identity != null && User.Identity.IsAuthenticated)
+            if(User.Identity?.IsAuthenticated == true)
             {
                 var userId = User.GetId();
                 foreach(var post in res)
@@ -53,17 +52,16 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> GetTopic(int id, [FromQuery] Offset offset)
         {
             var allowDeleted = false;
-            var isAuthed = User.Identity != null && User.Identity.IsAuthenticated;
-            if(isAuthed == true)
+            var isAuthed = User.Identity?.IsAuthenticated == true;
+            if(isAuthed && (User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
             {
-                if(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder))
-                    allowDeleted = true;
+                allowDeleted = true;
             }
 
             var topic = await topicService.GetTopic(id, allowDeleted);
             if(topic == null)
                 return NotFound();
-            
+
             topic.Posts = await postService.GetPostComments(topic.Post.Id, offset, new Params{IncludeDeleted = allowDeleted});
             if(isAuthed)
             {
@@ -79,10 +77,34 @@ namespace ForumApi.Controllers
             return Ok(topic);
         }
 
+        [Authorize]
+        [AllowAnonymous]
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromQuery] SearchDto search, [FromQuery] SearchParams searchParams, [FromQuery] Page page)
         {
-            return Ok(await searchService.SearchTopics(search.Query, searchParams, page));
+            var isAuthed = User.Identity?.IsAuthenticated == true;
+            var prms = new SearchParams
+            {
+                Sort = searchParams.Sort,
+                WithPostContent = searchParams.WithPostContent
+            };
+
+            if(isAuthed && (User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
+            {
+                prms.OnlyDeleted = searchParams.OnlyDeleted;
+            }
+
+            var res = await searchService.SearchTopics(search.Query, prms, page);
+            if(isAuthed)
+            {
+                var userId = User.GetId();
+                foreach(var post in res.Data)
+                {
+                    await likeService.UpdateLikeStatus(userId, post.Post);
+                }
+            }
+
+            return Ok(res);
         }
 
         [HttpPost]
@@ -96,8 +118,8 @@ namespace ForumApi.Controllers
                 var res = await topicService.Create(User.GetId(), topicDto);
                 // update files post ids
                 if(topicDto.FileIds.Count > 0)
-                    await fileService.Update(topicDto.FileIds.ToArray(), res.Post.Id);
-                
+                    await fileService.Update([..topicDto.FileIds], res.Post.Id);
+
                 await rep.Save();
                 await rep.Commit();
 

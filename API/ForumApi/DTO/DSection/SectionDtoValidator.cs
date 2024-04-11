@@ -1,21 +1,21 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 
 namespace ForumApi.DTO.DSection
 {
     public class SectionDtoValidator : AbstractValidator<SectionEdit>
     {
-        public SectionDtoValidator()
+        public SectionDtoValidator(IJsonStringLocalizer locale)
         {
             RuleFor(x => x.Title)
                 .NotEmpty()
-                .WithMessage("Title is required")
+                .WithMessage(locale["validators.title-required"])
                 .Length(3, 255)
-                .WithMessage("Title must be between 3 and 255 characters");
+                .WithMessage(locale["validators.title-length"]);
 
             RuleFor(s => s.OrderPosition)
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("Order position must be greater than or equal to 0")
-                .LessThan(int.MaxValue);
+                .WithMessage(locale["validators.orderposition-invalid"]);
         }
     }
 }

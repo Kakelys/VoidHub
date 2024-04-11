@@ -15,13 +15,12 @@ if (!Directory.Exists("wwwroot"))
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLogging();
-//builder.Logging.AddConsole();
 
 builder.Services.AddAppOptions(builder.Configuration);
 
 var imageSettings = builder.Configuration
   .GetSection(ImageOptions.Image)
-  .Get<ImageOptions>() ?? throw new NullReferenceException("ImageOptions");
+  .Get<ImageOptions>() ?? throw new ArgumentNullException("ImageOptions");
 
 //check for folders
 if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.AvatarFolder}"))
@@ -81,18 +80,20 @@ builder.Services.AddJwtAuth(builder.Configuration);
 builder.Services.AddSignalR();
 
 var frontCorsPolicy = "frontCorsPolicy";
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
 {
   options.AddPolicy(
-    name : frontCorsPolicy, 
-    policy => 
+    name : frontCorsPolicy,
+    policy =>
     {
-
       var clients = builder.Configuration.GetSection("Clients").Get<List<string>>();
 
-      if(clients != null && clients.Any())
-      foreach(var client in clients) {
-        policy.WithOrigins(client);
+      if(clients?.Count != 0)
+      {
+        foreach (var client in clients!)
+        {
+          policy.WithOrigins(client);
+        }
       }
 
       policy.AllowAnyHeader()
@@ -101,7 +102,11 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.ConfigureLocalization();
+
 var app = builder.Build();
+
+app.UseRequestLocalization();
 
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<QueryTokenMiddleware>();

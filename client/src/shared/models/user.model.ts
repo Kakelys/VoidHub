@@ -4,4 +4,5 @@ export class User {
   public email: string;
   public role: string;
   public avatarPath: string;
+  public isEmailConfirmed: boolean;
 }

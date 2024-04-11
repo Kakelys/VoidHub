@@ -4,12 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ForumApi.Data.Repository.Implements
 {
-    public class PostRepository : RepositoryBase<Post>, IPostRepository
+    public class PostRepository(ForumDbContext context) : RepositoryBase<Post>(context), IPostRepository
     {
-        public PostRepository(ForumDbContext context) : base(context)
-        {
-        }
-
         public new int Delete(Post entity)
         {
             return Delete(entity, DateTime.UtcNow);

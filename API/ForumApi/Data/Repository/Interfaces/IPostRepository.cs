@@ -5,7 +5,7 @@ namespace ForumApi.Data.Repository.Interfaces
     public interface IPostRepository : IRepositoryBase<Post>
     {
         Task IncreaseAllAncestorsCommentsCount(int? ancestorId, int value);
-        
+
         /// <summary>
         /// Return count inner comments
         /// </summary>

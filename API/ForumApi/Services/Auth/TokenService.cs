@@ -11,21 +11,16 @@ using ForumApi.Services.Auth.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using AspNetCore.Localizer.Json.Localizer;
 
 namespace ForumApi.Services.Auth
 {
-    public class TokenService : ITokenService
+    public class TokenService(
+        IRepositoryManager rep,
+        IOptions<JwtOptions> jwtOptions,
+        IJsonStringLocalizer locale) : ITokenService
     {
-        private readonly IRepositoryManager _rep;
-        private readonly JwtOptions _jwtOptions;
-
-        public TokenService(
-            IRepositoryManager rep,
-            IOptions<JwtOptions> jwtOptions)
-        {
-            _rep = rep;
-            _jwtOptions = jwtOptions.Value;
-        }
+        private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
         public string Create(List<Claim> claims, DateTime expiresAt, string secret)
         {
@@ -55,13 +50,13 @@ namespace ForumApi.Services.Auth
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
-                new Claim(ClaimTypes.Role, account.Role),
+                new(ClaimTypes.NameIdentifier, account.Id.ToString()),
+                new(ClaimTypes.Role, account.Role),
             };
 
             var accessToken = Create(claims, DateTime.UtcNow.AddMinutes(_jwtOptions.AccessLifetimeInMinutes), _jwtOptions.AccessSecret);
             var refreshToken = Create(claims, DateTime.UtcNow.AddMinutes(_jwtOptions.RefreshLifetimeInMinutes), _jwtOptions.RefreshSecret);
-            
+
             return new JwtPair
             {
                 AccessToken = accessToken,
@@ -71,12 +66,12 @@ namespace ForumApi.Services.Auth
 
         public async Task Revoke(string refreshToken)
         {
-            var tokenEntity = await _rep.Token.Value.FindByToken(refreshToken, false)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException("Invalid refresh token");
+            var tokenEntity = await rep.Token.Value.FindByToken(refreshToken, false)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-token"]);
 
-            _rep.Token.Value.Delete(tokenEntity);
+            rep.Token.Value.Delete(tokenEntity);
 
-            await _rep.Save();
+            await rep.Save();
         }
 
         public bool Validate(string token, string secret)
@@ -84,7 +79,7 @@ namespace ForumApi.Services.Auth
             var validator = new JwtSecurityTokenHandler();
 
             var validationParams = new TokenValidationParameters
-            {  
+            {
                 ValidIssuer = _jwtOptions.Issuer,
                 ValidAudience = _jwtOptions.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(
@@ -109,6 +104,11 @@ namespace ForumApi.Services.Auth
             }
 
             return false;
+        }
+
+        public JwtSecurityToken Decode(string token)
+        {
+            return new JwtSecurityTokenHandler().ReadJwtToken(token);
         }
     }
 }

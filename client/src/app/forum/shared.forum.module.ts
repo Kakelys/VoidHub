@@ -9,6 +9,9 @@ import { SharedModule } from "src/shared/shared.module";
 import { SharedEditorModule } from "src/shared/shared-editor.module";
 import { UploadService } from "./services/upload.service";
 import { TopicService } from "./services/topic.service";
+import { RecentElementComponent } from "./recent/recent-element/recent-element.component";
+import { ReducePost } from "./recent/reduce-post.pipe";
+import { TranslateModule } from "@ngx-translate/core";
 
 
 @NgModule({
@@ -22,17 +25,21 @@ import { TopicService } from "./services/topic.service";
     PostEditorComponent,
     UploadImagesComponent,
     PostElementComponent,
+    RecentElementComponent
   ],
   imports: [
     DeleteComponent,
     SharedEditorModule,
-    SharedModule
+    SharedModule,
+    TranslateModule.forChild(),
+    ReducePost
   ],
   exports: [
     CommentsComponent,
     PostEditorComponent,
     UploadImagesComponent,
     PostElementComponent,
+    RecentElementComponent
   ]
 })
 export class SharedForumModule {}
