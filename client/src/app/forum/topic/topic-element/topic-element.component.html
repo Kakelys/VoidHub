@@ -31,7 +31,7 @@
             <div class="avatar">
               <div class="w-10 rounded">
                 <a routerLink="/profile/{{topic.lastPost?.author.id}}">
-                  <img src="{{resourceUrl}}/{{topic.lastPost?.author?.avatarPath}}" loading="lazy"/>
+                  <img src="{{resourceUrl}}/{{topic.lastPost?.author?.avatarPath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}"/>
                 </a>
               </div>
             </div>

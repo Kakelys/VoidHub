@@ -2,6 +2,7 @@ using AspNetCore.Localizer.Json.Localizer;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DPost;
+using ForumApi.Migrations;
 using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.Utils.Exceptions;
 using Microsoft.EntityFrameworkCore;
@@ -21,24 +22,9 @@ namespace ForumApi.Services.ForumS
             post.IsLiked = isLiked;
         }
 
-        public async Task UpdateLikeStatus(int accountId, List<PostDto> posts)
-        {
-            var tasks = new List<Task>(posts.Count);
-
-            foreach(var post in posts)
-            {
-                tasks.Add(Task.Run(async () => 
-                {
-                    await UpdateLikeStatus(accountId, post);
-                }));
-            }
-
-            await Task.WhenAll(tasks);
-        }
-
         public async Task Like(int accountId, int postId)
         {
-            var user = await rep.Account.Value
+            _ = await rep.Account.Value
                 .FindById(accountId)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
 
@@ -62,7 +48,7 @@ namespace ForumApi.Services.ForumS
 
         public async Task UnLike(int accountId, int postId)
         {
-            var user = await rep.Account.Value
+            _ = await rep.Account.Value
                 .FindById(accountId)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
 

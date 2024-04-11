@@ -19,8 +19,6 @@ function onAppLoad(authService: AuthService): () => Promise<any> {
         console.error('Error while trying to auto-login user', err)
       }
     }
-
-    return;
   };
 }
 

@@ -109,7 +109,6 @@ export class ForumComponent implements OnDestroy {
       .getForumTopics(this.forumId, this.page, loadDeleted ? {onlyDeleted: true} : {})
       .subscribe((topics: Topic[]) => {
         this.topics = topics;
-        console.log(topics);
       });
   }
 

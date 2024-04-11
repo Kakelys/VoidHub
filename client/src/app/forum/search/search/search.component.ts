@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SearchParams } from '../../models/search-params.model';
 import { Page } from 'src/shared/page.model';
@@ -7,7 +7,6 @@ import { HttpException } from 'src/shared/models/http-exception.model';
 import { SearchResponse } from '../../models/search-response.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/shared/models/user.model';
-import { ReplaySubject, takeUntil } from 'rxjs';
 import { StringExtension } from 'src/shared/string.extension';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 

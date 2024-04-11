@@ -13,16 +13,20 @@ namespace ForumApi.Services.ForumS
             var res = new List<Name>();
             IQueryable<Section> query;
             if(includeHidden)
+            {
                 query = rep.Section.Value.FindAll();
+            }
             else
+            {
                 query = rep.Section.Value
-                    .FindByCondition(s => s.IsHidden == false);
+                    .FindByCondition(s => !s.IsHidden);
+            }
 
             var sections = await query
                 .Include(s => s.Forums.Where(f => f.DeletedAt == null))
                 .OrderBy(s => s.OrderPosition)
                 .ToListAsync();
-            
+
             sections.ForEach(s =>
             {
                 res.Add(new(){Title = s.Title, IsSelectable = false});

@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { HubConnection, HubConnectionBuilder, HubConnectionState, Subject } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder, HubConnectionState } from "@microsoft/signalr";
 import { BehaviorSubject, ReplaySubject, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { environment as env } from "src/environments/environment";

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace ForumApi.Utils.Extensions
 {
-    public class PasswordHelper
+    public static class PasswordHelper
     {
         public static string Hash(string password)
         {

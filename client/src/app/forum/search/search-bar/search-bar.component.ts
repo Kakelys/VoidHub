@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ReplaySubject } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from '../../../../shared/models/user.model';
 import { Roles } from 'src/shared/roles.enum';
@@ -52,13 +51,6 @@ export class SearchBarComponent {
   }
 
   onSubmit(form: NgForm) {
-    // let params = this.route.snapshot.queryParamMap
-    // if( params.get('query') == form.value.search &&
-    //   params.get('withPostContent') == form.value.withContent+'') {
-    //   this.onForceSearch.emit();
-    //   return;
-    // }
-
     this.router.navigate(["/forum/search"],
     {
       queryParams: {

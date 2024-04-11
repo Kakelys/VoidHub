@@ -1,17 +1,15 @@
 import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic';
 import { PostEditorData } from './../../models/post-editor-data.model';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewChildren, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
 import Editor from 'ckeditor5/build/ckeditor';
 import { HttpClient } from '@angular/common/http';
-import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { FileModel } from '../../models/file.model';
 import { UploadService } from '../../services/upload.service';
-import { ToastrExtension } from 'src/shared/toastr.extension';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
-import { pipe, take } from 'rxjs';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-post-editor',

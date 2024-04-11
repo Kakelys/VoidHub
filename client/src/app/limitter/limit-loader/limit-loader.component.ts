@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { LimitterInterceptor } from '../limitter.interceptor';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { LimitterService } from '../limitter.service';
 

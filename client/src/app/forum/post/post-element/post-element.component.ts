@@ -4,7 +4,6 @@ import { PostService } from '../../services/post.service';
 import { Roles } from 'src/shared/roles.enum';
 import Editor from 'ckeditor5/build/ckeditor';
 import { environment } from 'src/environments/environment';
-import { Post } from 'src/shared/models/post-model';
 import { PostInfo } from 'src/shared/models/post-info.model';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { ToastrService } from 'ngx-toastr';
