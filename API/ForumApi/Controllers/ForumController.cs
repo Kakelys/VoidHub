@@ -14,9 +14,9 @@ namespace ForumApi.Controllers
         IForumService forumService,
         ITopicService topicService) : ControllerBase
     {
+        [HttpGet("{forumId}")]
         [Authorize]
         [AllowAnonymous]
-        [HttpGet("{forumId}")]
         public async Task<IActionResult> GetForum(int forumId, [FromQuery] Params prms)
         {
             var isAuthed = User.Identity?.IsAuthenticated == true;
@@ -26,9 +26,9 @@ namespace ForumApi.Controllers
             return Ok(await forumService.Get(forumId, prms));
         }
 
+        [HttpGet("{forumId}/topics")]
         [Authorize]
         [AllowAnonymous]
-        [HttpGet("{forumId}/topics")]
         public async Task<IActionResult> GetTopicsPage(int forumId, [FromQuery] Page page, [FromQuery] Params prms)
         {
             var isAuthed = User.Identity?.IsAuthenticated == true;
@@ -38,6 +38,7 @@ namespace ForumApi.Controllers
             return Ok(await topicService.GetTopics(forumId, page, prms));
         }
 
+        [BanFilter]
         [HttpPost]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]

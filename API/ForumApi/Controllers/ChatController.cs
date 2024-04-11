@@ -20,38 +20,39 @@ namespace ForumApi.Controllers
         INotifyService notifyService,
         IAccountService accountService) : ControllerBase
     {
-        [Authorize]
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetChats([FromQuery] Offset offset, [FromQuery] DateTime time)
         {
             return Ok(await chatService.Get(User.GetId(), offset, time));
         }
 
+        [HttpGet("{chatId}")]
         [Authorize]
         [PermissionActionFilterV2<ChatMember>("ChatId", "chatId")]
-        [HttpGet("{chatId}")]
         public async Task<IActionResult> GetChat(int chatId)
         {
             return Ok(await chatService.Get(chatId));
         }
 
-        [Authorize]
         [HttpGet("between")]
+        [Authorize]
         public async Task<IActionResult> GetBetween([FromQuery] int targetId)
         {
             return Ok(await chatService.Get(User.GetId(), targetId));
         }
 
+        [HttpGet("{chatId}/messages")]
         [Authorize]
         [PermissionActionFilterV2<ChatMember>("ChatId", "chatId")]
-        [HttpGet("{chatId}/messages")]
         public async Task<IActionResult> GetChatMesages(int chatId, [FromQuery] Offset offset, [FromQuery] DateTime time)
         {
             return Ok(await messageService.GetMesages(chatId, offset, time));
         }
 
-        [Authorize]
         [HttpPost("personal")]
+        [Authorize]
+        [BanFilter]
         public async Task<IActionResult> CreatePersonal(Message dto)
         {
             var res = await chatService.CreatePersonal(User.GetId(), dto.TargetId, dto.Content);
@@ -72,9 +73,10 @@ namespace ForumApi.Controllers
             return Ok(res.Item1);
         }
 
+        [HttpPost("{chatId}/messages")]
         [Authorize]
         [PermissionActionFilterV2<ChatMember>("ChatId", "chatId")]
-        [HttpPost("{chatId}/messages")]
+        [BanFilter]
         public async Task<IActionResult> SendMessage(int chatId, Message dto)
         {
             var msgRes = await messageService.SendMessage(chatId, User.GetId(), dto.Content);

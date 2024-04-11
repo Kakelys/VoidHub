@@ -20,9 +20,9 @@ namespace ForumApi.Controllers
         ILikeService likeService
     ) : ControllerBase
     {
+        [HttpGet("{id}/comments")]
         [Authorize]
         [AllowAnonymous]
-        [HttpGet("{id}/comments")]
         public async Task<IActionResult> GetPage(int id, [FromQuery] Offset offset, [FromQuery] Params prms)
         {
             var res = await _postService.GetPostComments(id, offset, new Params
@@ -76,8 +76,8 @@ namespace ForumApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        [BanFilter]
         [PermissionActionFilter<Post>]
+        [BanFilter]
         public async Task<IActionResult> Update(int id, PostEditDto postDto)
         {
             var post = await _postService.Update(id, postDto);

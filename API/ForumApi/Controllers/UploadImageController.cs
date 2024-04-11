@@ -42,8 +42,9 @@ namespace ForumApi.Controllers
             return Ok(await uploadService.UploadImage(newFileDto!.File!, fileDto));
         }
 
-        [HttpDelete()]
+        [HttpDelete]
         [Authorize]
+        [BanFilter]
         public async Task<IActionResult> DeteleImages([FromQuery] int[] ids)
         {
             if(ids.Length == 0)
@@ -64,6 +65,7 @@ namespace ForumApi.Controllers
         [HttpDelete("{id}")]
         [Authorize]
         [PermissionActionFilter<Data.Models.File>]
+        [BanFilter]
         public async Task<IActionResult> DeleteImage(int id)
         {
             await uploadService.DeleteImages([id]);

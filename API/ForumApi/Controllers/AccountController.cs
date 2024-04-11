@@ -185,6 +185,7 @@ namespace ForumApi.Controllers
         }
 
         [HttpDelete]
+        [BanFilter]
         [Authorize]
         public async Task<IActionResult> DeleteSelf()
         {
