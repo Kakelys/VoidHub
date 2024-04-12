@@ -22,6 +22,14 @@
   {{ 'menu.admin-panel' | translate}}
   </a>
 
+  <a class="btn btn-accent btn-outline min-h-min h-8 mt-3"
+    routerLinkActive="bg-neutral"
+    routerLink="/forum/new-topic"
+    *ngIf="user"
+  >
+    {{ 'lables.new-topic' | translate }}
+  </a>
+
   <div class="mt-5">
     <div class="collapse collapse-arrow">
       <input type="checkbox" name="shortcutItem"/>
