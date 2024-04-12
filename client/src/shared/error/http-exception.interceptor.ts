@@ -13,46 +13,55 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
     private trans: TranslateService
   ){}
 
-  errors = [];
-  //TODO: mb simply try instant instead of get?
-  subs = []
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((err) => {
+        let errors = [];
+        //TODO: mb simply try instant instead of get?
+        let subs = [];
         if (err instanceof HttpErrorResponse) {
           console.error(err);
           switch (err.status) {
-            case 400: {
-              this.handle400(err);
+            case 400:
+              this.handle400(err, errors, subs);
               break;
-            }
             case 401:
-              this.errors.push(err.statusText)
+              errors.push(err.statusText)
               break;
             case 403:
-              this.handle403(err);
+              this.handle403(err, errors, subs);
               break;
             case 404:
-              this.handle404(err);
+              this.handle404(err, errors, subs);
               break;
             case 500:
-              this.handle500();
+              this.handle500(errors, subs);
               break;
             default:
-              this.handleDefault(err);
+              this.handleDefault(err, errors, subs);
               break;
           }
         }
 
         if(err instanceof Error) {
-          this.errors.push(err.message);
+          errors.push(err.message);
         }
 
-        return forkJoin(this.subs).pipe(switchMap(val => {
+        if(subs.length == 0) {
           const httpException: HttpException = {
             statusCode: err.status,
-            errors: this.errors,
+            errors: errors,
+            error: err
+          };
+
+          return throwError(() => httpException);
+        }
+
+        return forkJoin(subs).pipe(switchMap(val => {
+          const httpException: HttpException = {
+            statusCode: err.status,
+            errors: errors,
             error: err
           }
 
@@ -62,17 +71,17 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
     );
   }
 
-  handle400(err) {
+  handle400(err, errors, subs) {
     if (err.error.errors) {
       //check if err.error.errors is array
       if (Array.isArray(err.error.errors)) {
         let validErrors = err.error.errors;
         for(const element of validErrors)
-          this.errors.push(element.ErrorMessage);
+          errors.push(element.ErrorMessage);
         }
       else {
         Object.keys(err.error.errors).forEach(key => {
-          this.errors.push(err.error.errors[key][0]);
+          errors.push(err.error.errors[key][0]);
         });
       }
 
@@ -80,11 +89,11 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
     }
 
     if (err.error) {
-      this.errors.push(err.error);
+      errors.push(err.error);
     }
   }
 
-  handle403(err) {
+  handle403(err, errors, subs) {
     if(err.error?.ExpiresAt && err.error?.Reason) {
       let banReason$ = this.trans.get('labels.you-banned-until')
       .pipe(switchMap(bannedLabel => {
@@ -92,68 +101,68 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
         .pipe(switchMap(reasonLabel => {
           let msg = `${bannedLabel} ${new Date(err.error.ExpiresAt).toLocaleString()}, ${reasonLabel}: ${err.error.Reason}`;
 
-          this.errors.push(msg);
+          errors.push(msg);
           this.toastr.error(msg);
           return reasonLabel;
         }))
       }))
 
-      this.subs.push(banReason$);
+      subs.push(banReason$);
     }
 
     let accessDenied$ = this.trans.get('labels.access-denied')
     .pipe(switchMap(label => {
-      this.errors.push(label);
+      errors.push(label);
       return label;
     }))
 
-    this.subs.push(accessDenied$);
+    subs.push(accessDenied$);
   }
 
-  handle404(err) {
+  handle404(err, errors, subs) {
     if(err.error) {
-      this.errors.push(err.error);
+      errors.push(err.error);
     } else {
       let notFound$ = this.trans.get('labels.fail-request')
       .pipe(switchMap(label => {
-        this.errors.push(label);
+        errors.push(label);
         return label;
       }))
 
-      this.subs.push(notFound$);
+      subs.push(notFound$);
     }
   }
 
-  handle500() {
+  handle500(errors, subs) {
     let internalError$ = this.trans.get('lables.internal-error')
     .pipe(switchMap(label => {
-      this.errors.push(label);
+      errors.push(label);
       return label;
     }))
 
-    this.subs.push(internalError$);
+    subs.push(internalError$);
   }
 
-  handleDefault(err) {
+  handleDefault(err, errors, subs) {
     // connection refused or timeout
     if(err.status == 0) {
       let connectionRefused$ = this.trans.get('labels.connection-refused')
       .pipe(switchMap(label => {
-        this.errors.push(label);
+        errors.push(label);
         return label;
       }))
 
-      this.subs.push(connectionRefused$);
+      subs.push(connectionRefused$);
 
       return;
     }
 
     let unknownError$ = this.trans.get('labels.something-went-wrong')
     .pipe(switchMap(label => {
-      this.errors.push(label);
+      errors.push(label);
       return label;
     }))
 
-    this.subs.push(unknownError$);
+    subs.push(unknownError$);
   }
 }

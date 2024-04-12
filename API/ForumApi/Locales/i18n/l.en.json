@@ -47,7 +47,8 @@
     "topic-not-deleted": "Topic not deleted",
     "invalid-token": "Invalid token",
     "email-already-confirmed": "Email already confirmed",
-    "confirm-token-expired": "Confirm token expired"
+    "confirm-token-expired": "Confirm token expired",
+    "email-not-confirmed": "Email not confirmed"
   },
   "validators": {
     "login-required": "Login name must not be empty",
@@ -81,13 +82,20 @@
     "orderposition-invalid": "Invalid order position",
     "offsetnumber-invalid": "Invalid offset number",
     "offsetlimit-size": "Limit must be greater than 0 and less than or equal to 100",
-    "query-length": "Query must be between 1 and 255 characters"
+    "query-length": "Query must be between 1 and 255 characters",
+    "reason-required": "Reason must not be empty",
+    "date-invalid": "Invalid date"
   },
   "email": {
     "confirm-email": "Confirm Email",
     "confirm-ask-for-confirm-line": "Hello, pls confirm your email by visiting our site through link below.",
     "link-will-be-valid": "The link will be valid for the next",
     "hours": "hours",
-    "not-for-smap": "We will not use it for spam"
+    "not-for-smap": "We will not use it for spam",
+    "password-recover-request": "You requested a password recovery link",
+    "ignore-if-not-you": "If you're not, ignore this email",
+    "mins": "minutes",
+    "password-recover": "Password recover",
+    "visit-link-enter-password": "Visit the following link and enter a new password"
   }
 }

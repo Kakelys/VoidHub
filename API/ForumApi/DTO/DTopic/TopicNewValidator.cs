@@ -1,5 +1,6 @@
 using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
+using ForumApi.Utils.Extensions;
 
 namespace ForumApi.DTO.DTopic
 {
@@ -8,17 +9,13 @@ namespace ForumApi.DTO.DTopic
         public TopicNewValidator(IJsonStringLocalizer locale)
         {
             RuleFor(x => x.Title)
-                .NotEmpty()
-                .WithMessage(locale["validators.title-required"])
-                .Length(3, 255)
-                .WithMessage(locale["validators.title-length"]);
+                .TopicTitleRules(locale);
 
             RuleFor(x => x.Content)
                 .NotEmpty()
                 .WithMessage(locale["validators.content-required"])
                 .Length(1, 24000)
                 .WithMessage(locale["validators.content-length"]);
-                
         }
     }
 }

@@ -59,7 +59,7 @@ namespace ForumApi.Services.Auth
 
             return banEntity;
         }
-        
+
         public async Task<Ban> Update(int moderId, int banId, BanEdit ban)
         {
             var moder = await rep.Account.Value

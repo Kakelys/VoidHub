@@ -97,7 +97,7 @@ export class AuthService
   }
 
   private handleAuth(authResponse:AuthResponse) {
-    if(!authResponse || !authResponse.user || !authResponse.tokens)
+    if(!authResponse?.user || !authResponse.tokens)
       return;
 
     localStorage.setItem('access-token', authResponse.tokens.accessToken);

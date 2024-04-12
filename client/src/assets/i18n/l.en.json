@@ -164,6 +164,12 @@
     "resend-confirm-email": "Resend email",
     "done-check-email": "Done. Check email",
     "thank-for-confirming-email": "Thank you for confirming email",
-    "back-to-home-page": "Back to home page"
-  }
+    "back-to-home-page": "Back to home page",
+    "login-or-email": "login or email",
+    "forgot-your-password": "Forgot your password",
+    "recover-instruction": "Follow the instructions in the email. If such a login or email exists and the email is confirmed, the email will be sent.",
+    "password-recovering": "Password recovering",
+    "enter-new-password": "Enter new password"
+  },
+  "labels-using-new-password": "Done. Now you can login using new password"
 }

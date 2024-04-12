@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { pipe, take } from 'rxjs';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-delete',

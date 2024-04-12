@@ -21,7 +21,7 @@
     <div *ngFor="let file of uploadedFiles">
       <div class="avatar my-2 mx-1">
         <div class="w-32 rounded">
-          <img src="{{resourceUrl}}/{{file.path}}" class="rounded opacity-30 relative z-10" loading="lazy"/>
+          <img src="{{resourceUrl}}/{{file.path}}" class="rounded opacity-30 relative z-10" loading="lazy" alt=""/>
           <div class="w-full flex justify-end absolute top-0 z-20">
             <app-delete
               (onConfirm)="onDelete(file.id)"

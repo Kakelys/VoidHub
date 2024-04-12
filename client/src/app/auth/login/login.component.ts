@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
-import { NgFor } from '@angular/common';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
 import { HttpException } from 'src/shared/models/http-exception.model';
 

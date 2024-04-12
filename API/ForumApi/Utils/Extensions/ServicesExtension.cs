@@ -47,6 +47,7 @@ namespace ForumApi.Utils.Extensions
 
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IConfirmService, ConfirmService>();
+            services.AddScoped<IPasswordRecoverService, PasswordRecoverService>();
 
             return services;
         }

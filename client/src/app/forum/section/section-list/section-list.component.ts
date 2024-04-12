@@ -1,5 +1,4 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Section } from '../../models/section.model';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/shared/models/user.model';

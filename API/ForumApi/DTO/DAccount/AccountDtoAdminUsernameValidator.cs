@@ -1,5 +1,6 @@
 using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
+using ForumApi.Utils.Extensions;
 
 namespace ForumApi.DTO.DAccount
 {
@@ -11,10 +12,7 @@ namespace ForumApi.DTO.DAccount
         public AccountDtoAdminUsernameValidator(IJsonStringLocalizer locale)
         {
             RuleFor(x => x.Username)
-                .NotEmpty()
-                .WithMessage(locale["validators.username-required"])
-                .MaximumLength(32)
-                .WithMessage(locale["validators.username-length"]);
+                .UsernameRules(locale);
 
             // admin change only user's usrname
             RuleFor(x => x.Role)

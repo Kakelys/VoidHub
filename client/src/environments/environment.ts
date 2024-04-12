@@ -20,6 +20,7 @@ export const environment = {
     loadProfilePosts: 'loadProfilePosts',
     loadProfileTopics: 'loadProfileTopics',
     loadComments: 'loadComments',
-    confirmEmail: 'confirmEmail'
+    confirmEmail: 'confirmEmail',
+    sendRecover: 'sendRecover'
   },
 }

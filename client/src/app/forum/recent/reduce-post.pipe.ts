@@ -50,7 +50,7 @@ export class ReducePost implements PipeTransform {
         }
 
         // reduce tag name if is closing tag
-        if(tagName[0] === '/') {
+        if(tagName.startsWith('/')) {
           tagName = tagName.substring(1);
         }
 
@@ -89,15 +89,11 @@ export class ReducePost implements PipeTransform {
       if (!insideTag) {
         symbolCount++;
       }
+      else if (char !== '<' && (char === ' ' || char === '\n')) {
+        tagNameReaded = true;
+      }
       else {
-        // read tag name
-        if(char !== '<')
-        if (char === ' ' || char === '\n') {
-          tagNameReaded = true;
-        }
-        else if (!tagNameReaded) {
-          tagName += char;
-        }
+        tagName += char;
       }
 
       result += char;

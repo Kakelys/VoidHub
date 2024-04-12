@@ -15,7 +15,7 @@ namespace ForumApi.Services.Email
         {
             var from = MailboxAddress.Parse(_emailOptions.From);
             var to = MailboxAddress.Parse(email);
-            var msg = new MimeMessage 
+            var msg = new MimeMessage
             {
                 Subject = subject,
                 Body = new TextPart(format)

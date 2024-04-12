@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { TruncatePipe } from 'src/shared/truncate.pipe';
 import { TimezonePipe } from 'src/shared/timemezone.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-topic-element',
@@ -18,7 +19,8 @@ import { TimezonePipe } from 'src/shared/timemezone.pipe';
     ClosedIconComponent,
     RouterModule,
     TruncatePipe,
-    TimezonePipe
+    TimezonePipe,
+    TranslateModule
   ]
 })
 export class TopicElementComponent {

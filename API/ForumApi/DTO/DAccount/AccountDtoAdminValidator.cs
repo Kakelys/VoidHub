@@ -23,6 +23,5 @@ namespace ForumApi.DTO.DAccount
             RuleFor(r => r.NewPassword).Null();
             RuleFor(r => r.Img).Null();
         }
-        
     }
 }

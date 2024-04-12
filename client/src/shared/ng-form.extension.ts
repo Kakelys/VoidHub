@@ -4,8 +4,8 @@ export class NgFormExtension{
 
   static markAllAsTouched(form: NgForm) {
     let controls = form.controls;
-    for(let i = 0; i < Object.keys(controls).length; i++) {
-      let control = controls[Object.keys(controls)[i]];
+    for(const element of Object.keys(controls)) {
+      let control = controls[element];
       control.markAsTouched();
     }
   }

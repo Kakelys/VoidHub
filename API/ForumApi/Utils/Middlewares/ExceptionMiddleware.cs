@@ -1,6 +1,5 @@
 using System.Text.Json;
 using AspNetCore.Localizer.Json.Localizer;
-using ForumApi.Locales;
 using ForumApi.Utils.Exceptions;
 
 namespace ForumApi.Utils.Middlewares

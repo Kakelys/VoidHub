@@ -11,13 +11,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;
 using AspNetCore.Localizer.Json.Localizer;
+using ForumApi.Data.Models;
 
 namespace ForumApi.Services.ForumS
 {
-    public class AccountService 
+    public class AccountService
         (
-            IRepositoryManager rep, 
-            IMapper mapper, 
+            IRepositoryManager rep,
+            IMapper mapper,
             IOptions<ImageOptions> imageOptions,
             IJsonStringLocalizer locale
         ) : IAccountService
@@ -46,7 +47,6 @@ namespace ForumApi.Services.ForumS
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-user"]);
         }
 
-        
         public async Task<User> GetUser(int id)
         {
             var account = await rep.Account.Value
@@ -87,9 +87,10 @@ namespace ForumApi.Services.ForumS
                     throw new BadRequestException(locale["errors.email-exist"]);
 
                 user.Email = accountDto.Email;
+                user.IsEmailConfirmed = false;
             }
-            
-            if(accountDto.Role != Data.Models.RoleEnum.None)
+
+            if(accountDto.Role != RoleEnum.None)
             {
                 if(targetId == senderId)
                     throw new BadRequestException(locale["errors.self-role"]);
@@ -107,7 +108,7 @@ namespace ForumApi.Services.ForumS
 
                 user.PasswordHash = PasswordHelper.Hash(accountDto.NewPassword);
             }
-            
+
             await rep.Save();
 
             return mapper.Map<AuthUser>(user);
@@ -129,9 +130,9 @@ namespace ForumApi.Services.ForumS
 
                 // delete if changed to default
                 if(user.AvatarPath == _imageOptions.AvatarDefault
-                   && File.Exists($"{_imageOptions.Folder}/{oldPath}"))
+                   && System.IO.File.Exists($"{_imageOptions.Folder}/{oldPath}"))
                 {
-                    File.Delete($"{_imageOptions.Folder}/{oldPath}");
+                    System.IO.File.Delete($"{_imageOptions.Folder}/{oldPath}");
                 }
 
                 await rep.Commit();

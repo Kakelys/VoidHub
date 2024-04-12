@@ -1,6 +1,6 @@
 <div class="flex flex-col items-center">
   <div class="bg-base-200 rounded-2xl">
-    <div class="text-lg text-center pt-12">{{'signin' | translate}}</div>
+    <div class="text-lg text-center mt-5">{{'signin' | translate}}</div>
     <app-error-message-list [messages]="errorMessages"></app-error-message-list>
     <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" class="px-12 pb-5">
       <div class="flex flex-col">
@@ -16,7 +16,7 @@
             }"
             ngModel
             required
-            autocomplete="loginname"
+            autocomplete="username"
             />
           <label class="flex flex-col items-start  label pt-0.5">
             <span
@@ -38,7 +38,7 @@
             }"
             ngModel
             required
-            autocomplete="password"
+            autocomplete="on"
           />
           <label class="flex flex-col items-start label pt-0.5">
             <span
@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col items-center pb-12 pt-5">
+      <div class="flex flex-col items-center pt-5">
           <app-limit-loader [limit]="1">
             <button class="btn btn-accent text-base-100 min-h-fit h-8">
               {{'signin' | translate}}
@@ -60,8 +60,10 @@
               </svg>
             </button>
           </app-limit-loader>
-
-          <a class="link link-hover pt-2 text-cyan-400 hover:text-cyan-200" routerLink="/register">
+          <a class="link link-hover pt-2" routerLink="/password-recover">
+            {{ 'labels.forgot-your-password' | translate }}?
+          </a>
+          <a class="link link-hover pt-2" routerLink="/register">
             {{'forms.create-new-account' | translate}}
           </a>
       </div>

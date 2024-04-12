@@ -11,17 +11,17 @@ namespace ForumApi.Data.Repository.Implements
             return Delete(entity, DateTime.UtcNow);
         }
 
-        public new int DeleteMany(IEnumerable<Post> entities)
-        {
-            return DeleteMany(entities, DateTime.UtcNow);
-        }
-
         public int Delete(Post entity, DateTime? deleteTime)
         {
             var deleted = 1;
             entity.DeletedAt = deleteTime;
             deleted += DeleteMany(entity.Comments.Where(c => c.DeletedAt == null));
             return deleted;
+        }
+
+        public new int DeleteMany(IEnumerable<Post> entities)
+        {
+            return DeleteMany(entities, DateTime.UtcNow);
         }
 
         public int DeleteMany(IEnumerable<Post> entities, DateTime? deleteTime)
