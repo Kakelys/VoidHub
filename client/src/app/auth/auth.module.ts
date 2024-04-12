@@ -6,6 +6,9 @@ import { RouterModule } from "@angular/router";
 import { SharedModule } from "src/shared/shared.module";
 import { ErrorMessageListComponent } from "../error-message-list/error-message-list.component";
 import { TranslateModule } from "@ngx-translate/core";
+import { PasswordRecoverRequestComponent } from './password-recover-request/password-recover-request.component';
+import { PasswordRecoverComponent } from './password-recover/password-recover.component';
+import { RecoverService } from "./recover.service";
 
 function onAppLoad(authService: AuthService): () => Promise<any> {
   return async () => {
@@ -25,7 +28,9 @@ function onAppLoad(authService: AuthService): () => Promise<any> {
 @NgModule({
   declarations: [
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    PasswordRecoverRequestComponent,
+    PasswordRecoverComponent
   ],
   imports: [
     SharedModule,
@@ -33,12 +38,15 @@ function onAppLoad(authService: AuthService): () => Promise<any> {
     TranslateModule.forChild(),
     RouterModule.forChild([
       {path: 'login', component: LoginComponent},
-      {path: 'register', component: RegisterComponent}
+      {path: 'register', component: RegisterComponent},
+      {path: 'password-recover', component: PasswordRecoverRequestComponent},
+      {path: 'password-recover/:token', component: PasswordRecoverComponent}
     ])
   ],
   exports: [],
   providers: [
     AuthService,
+    RecoverService,
     {
       provide: APP_INITIALIZER,
       useFactory: onAppLoad,

@@ -95,6 +95,7 @@
     "password-recover-request": "You requested a password recovery link",
     "ignore-if-not-you": "If you're not, ignore this email",
     "mins": "minutes",
-    "password-recover": "Password recover"
+    "password-recover": "Password recover",
+    "visit-link-enter-password": "Visit the following link and enter a new password"
   }
 }

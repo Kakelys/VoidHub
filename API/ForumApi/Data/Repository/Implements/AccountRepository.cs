@@ -18,8 +18,11 @@ namespace ForumApi.Data.Repository.Implements
         public IQueryable<Account> FindByLogin(string login, bool asTracking = false) =>
             FindByCondition(a => EF.Functions.ILike(a.LoginName, login), asTracking);
 
-        public IQueryable<Account> FindByLoginWithTokens(string login, bool asTracking = false) => 
+        public IQueryable<Account> FindByLoginWithTokens(string login, bool asTracking = false) =>
             FindByLogin(login, asTracking).Include(a => a.Tokens);
+
+        public IQueryable<Account> FindByLoginOrEmail(string loginOrEmail, bool asTracking = false) =>
+            FindByCondition(a => EF.Functions.ILike(a.Email, loginOrEmail) || EF.Functions.ILike(a.LoginName, loginOrEmail), asTracking);
 
         public override void Delete(Account entity)
         {

@@ -1,6 +1,6 @@
 <div class="flex flex-col items-center">
   <div class="bg-base-200 rounded-2xl">
-    <div class="text-lg text-center pt-12">{{'signup' | translate}}</div>
+    <div class="text-lg text-center mt-5">{{'signup' | translate}}</div>
     <app-error-message-list [messages]="errorMessages"></app-error-message-list>
     <form class="px-12 pb-5" #regForm="ngForm" (ngSubmit)="onSubmit(regForm)">
       <div class="flex flex-col">
@@ -116,7 +116,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col items-center pb-12 pt-4">
+      <div class="flex flex-col items-center pt-4">
         <app-limit-loader [limit]="1">
           <button class="btn btn-accent text-base-100 min-h-fit h-8">
             {{'forms.create-account' | translate}}
@@ -131,7 +131,7 @@
           <div class="text-secondary-content">
             {{'forms.account-already-have' | translate}}
           </div>
-          <a class="ps-2 link link-hover text-cyan-400 hover:text-cyan-200" routerLink="/login">{{'signin' | translate}}</a>
+          <a class="ps-2 link link-hover" routerLink="/login">{{'signin' | translate}}</a>
         </div>
       </div>
     </form>

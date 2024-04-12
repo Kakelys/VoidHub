@@ -18,6 +18,7 @@ namespace ForumApi.Data.Repository.Interfaces
         /// </summary>
         IQueryable<Account> FindByLogin(string login, bool asTracking = false);
         IQueryable<Account> FindByLoginWithTokens(string login, bool asTracking = false);
+        IQueryable<Account> FindByLoginOrEmail(string loginOrEmail, bool asTracking = false);
         /// <summary>
         /// Set DeletedAt time to current time and change email to email-deleted
         /// <para>Not saving db changes</para>
