@@ -33,6 +33,7 @@ import { BreadcrumbService } from "./services/breadcrumb.service";
 import { SharedForumModule } from "./shared.forum.module";
 import { canActivateAdmin } from "./admin/role.guard";
 import { TranslateModule } from "@ngx-translate/core";
+import { NewTopicPageComponent } from "./topic/new-topic-page/new-topic-page.component";
 
 @NgModule({
   providers: [
@@ -58,6 +59,7 @@ import { TranslateModule } from "@ngx-translate/core";
     ForumElementComponent,
     RecentComponent,
     BreadcrumbComponent,
+    NewTopicPageComponent
   ],
   imports: [
     SharedModule,
@@ -77,7 +79,7 @@ import { TranslateModule } from "@ngx-translate/core";
           {path: '', redirectTo: 'sections', pathMatch: 'full'},
           {path:'sections', component: SectionListComponent},
           {path:'new-section', component: NewSectionComponent},
-          {path:'new-topic', component: NewTopicComponent},
+          {path:'new-topic', component: NewTopicPageComponent},
           {path:'recent', component: RecentComponent},
           {path:'section/:id/new-forum', component: NewForumComponent},
           {path:'topic/:id/:page', component: TopicComponent},
