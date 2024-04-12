@@ -12,7 +12,7 @@ namespace ForumApi.DTO.DForum
                 .WithName(locale["validators.title-required"])
                 .Length(3, 255)
                 .WithName(locale["validators.title-length"]);
-            
+
             RuleFor(f => f.SectionId)
                 .GreaterThanOrEqualTo(1)
                 .WithMessage(locale["validators.sectionid-invalid"]);

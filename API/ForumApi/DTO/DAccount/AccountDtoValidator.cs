@@ -1,5 +1,6 @@
 using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
+using ForumApi.Utils.Extensions;
 
 namespace ForumApi.DTO.DAccount
 {
@@ -16,18 +17,10 @@ namespace ForumApi.DTO.DAccount
                 .WithMessage(locale["validators.no-role"]);
 
             RuleFor(r => r.Email)
-                .NotEmpty()
-                .WithMessage(locale["validators.email-required"])
-                .EmailAddress()
-                .WithMessage(locale["validators.email-valid"]);
+                .EmailRules(locale);
 
             RuleFor(r => r.Username)
-                .NotEmpty()
-                .WithMessage(locale["validators.username-required"])
-                .Length(3, 32)
-                .WithMessage(locale["forms-errors.username-length"])
-                .Matches(@"^[a-zA-Z\d!@#$%^&*()\-_=+{}:,<.>]+$")
-                .WithMessage(locale["validators.username-characters"]);
+                .UsernameRules(locale);
 
             RuleFor(x => x.OldPassword)
                 .NotEmpty()
@@ -39,13 +32,8 @@ namespace ForumApi.DTO.DAccount
                 .When(x => !string.IsNullOrEmpty(x.OldPassword));
 
             RuleFor(r => r.NewPassword)
-                .NotEmpty()
-                .WithMessage(locale["validators.password-required"])
-                .Length(8, 32)
-                .WithMessage(locale["forms-errors.password-length"])
-                .Matches(@"^[a-zA-Z\d!@#$%^&*()\-_=+{}:,<.>]+$")
-                .WithMessage(locale["validators.password-characters"])
+                .PasswordRules(locale)
                 .When(x => !string.IsNullOrEmpty(x.NewPassword));
-        }        
+        }
     }
 }
