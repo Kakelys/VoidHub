@@ -23,10 +23,9 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
         if (err instanceof HttpErrorResponse) {
           console.error(err);
           switch (err.status) {
-            case 400: {
+            case 400:
               this.handle400(err, errors, subs);
               break;
-            }
             case 401:
               errors.push(err.statusText)
               break;
@@ -47,6 +46,16 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
 
         if(err instanceof Error) {
           errors.push(err.message);
+        }
+
+        if(subs.length == 0) {
+          const httpException: HttpException = {
+            statusCode: err.status,
+            errors: errors,
+            error: err
+          };
+
+          return throwError(() => httpException);
         }
 
         return forkJoin(subs).pipe(switchMap(val => {
