@@ -5,6 +5,7 @@ using ForumApi.Utils.Middlewares;
 using ForumApi.Options;
 using Microsoft.OpenApi.Models;
 using ForumApi.Hubs;
+using ForumApi.Utils.Background;
 
 //need to be checked before create builder
 if (!Directory.Exists("wwwroot"))
@@ -101,6 +102,8 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+
+builder.Services.AddHostedService<GarbageFileService>();
 
 builder.Services.ConfigureLocalization();
 

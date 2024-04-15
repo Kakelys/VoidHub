@@ -23,6 +23,9 @@ namespace ForumApi.Data.ModelConfigurations
                 .WithMany(p => p.Files)
                 .HasForeignKey(f => f.PostId)
                 .IsRequired(false);
+
+            builder.Property(a => a.CreatedAt)
+                .HasDefaultValueSql("timezone('utc', now())");
         }
     }
 }
