@@ -6,5 +6,6 @@ namespace ForumApi.DTO.Auth
         public string Username { get; set; } = null!;
         public string Role { get; set; } = null!;
         public string AvatarPath { get; set; } = null!;
+        public DateTime CreatedAt { get; set; }
     }
 }

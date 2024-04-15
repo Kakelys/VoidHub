@@ -36,7 +36,18 @@
             {{ 'search.include-content' | translate }}
           </div>
         </div>
-
+        <div class="flex flex-row mt-2">
+          <input
+            type="checkbox"
+            name="partialTitle"
+            id="partialTitle"
+            class="checkbox checkbox-sm"
+            [ngModel]="searchParams?.partialTitle"
+          />
+          <div class="ms-2 text-sm">
+            {{ 'labels.partial-match' | translate }}
+          </div>
+        </div>
         <div class="flex flex-row mt-2" *ngIf="user && user.role == roles.ADMIN">
           <input
             type="checkbox"

@@ -169,7 +169,8 @@
     "forgot-your-password": "Forgot your password",
     "recover-instruction": "Follow the instructions in the email. If such a login or email exists and the email is confirmed, the email will be sent.",
     "password-recovering": "Password recovering",
-    "enter-new-password": "Enter new password"
+    "enter-new-password": "Enter new password",
+    "partial-match": "Partial match"
   },
   "labels-using-new-password": "Done. Now you can login using new password"
 }

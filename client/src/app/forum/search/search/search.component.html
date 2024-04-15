@@ -29,10 +29,42 @@
         </app-paginator>
       </div>
 
-      <app-recent-element
-        *ngFor="let el of searchResult.data"
-        [post]="{topic: el.topic, post: el.post, sender: el.sender}" [user]="user" [enableDeliting]="false"
-      ></app-recent-element>
+      <div *ngFor="let el of searchResult.data">
+        <div [ngSwitch]="el.type">
+          <div *ngSwitchCase="resTypes.Topic">
+            <app-recent-element
+              [post]="{topic: el.data.topic, post: el.data.post, sender: el.data.sender}" [user]="user" [enableDeliting]="false"
+            ></app-recent-element>
+          </div>
+          <div *ngSwitchCase="resTypes.User">
+            <div class="flex flex-row bg-neutral rounded p-3 my-2">
+              <div class="my-auto me-2">
+                <div class="avatar">
+                  <div class="w-20 rounded">
+                    <img src="{{resourceUrl}}/{{el.data.avatarPath}}" loading="lazy" />
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <a class="text-3xl min-h-fit h-min link no-underline" routerLink="/profile/{{el.data.id}}">
+                  {{el.data.username}}
+                </a>
+                <div [ngSwitch]="el.data.role">
+                  <div *ngSwitchCase="roles.ADMIN" class="text-red-700">{{ 'roles.admin' | translate }}</div>
+                  <div *ngSwitchCase="roles.MODER"class="text-orange-600">{{ 'roles.moder' | translate }}</div>
+                  <div *ngSwitchCase="roles.USER">{{ 'roles.user' | translate }}</div>
+                </div>
+                <div>
+                  {{ 'profile.reg-date' | translate }}: {{el.data.createdAt | date: 'dd.MM.yyyy'}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <p *ngSwitchDefault>
+
+          </p>
+        </div>
+      </div>
 
       <div class="py-1">
         <app-paginator
