@@ -22,7 +22,7 @@ namespace ForumApi.Utils.Background
         private async Task DeleteNotLinkedFiles(CancellationToken cancellationToken) 
         {
             while(!cancellationToken.IsCancellationRequested)
-            {   
+            {
                 var scp = scope.CreateAsyncScope();
                 var rep = scp.ServiceProvider.GetService<IRepositoryManager>();
 
@@ -30,7 +30,7 @@ namespace ForumApi.Utils.Background
                 {
                     var garbageFiles = await rep!.File.Value
                         .FindByCondition(f => f.CreatedAt.AddDays(7) < DateTime.UtcNow && f.PostId == null)
-                        .ToListAsync();
+                        .ToListAsync(CancellationToken.None);
 
                     rep.File.Value.DeleteMany(garbageFiles);
                     await rep.Save();
@@ -44,7 +44,7 @@ namespace ForumApi.Utils.Background
 
                 await scp.DisposeAsync();
 
-                await Task.Delay(1000 * 60 * 12);
+                await Task.Delay(1000 * 60 * 12, CancellationToken.None);
             }
         }
     }

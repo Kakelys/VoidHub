@@ -35,44 +35,12 @@ if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.PostImageFolder}"))
 }
 
 builder.Services.AddRepository(builder.Configuration);
-
 builder.Services.AddAppServices();
 
 builder.Services.AddControllers()
   .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "FroumAPI", Version = "v1" });
-
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-      {
-        Description = @"Example: 'Bearer eyASDsddw....'",
-         Name = "Authorization",
-         In = ParameterLocation.Header,
-         Type = SecuritySchemeType.ApiKey,
-         Scheme = "Bearer"
-       });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-      {
-        {
-          new OpenApiSecurityScheme
-          {
-            Reference = new OpenApiReference
-              {
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
-              },
-              Scheme = "oauth2",
-              Name = "Bearer",
-              In = ParameterLocation.Header,
-
-            },
-            new List<string>()
-          }
-      });
-});
+builder.Services.AddSwagger();
 
 builder.Services.ConfigureAutoMapper();
 builder.Services.AddValidators();
@@ -91,15 +59,15 @@ builder.Services.AddCors(options =>
 
       if(clients?.Count != 0)
       {
-        foreach (var client in clients!)
-        {
-          policy.WithOrigins(client);
-        }
+        policy.WithOrigins([..clients]);
       }
 
-      policy.AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+      // TODO: strange origin works with tunnels
+      policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+            //.AllowCredentials();
     });
 });
 
@@ -120,10 +88,10 @@ if(!File.Exists($"{imageSettings.Folder}/{imageSettings.AvatarDefault}"))
   app.Logger.LogWarning($"Default avatar in {imageSettings.Folder}/{imageSettings.AvatarDefault} not found.");
 }
 
-app.UseCors(frontCorsPolicy);
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors(frontCorsPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();
