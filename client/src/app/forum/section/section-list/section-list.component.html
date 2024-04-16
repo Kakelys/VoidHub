@@ -1,12 +1,11 @@
 <app-limit-loader [limit]="1" [containerClasses]="'flex flex-col items-center'">
   <div class="flex flex-col">
-    <div class="flex flex-row mb-3">
-      <a class=" btn btn-neutral w-fit min-h-fit h-8" routerLink="../new-section" *ngIf="user && user?.role == roles.ADMIN">
+    <div class="flex flex-row mb-3" *ngIf="user">
+      <a class=" btn btn-neutral w-fit min-h-fit h-8" routerLink="../new-section" *ngIf="user?.role == roles.ADMIN">
         {{ 'lables.add-new-section' | translate }}
       </a>
       <a class="btn btn-accent btn-outline min-h-min h-8 ms-3 xl:hidden flex"
         routerLink="/forum/new-topic"
-        *ngIf="user"
       >
         {{ 'lables.new-topic' | translate }}
       </a>
