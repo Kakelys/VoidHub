@@ -11,7 +11,7 @@ namespace ForumApi.Controllers
     [ApiController]
     [Route("api/v1/search")]
     public class SearchController(
-        ISearchService searchService, 
+        ISearchService searchService,
         ILikeService likeService) : ControllerBase
     {
         [Authorize]
@@ -46,9 +46,8 @@ namespace ForumApi.Controllers
                     break;
                 default:
                     await TopicSearch(res, search, prms, page);
-                    UpdPage(res.SearchCount, page);
-                    if(page.PageNumber > 0 && page.PageSize > 0)
-                        await UserSearch(res, search, prms, page);
+                    UpdPage(res.SearchCount, res.Data.Count, page);
+                    await UserSearch(res, search, prms, page);
                     break;
             }
 
@@ -68,29 +67,29 @@ namespace ForumApi.Controllers
                 }
             }
             res.SearchCount += topicRes.SearchCount;
-            res.Data.AddRange(topicRes.Data.Select(t => new SearchElement
+            res.Data.AddRange(topicRes.Data.ConvertAll(t => new SearchElement
             {
                 Type = SearchElementType.Topic,
                 Data = t
-            }).ToList());
+            }));
         }
 
         private async Task UserSearch(SearchResponse<object> res, SearchDto search, SearchParams prms, Page page)
         {
             search.Query = search.Query.Trim();
             var userRes = await searchService.SearchUsers(search.Query, prms, page);
-            
+
             res.SearchCount += userRes.SearchCount;
-            res.Data.AddRange(userRes.Data.Select(t => new SearchElement
+            res.Data.AddRange(userRes.Data.ConvertAll(t => new SearchElement
             {
                 Type = SearchElementType.User,
                 Data = t
-            }).ToList());
+            }));
         }
 
-        private void UpdPage(int searchCount, Page page)
+        private static void UpdPage(int searchCount, int loaded, Page page)
         {
-            if(searchCount > page.PageSize)
+            if(searchCount >= page.PageSize && searchCount != loaded)
             {
                 page.PageNumber -= searchCount / page.PageSize;
                 if(searchCount % page.PageSize != 0)
@@ -98,7 +97,13 @@ namespace ForumApi.Controllers
             }
             else
             {
-                page.PageSize -= searchCount;
+                page.PageSize -= loaded;
+            }
+
+            if(page.PageNumber <= 0)
+            {
+                page.PageSize = 0;
+                page.PageNumber = 1;
             }
         }
     }

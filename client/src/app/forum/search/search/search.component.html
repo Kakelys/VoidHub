@@ -1,5 +1,5 @@
 <div class="flex flex-col">
-  <div class="mb-3">
+  <div class="mb-3 w-fit">
     <app-search-bar
       [searchQuery]="query"
       [searchParams]="searchParams"
@@ -17,7 +17,7 @@
   <div *ngIf="searchResult">
     <ng-template #emptySearch>
       <div class="ms-5 text-warning">
-        {{ 'search.no-topics' | translate }}
+        {{ 'search.no-results' | translate }}
       </div>
     </ng-template>
     <div *ngIf="searchResult.data.length > 0; else emptySearch">
