@@ -60,7 +60,7 @@
             {{ 'labels.partial-match' | translate }}
           </div>
         </div>
-        <div class="flex flex-row mt-2" *ngIf="user && user.role == roles.ADMIN">
+        <div class="flex flex-row mt-2" *ngIf="user && (user.role == roles.ADMIN || user.role == roles.MODER)">
           <input
             type="checkbox"
             name="onlyDeleted"
