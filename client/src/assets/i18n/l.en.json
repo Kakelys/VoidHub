@@ -171,5 +171,8 @@
     "password-recovering": "Password recovering",
     "enter-new-password": "Enter new password"
   },
-  "labels-using-new-password": "Done. Now you can login using new password"
+  "labels-using-new-password": "Done. Now you can login using new password",
+  "labels.user-banned": "User banned",
+  "labels.user-unbanned": "User unbanned",
+  "forms-errors.ban-time": "Ban time must be greater than current time"
 }

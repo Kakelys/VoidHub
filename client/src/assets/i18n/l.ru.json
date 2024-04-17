@@ -175,5 +175,8 @@
   "validators": {
     "date-invalid": "Недействительная дата",
     "reason-required": "Причина не должна быть пустой"
-  }
+  },
+  "forms-errors.ban-time": "Время бана должно быть в будущем времени",
+  "labels.user-banned": "Пользователь заблокирован",
+  "labels.user-unbanned": "Пользователь разблокирован"
 }
