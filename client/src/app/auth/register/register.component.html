@@ -75,7 +75,7 @@
             placeholder="{{'forms.password' | translate}}"
             id="password"
             name="password"
-            class="input-sm bg-neutral mt-2 input input-bordered w-full max-w-xs"
+            class="input-sm bg-neutral mt-2 input input-bordered w-full"
             [ngClass]="{
               'input-error': regForm.controls['password']?.touched && regForm.controls['password']?.invalid
             }"
@@ -91,7 +91,7 @@
             id="confirmPassword"
             name="confirmPassword"
             placeholder="{{'forms.password-confirm' | translate}}"
-            class="input-sm bg-neutral mt-2 input input-bordered w-full max-w-xs"
+            class="input-sm bg-neutral mt-2 input input-bordered w-full"
             [ngClass]="{
               'input-error': regForm.controls['confirmPassword']?.touched && (regForm.controls['confirmPassword']?.invalid || regForm.controls['password']?.value != regForm.controls['confirmPassword']?.value)
             }"

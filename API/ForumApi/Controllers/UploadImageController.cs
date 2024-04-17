@@ -1,6 +1,7 @@
 using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
 using ForumApi.Controllers.Filters;
+using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DFile;
 using ForumApi.Options;
 using ForumApi.Services.FileS.Interfaces;
@@ -18,7 +19,8 @@ namespace ForumApi.Controllers
         IUploadService uploadService,
         IFileService fileService,
         IOptions<ImageOptions> options,
-        IJsonStringLocalizer locale
+        IJsonStringLocalizer locale,
+        Lazy<IFileRepository> fileRep
     ) : ControllerBase
     {
         private readonly ImageOptions _imageOptions = options.Value;
@@ -38,6 +40,9 @@ namespace ForumApi.Controllers
                 AccountId = accountId,
                 Path = $"{_imageOptions.PostImageFolder}/{accountId}{Guid.NewGuid()}{_imageOptions.FileType}",
             };
+
+            if(fileRep.Value.FindByCondition(f => f.AccountId == accountId).Count() > options.Value.LimitPerAccount)
+                throw new BadRequestException(locale["errors.image-limit-exceeded"]);
 
             return Ok(await uploadService.UploadImage(newFileDto!.File!, fileDto));
         }

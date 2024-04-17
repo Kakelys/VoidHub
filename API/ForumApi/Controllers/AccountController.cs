@@ -86,7 +86,7 @@ namespace ForumApi.Controllers
                 IncludeDeleted = includeDeleted,
                 ByAccountId = id,
                 OrderBy = "CreatedAt desc"
-            };
+        };
 
             var res = await topicService.GetTopics(offset, prms);
             if(User.IsAuthed())

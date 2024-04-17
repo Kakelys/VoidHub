@@ -48,7 +48,8 @@
     "invalid-token": "Invalid token",
     "email-already-confirmed": "Email already confirmed",
     "confirm-token-expired": "Confirm token expired",
-    "email-not-confirmed": "Email not confirmed"
+    "email-not-confirmed": "Email not confirmed",
+    "image-limit-exceeded": "image limit exceeded"
   },
   "validators": {
     "login-required": "Login name must not be empty",

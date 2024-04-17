@@ -48,7 +48,8 @@
     "confirm-token-expired": "Срок токена подтверждения стек",
     "email-already-confirmed": "Электронная почта уже подтверждена",
     "invalid-token": "Неверный токен",
-    "email-not-confirmed": "Электронная почта не подтверждена"
+    "email-not-confirmed": "Электронная почта не подтверждена",
+    "image-limit-exceeded": "лимит изображений превышен"
   },
   "validators": {
     "ancestorid-invalid": "Неверный идентификатор предка",

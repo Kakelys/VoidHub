@@ -12,17 +12,16 @@ using ForumApi.DTO.DTopic;
 using AutoMapper;
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
+using ForumApi.DTO.DAccount;
 
 namespace ForumApi.Services.Utils
 {
     public class SearchService(IRepositoryManager rep, IMapper mapper) : ISearchService
     {
-        public async Task<SearchResponse> SearchTopics(string query, SearchParams search, Page page)
+        public async Task<SearchResponse<TopicInfoResponse>> SearchTopics(string query, SearchParams search, Page page)
         {
-            query = query.Trim();
-
             var basePredicate = PredicateBuilder.New<Topic>(t => search.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null);
-            var orPredicate = PredicateBuilder.New<Topic>(t => true);
+            var orPredicate = PredicateBuilder.New<Topic>(true);
 
             // configure tsquery search
             var forTsQuery = query.Split(' ')
@@ -42,10 +41,13 @@ namespace ForumApi.Services.Utils
             if(search.WithPostContent)
                 orPredicate.Or(predicators[SearchParamNames.WordContent]);
 
+            if(search.PartialTitle)
+                orPredicate.Or(predicators[SearchParamNames.PartialTitle]);
+
             // do search
             var q = rep.Topic.Value.FindByCondition(basePredicate, true).Where(orPredicate);
 
-            q = q.OrderByDescending(t => t.SearchVector.Rank( 
+            q = q.OrderByDescending(t => t.SearchVector.Rank(
                 EF.Functions.ToTsQuery("english", forTsQuery)
             ));
 
@@ -60,18 +62,31 @@ namespace ForumApi.Services.Utils
                 q = ((IOrderedQueryable<Topic>)q).ThenBy($"CreatedAt {search.Sort}");
             }
 
-            var searchRes = new SearchResponse
+            return new SearchResponse<TopicInfoResponse>
             {
                 SearchCount = q.Count(),
-                Data = await q.TakePage(page).Select(t => new TopicInfoResponse 
+                Data = await q.TakePage(page).Select(t => new TopicInfoResponse
                 {
                     Sender = mapper.Map<User>(t.Author),
                     Topic = mapper.Map<TopicDto>(t),
                     Post = mapper.Map<PostDto>(t.Posts.OrderByDescending(p => p.CreatedAt).First())
                 }).ToListAsync()
             };
-            
-            return searchRes;
+        }
+
+        public async Task<SearchResponse<User>> SearchUsers(string query, SearchParams search, Page page)
+        {
+            var predicate = PredicateBuilder.New<Account>(t => search.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null);
+            predicate.And(a => EF.Functions.ILike(a.Username, $"%{query}%"));
+
+            var q = rep.Account.Value
+                .FindByCondition(predicate);
+
+            return new()
+            {
+                SearchCount = q.Count(),
+                Data = await q.TakePage(page).Select(a => mapper.Map<User>(a)).ToListAsync()
+            };
         }
     }
 }
