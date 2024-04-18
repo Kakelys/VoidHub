@@ -38,8 +38,7 @@ export class PasswordRecoverComponent {
     this.recoverService.recover(this.route.snapshot.params['token'], data.password)
     .subscribe({
       next: _ => {
-        this.trans.get('labels-using-new-password')
-        .pipe(take(1))
+        this.trans.get('labels.using-new-password')
         .subscribe(str => {
           this.toastr.success(str);
           this.router.navigate(['/login']);

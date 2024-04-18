@@ -22,7 +22,8 @@
     "password-not-equal": "Passwords not equal",
     "password-length": "Password must be at least 8 characters",
     "title-required": "Title is required",
-    "title-length": "Title length must be between 3 and 255 characters"
+    "title-length": "Title length must be between 3 and 255 characters",
+    "ban-time": "Ban time must be greater than current time"
   },
   "forms": {
     "login": "login",
@@ -170,13 +171,16 @@
     "back-to-home-page": "Back to home page",
     "login-or-email": "login or email",
     "forgot-your-password": "Forgot your password",
-    "recover-instruction": "Follow the instructions in the email. If such a login or email exists and the email is confirmed, the email will be sent.",
     "password-recovering": "Password recovering",
     "enter-new-password": "Enter new password",
-    "partial-match": "Partial match"
-  },
-  "labels-using-new-password": "Done. Now you can login using new password",
-  "labels.user-banned": "User banned",
-  "labels.user-unbanned": "User unbanned",
-  "forms-errors.ban-time": "Ban time must be greater than current time"
+    "partial-match": "Partial match",
+    "recover-instruction": "Follow the instructions in the email. If such a login or email exists and the email is confirmed, the email will be sent",
+    "using-new-password": "Done. Now you can login using new password",
+    "user-banned": "User banned",
+    "user-unbanned": "User Unbanned",
+    "role-updated-successfully": "Role updated successfully",
+    "name-updated-successfully": "Name updated successfully",
+    "account-id-not-provided": "Account id not provided",
+    "avatar-updated-successfully": "Avatar updated successfully"
+  }
 }

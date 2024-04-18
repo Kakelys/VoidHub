@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgForm } from '@angular/forms';
 import { NgFormExtension } from 'src/shared/ng-form.extension';
 import { HttpException } from 'src/shared/models/http-exception.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-rename-menu',
@@ -23,7 +24,8 @@ export class RenameMenuComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private accountService: AccountService,
-    private toastr: ToastrService) {}
+    private toastr: ToastrService,
+    private trans: TranslateService) {}
 
     ngOnInit(): void {
       this.userIdBlocked = this.adminService.userIdBlocked;
@@ -45,7 +47,9 @@ export class RenameMenuComponent implements OnInit {
 
       this.accountService.updateUsername(form.value.currentUsername, form.value).subscribe({
         next: () => {
-          this.toastr.success('Name updated successfully');
+          this.trans.get('labels.name-updated-successfully').subscribe(str => {
+            this.toastr.success(str);
+          })
         },
         error: (err: HttpException) => {
           this.errorMessages = err.errors;
