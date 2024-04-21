@@ -51,5 +51,14 @@ namespace ForumApi.Controllers
             var section = await sectionService.Update(id, sectionDto);
             return Ok(section);
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = Role.Admin)]
+        [BanFilter]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await sectionService.Delete(id);
+            return Ok();
+        }
     }
 }

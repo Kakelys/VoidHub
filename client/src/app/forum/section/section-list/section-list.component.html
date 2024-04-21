@@ -10,7 +10,9 @@
         {{ 'lables.new-topic' | translate }}
       </a>
     </div>
-    <app-section class="pb-5" *ngFor="let el of sections" [data]="el" [user]="user">
+    <app-section class="pb-5" *ngFor="let el of sections" [data]="el" [user]="user"
+      (onSectionDeleted)="onSectionDeleted($event)"
+    >
     </app-section>
   </div>
 </app-limit-loader>

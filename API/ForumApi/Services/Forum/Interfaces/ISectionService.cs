@@ -9,5 +9,6 @@ namespace ForumApi.Services.ForumS.Interfaces
         Task<List<SectionDtoResponse>> GetDtoSections(bool includeHidden = false);
         Task<Section> Create(SectionEdit section);
         Task<Section> Update(int sectionId, SectionEdit section);
+        Task Delete(int sectionId);
     }
 }
