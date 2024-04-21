@@ -1,3 +1,4 @@
+import { AuthService } from './auth/auth.service';
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -100,7 +101,7 @@ registerLocaleData(ruLocale);
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      deps: [TranslateService],
+      deps: [AuthService, ToastrService, TranslateService],
       multi: true,
     },
     {

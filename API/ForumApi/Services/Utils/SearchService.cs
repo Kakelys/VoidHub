@@ -26,6 +26,7 @@ namespace ForumApi.Services.Utils
             // configure tsquery search
             var forTsQuery = "";
 
+            query = query.Replace(":", "");
             if(!string.IsNullOrEmpty(query))
             {
                 forTsQuery = query.Split(' ')
@@ -74,7 +75,7 @@ namespace ForumApi.Services.Utils
                 {
                     Sender = mapper.Map<User>(t.Author),
                     Topic = mapper.Map<TopicDto>(t),
-                    Post = mapper.Map<PostDto>(t.Posts.OrderByDescending(p => p.CreatedAt).First())
+                    Post = mapper.Map<PostDto>(t.Posts.OrderBy(p => p.CreatedAt).First())
                 }).ToListAsync()
             };
         }

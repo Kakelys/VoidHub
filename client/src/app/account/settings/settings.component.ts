@@ -58,7 +58,10 @@ export class SettingsComponent implements OnDestroy {
     let data = form.value;
 
     if(data.oldPassword && !data.newPassword || !data.oldPassword && data.newPassword) {
-      this.errorMessages.push("Both old and new password must be filled");
+      this.trans.get("forms-errors.old-and-new-required")
+      .subscribe(str => {
+        this.errorMessages.push(str);
+      })
       return;
     }
 
@@ -69,7 +72,10 @@ export class SettingsComponent implements OnDestroy {
 
     this.accountService.updAccount(data).subscribe({
       next: (user: User) => {
-        this.toastr.success('Account updated successfully');
+        this.trans.get("labels.account-updated-succ")
+        .subscribe(str => {
+          this.toastr.success(str);
+        })
         this.authService.updateUser(user);
       },
       error: (err:HttpException) => {
@@ -97,7 +103,11 @@ export class SettingsComponent implements OnDestroy {
     }
 
     if(this.fileToUpload.size > env.maxAvatarSize) {
-      this.errorMessages.push(`File size must be less than ${env.maxAvatarSize / 1024} KB`);
+      this.trans.get("forms-errors.file-size")
+      .subscribe(str => {
+          this.errorMessages.push(`${str} ${env.maxAvatarSize / 1024} KB`);
+      })
+
       return;
     }
 
@@ -116,7 +126,12 @@ export class SettingsComponent implements OnDestroy {
           } else {
             this.urlDynamicParam = Date.now().toString();
           }
-          this.toastr.success('Avatar updated successfully');
+
+          this.trans.get("labels.avatar-updated-successfully")
+          .subscribe(str => {
+              this.errorMessages.push(`${str} ${env.maxAvatarSize / 1024} KB`);
+          })
+
           this.fileToUpload = null;
           form.reset();
         }
@@ -135,7 +150,6 @@ export class SettingsComponent implements OnDestroy {
     .subscribe({
       next: _ => {
         this.trans.get('labels.done-check-email')
-        .pipe(take(1))
         .subscribe(str => {
           this.toastr.success(str);
         })

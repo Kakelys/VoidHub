@@ -23,7 +23,10 @@
     "password-length": "Password must be at least 8 characters",
     "title-required": "Title is required",
     "title-length": "Title length must be between 3 and 255 characters",
-    "ban-time": "Ban time must be greater than current time"
+    "ban-time": "Ban time must be greater than current time",
+    "old-and-new-required": "Both old and new password must be filled",
+    "file-size": "File size must be less than",
+    "wrong-account-id": "Wrong account id"
   },
   "forms": {
     "login": "login",
@@ -181,6 +184,8 @@
     "role-updated-successfully": "Role updated successfully",
     "name-updated-successfully": "Name updated successfully",
     "account-id-not-provided": "Account id not provided",
-    "avatar-updated-successfully": "Avatar updated successfully"
+    "avatar-updated-successfully": "Avatar updated successfully",
+    "account-updated-succ": "Account updated successfully",
+    "copied": "Copied"
   }
 }

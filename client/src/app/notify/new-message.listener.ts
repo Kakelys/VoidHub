@@ -6,6 +6,7 @@ import { NewMessageNotification } from "./new-message-notification.model";
 import { NewMessageComponent } from "./new-message/new-message.component";
 import { AuthService } from "../auth/auth.service";
 import { ReplaySubject, Subscription, takeUntil } from "rxjs";
+import { CustomSound } from "src/shared/sound.extension";
 
 @Injectable()
 export class NewMessageListener implements OnDestroy {
@@ -65,5 +66,7 @@ export class NewMessageListener implements OnDestroy {
       toastClass: "",
       positionClass: "toast-bottom-right"
     });
+
+    CustomSound.playMetalPipe();
   }
 }
