@@ -24,4 +24,8 @@ export class SectionService {
   updateSection(sectionId, data) {
     return this.http.put(`${this.baseUrl}/${sectionId}`, data);
   }
+
+  deleteSection(sectionId: number) {
+    return this.http.delete(`${this.baseUrl}/${sectionId}`);
+  }
 }

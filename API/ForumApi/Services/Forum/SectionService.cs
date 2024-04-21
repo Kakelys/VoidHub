@@ -103,5 +103,19 @@ namespace ForumApi.Services.ForumS
 
             return entity;
         }
+
+        public async Task Delete(int sectionId)
+        {
+            var entity = await _rep.Section.Value
+                .FindByCondition(s => s.Id == sectionId, true)
+                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-section"]);
+
+            if(entity.Forums.Count(f => f.DeletedAt != null) > 0)
+                throw new NotFoundException(locale["errors.no-section-with-forum-delete"]);
+
+
+            _rep.Section.Value.Delete(entity);
+            await _rep.Save();
+        }
     }
 }

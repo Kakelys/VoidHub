@@ -42,6 +42,10 @@ export class SectionListComponent implements OnDestroy {
     })
   }
 
+  onSectionDeleted(id: number) {
+    this.sections = this.sections.filter(s => s.section.id != id);
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
