@@ -24,9 +24,14 @@ namespace ForumApi.Services.Utils
             var orPredicate = PredicateBuilder.New<Topic>(true);
 
             // configure tsquery search
-            var forTsQuery = query.Split(' ')
-                .Select(w => $"{w}:*")
-                .Aggregate((a, b) => $"{a} | {b}");
+            var forTsQuery = "";
+
+            if(!string.IsNullOrEmpty(query))
+            {
+                forTsQuery = query.Split(' ')
+                    .Select(w => $"{w}:*")
+                    .Aggregate((a, b) => $"{a} | {b}");
+            }
 
             var predicators = new Dictionary<string, Expression<Func<Topic, bool>>>
             {
