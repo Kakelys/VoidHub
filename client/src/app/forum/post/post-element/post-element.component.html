@@ -86,7 +86,7 @@
       [postId]="post.post.id"
       [topicId]="post.post.topicId"
       [content]="post.post.content"
-      [submitPlaceholder]="'Save'"
+      [submitPlaceholder]="'forms.save' | translate"
       (onCreate)="onPostEdit($event)"
       (onCancel)="setEditMode(false)">
     </app-post-editor>

@@ -98,7 +98,10 @@ export class SettingsComponent implements OnDestroy {
     }
 
     if(!this.fileToUpload) {
-      this.errorMessages.push("File is required");
+      this.trans.get("forms-errors.file-required")
+      .subscribe(str => {
+          this.errorMessages.push(`${str}`);
+      })
       return;
     }
 
@@ -129,7 +132,7 @@ export class SettingsComponent implements OnDestroy {
 
           this.trans.get("labels.avatar-updated-successfully")
           .subscribe(str => {
-              this.errorMessages.push(`${str} ${env.maxAvatarSize / 1024} KB`);
+            this.toastr.success(str)
           })
 
           this.fileToUpload = null;

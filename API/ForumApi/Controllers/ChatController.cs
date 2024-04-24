@@ -91,9 +91,8 @@ namespace ForumApi.Controllers
                     Sender = msgRes.Sender
                 };
 
-                chat.Members.ToList().ForEach(m => {
-                    if(!chat.Chat.IsGroup)
-                        notification.AnotherUser = chat.Members.Find(cm => cm.Id != m.Id);
+                chat.Members.DistinctBy(m => m.Id).ToList().ForEach(m => {
+                    notification.AnotherUser = chat.Members.Find(cm => cm.Id != m.Id);
 
                     notifyService.Notify(m.Id, notification);
                 });

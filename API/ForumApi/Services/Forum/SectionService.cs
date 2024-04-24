@@ -34,7 +34,7 @@ namespace ForumApi.Services.ForumS
                 .Select(s => new SectionResponse {
                     Section = _mapper.Map<SectionDto>(s),
                     Forums = s.Forums
-                        .Where(f => f.DeletedAt == null)
+                        .Where(f => includeHidden ? true : f.DeletedAt == null)
                         .Select(f => new {
                             Forum = f,
                             Topics = f.Topics.Where(t => t.DeletedAt == null)
@@ -110,7 +110,7 @@ namespace ForumApi.Services.ForumS
                 .FindByCondition(s => s.Id == sectionId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-section"]);
 
-            if(entity.Forums.Count(f => f.DeletedAt != null) > 0)
+            if(entity.Forums.Count > 0)
                 throw new NotFoundException(locale["errors.no-section-with-forum-delete"]);
 
 

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.DTO.Utils;
 using AspNetCore.Localizer.Json.Localizer;
+using LinqKit;
 
 namespace ForumApi.Services.ForumS
 {
@@ -17,8 +18,12 @@ namespace ForumApi.Services.ForumS
     {
         public async Task<ForumResponse?> Get(int forumId, Params prms)
         {
+            var predicate = PredicateBuilder.New<Forum>(f => f.Id == forumId);
+            if(!prms.IncludeDeleted)
+                predicate.And(f => f.DeletedAt == null);
+
             return await rep.Forum.Value
-                .FindByCondition(f => f.Id == forumId && f.DeletedAt == null)
+                .FindByCondition(predicate)
                 .Select(f => new ForumResponse
                 {
                     Id = f.Id,
@@ -41,7 +46,7 @@ namespace ForumApi.Services.ForumS
         public async Task<Forum> Update(int forumId, ForumEdit forumDto)
         {
             var entity = await rep.Forum.Value
-                .FindByCondition(f => f.Id == forumId && f.DeletedAt == null, true)
+                .FindByCondition(f => f.Id == forumId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-forum"]);
 
             mapper.Map(forumDto, entity);

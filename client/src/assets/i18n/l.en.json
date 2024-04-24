@@ -26,7 +26,8 @@
     "ban-time": "Ban time must be greater than current time",
     "old-and-new-required": "Both old and new password must be filled",
     "file-size": "File size must be less than",
-    "wrong-account-id": "Wrong account id"
+    "wrong-account-id": "Wrong account id",
+    "file-required": "File is required"
   },
   "forms": {
     "login": "login",
@@ -186,6 +187,7 @@
     "account-id-not-provided": "Account id not provided",
     "avatar-updated-successfully": "Avatar updated successfully",
     "account-updated-succ": "Account updated successfully",
-    "copied": "Copied"
+    "copied": "Copied",
+    "forum-updated": "Forum updated"
   }
 }

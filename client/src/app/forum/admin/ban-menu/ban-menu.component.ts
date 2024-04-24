@@ -61,7 +61,7 @@ export class BanMenuComponent implements OnInit {
     if(banTime <= 0)
     {
       this.trans.get('forms-errors.ban-time').subscribe(str => {
-        this.toastr.success(str);
+        this.toastr.error(str);
       })
 
       return;

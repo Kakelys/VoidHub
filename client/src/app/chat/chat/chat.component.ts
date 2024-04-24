@@ -88,6 +88,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.notifyService.getSubject('newMessage')
     .pipe(takeUntil(this.destroy$))
     .subscribe((notify: NewMessageNotification) => {
+      if(notify.chat.id != this.chatId)
+        return;
+
+      console.log(1);
       this.onNewMessage(notify);
     })
   }
