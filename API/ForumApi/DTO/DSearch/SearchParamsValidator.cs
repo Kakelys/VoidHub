@@ -4,7 +4,7 @@ namespace ForumApi.DTO.DSearch
 {
     public class SearchParamsValidator : AbstractValidator<SearchParams>
     {
-        public SearchParamsValidator() 
+        public SearchParamsValidator()
         {
             RuleFor(x => x.Sort)
                 .Must(x => x == "asc" || x == "desc" || x == "")

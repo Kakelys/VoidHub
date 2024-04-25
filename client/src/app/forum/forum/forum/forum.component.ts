@@ -14,6 +14,7 @@ import { Name } from '../../models/names.model';
 import { NameService } from '../../services/name.service';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { environment } from 'src/environments/environment';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -44,6 +45,7 @@ export class ForumComponent implements OnDestroy {
     private router: Router,
     private forumService: ForumService,
     private toastr: ToastrService,
+    private trans: TranslateService,
     private nameService: NameService) {
 
     authService.user$.pipe(takeUntil(this.destroy$))
@@ -117,7 +119,9 @@ export class ForumComponent implements OnDestroy {
       .subscribe({
         next: (forum:any) => {
           this.forum.title = forum.title;
-          this.toastr.success('Forum updated');
+          this.trans.get('labels.forum-updated').subscribe(str => {
+            this.toastr.success(str);
+          })
         },
         error: (err:HttpException) => {
           ToastrExtension.handleErrors(this.toastr, err.errors);
@@ -145,6 +149,9 @@ export class ForumComponent implements OnDestroy {
     this.forumService.deleteForum(this.forum.id).subscribe({
       next: () => {
         this.router.navigate(['../../'], {relativeTo: this.route});
+      },
+      error: (err: HttpException) => {
+        ToastrExtension.handleErrors(this.toastr, err.errors)
       }
     })
   }

@@ -1,4 +1,3 @@
-using AutoMapper;
 using ForumApi.Data.Repository.Interfaces;
 using ForumApi.DTO.DBan;
 using ForumApi.Utils.Exceptions;
@@ -19,8 +18,7 @@ namespace ForumApi.Controllers.Filters
 
             var userBan = await banRepo.Value
                 .FindByCondition(b => b.AccountId == userId && b.IsActive && b.ExpiresAt > DateTime.UtcNow)
-                .OrderByDescending(b => b.IsActive)
-                .ThenByDescending(b => b.ExpiresAt)
+                .OrderByDescending(b => b.ExpiresAt)
                 .Select(b => new BanResponse
                 {
                     Id = b.Id,

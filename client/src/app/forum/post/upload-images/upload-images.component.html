@@ -32,7 +32,7 @@
               <button
                 type="button"
                 class="btn btn-neutral min-h-min h-8 p-0 mr-2 tooltip tooltip-bottom"
-                data-tip="'lables.paste-to-editor' | translate"
+                [attr.data-tip]="'lables.paste-to-editor' | translate"
                 (click)="emitPaste(resourceUrl + '/' + file.path)"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 px-1" viewBox="0 0 24 24" fill="none">
@@ -42,7 +42,7 @@
               <button
                 type="button"
                 class="btn btn-neutral min-h-min h-8 p-0 tooltip tooltip-bottom"
-                data-tip="'lables.copy-to-clipboard' | translate"
+                [attr.data-tip]="'lables.copy-to-clipboard' | translate"
                 (click)="copyToClipBoard(resourceUrl + '/' + file.path)"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 px-1" viewBox="0 0 24 24" fill="none">

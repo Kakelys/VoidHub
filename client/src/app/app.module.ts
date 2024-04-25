@@ -1,3 +1,4 @@
+import { AuthService } from './auth/auth.service';
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -25,7 +26,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LocalizeInterceptor } from 'src/shared/localize.interceptor';
 import { environment } from 'src/environments/environment';
 import ruLocale from '@angular/common/locales/ru';
-import jaLocale from '@angular/common/locales/ja';
 import { RightMenuComponent } from './menu/right-menu/right-menu.component';
 import { LimitterInterceptor } from './utils/limitter/limitter.interceptor';
 import { LimitterService } from './utils/limitter/limitter.service';
@@ -37,7 +37,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 registerLocaleData(ruLocale);
-registerLocaleData(jaLocale);
 
 @NgModule({
   declarations: [
@@ -106,7 +105,7 @@ registerLocaleData(jaLocale);
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      deps: [TranslateService],
+      deps: [AuthService, ToastrService, TranslateService],
       multi: true,
     },
     {

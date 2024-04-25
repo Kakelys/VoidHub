@@ -120,7 +120,7 @@ export class HttpExceptionInterceptor implements HttpInterceptor {
   }
 
   handle404(err, errors, subs) {
-    if(err.error) {
+    if(err.error && err.error.indexOf('<html') == -1) {
       errors.push(err.error);
     } else {
       let notFound$ = this.trans.get('labels.fail-request')

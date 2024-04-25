@@ -1,8 +1,18 @@
 <div class="flex flex-col">
   <a class="btn btn-ghost min-h-8 h-8 my-1" routerLinkActive="bg-neutral" routerLink="/forum/sections">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4" viewBox="0 0 24 24" fill="none">
+      <path d="M19 9.77806V16.2C19 17.8801 19 18.7202 18.673 19.3619C18.3854 19.9264 17.9265 20.3854 17.362 20.673C16.7202 21 15.8802 21 14.2 21H9.8C8.11984 21 7.27976 21 6.63803 20.673C6.07354 20.3854 5.6146 19.9264 5.32698 19.3619C5 18.7202 5 17.8801 5 16.2V9.7774M21 12L15.5668 5.96393C14.3311 4.59116 13.7133 3.90478 12.9856 3.65138C12.3466 3.42882 11.651 3.42887 11.0119 3.65153C10.2843 3.90503 9.66661 4.59151 8.43114 5.96446L3 12M14 12C14 13.1045 13.1046 14 12 14C10.8954 14 10 13.1045 10 12C10 10.8954 10.8954 9.99996 12 9.99996C13.1046 9.99996 14 10.8954 14 12Z"
+        class="stroke-base-content"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      />
+    </svg>
     {{ 'menu.main' | translate}}
   </a>
   <a class="btn btn-ghost min-h-8 h-8 my-1" routerLinkActive="bg-neutral" routerLink="/forum/recent">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" class="stroke-base-content" stroke-width="1.5"/>
+      <path d="M12 8V12L14.5 14.5" class="stroke-base-content" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
     {{ 'menu.recent' | translate}}
   </a>
   <a
@@ -11,7 +21,12 @@
     routerLink="/chats"
     *ngIf="user"
   >
-  {{ 'menu.chats' | translate}}
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4" viewBox="0 0 24 24" fill="none">
+      <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z"
+        class="stroke-base-content" stroke-width="1.5"
+      />
+    </svg>
+    {{ 'menu.chats' | translate}}
   </a>
   <a
     class="btn btn-ghost min-h-8 h-8 my-1"
@@ -22,8 +37,16 @@
   {{ 'menu.admin-panel' | translate}}
   </a>
 
+  <a class="btn btn-accent btn-outline min-h-min h-8 mt-3"
+    routerLinkActive="bg-neutral"
+    routerLink="/forum/new-topic"
+    *ngIf="user"
+  >
+    {{ 'lables.new-topic' | translate }}
+  </a>
+
   <div class="mt-5">
-    <div class="collapse collapse-arrow">
+    <div class="collapse collapse-arrow w-fit">
       <input type="checkbox" name="shortcutItem"/>
       <div class="collapse-title font-medium">
         {{ 'menu.sections' | translate}}

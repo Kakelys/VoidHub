@@ -4,6 +4,7 @@ namespace ForumApi.DTO.DSearch
     {
         public string Sort { get; set; } = "";
         public bool WithPostContent { get; set; } = false;
+        public bool PartialTitle { get; set; } = false;
         public bool OnlyDeleted { get; set; } = false;
     }
 }

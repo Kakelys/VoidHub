@@ -29,7 +29,8 @@ export class SignalrService implements OnDestroy {
   }
 
   public async start() {
-    await this.stop();
+    if(this.hub)
+      await this.stop();
 
     this.hub = new HubConnectionBuilder()
     .withUrl(env.baseAPIUrl + "/v1/signalr", {

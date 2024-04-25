@@ -43,10 +43,14 @@
             <span class="label-text">{{ 'lables.choose-forum' | translate }}</span>
           </div>
           <select
-            class="select select-bordered bg-neutral h-8 min-h-min"
             id="forumId"
             name="forumId"
             [ngModel]="forumId"
+            class="select select-bordered bg-neutral h-8 min-h-min"
+            [ngClass]="{
+              'outline outline-error': newTopicForm.controls['forumId']?.touched && newTopicForm.controls['forumId'].invalid
+            }"
+            required
           >
             <option *ngFor="let name of names" [value]="name.id"
               [disabled]="!name.isSelectable"

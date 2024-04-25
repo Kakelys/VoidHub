@@ -20,7 +20,7 @@ namespace ForumApi.Services.FileS
                 .ToListAsync();
         }
 
-        public async Task<List<FileDto>> Get(int[] ids) 
+        public async Task<List<FileDto>> Get(int[] ids)
         {
             var set = ids.ToHashSet();
             return await rep.File.Value

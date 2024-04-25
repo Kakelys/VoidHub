@@ -5,6 +5,7 @@ using ForumApi.Controllers.Filters;
 using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ForumApi.Utils.Extensions;
 
 namespace ForumApi.Controllers
 {
@@ -19,9 +20,15 @@ namespace ForumApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetForum(int forumId, [FromQuery] Params prms)
         {
-            var isAuthed = User.Identity?.IsAuthenticated == true;
-            if(!isAuthed || !(User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
+            if(!User.IsAdminOrModer())
+            {
                 prms = Params.FromUser(prms);
+            }
+            else
+            {
+                // TODO: better do on front
+                prms.IncludeDeleted = true;
+            }
 
             return Ok(await forumService.Get(forumId, prms));
         }
