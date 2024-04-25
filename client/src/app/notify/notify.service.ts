@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { HubConnection } from "@microsoft/signalr";
 import { ToastrService } from "ngx-toastr";
 import { SignalrService } from "src/shared/signalr.service";
-import { NotificationBase } from "./notifcation-base.model";
+import { NotificationBase } from "./models/notifcation-base.model";
 import { ReplaySubject, Subject, takeUntil } from "rxjs";
 
 @Injectable()
@@ -28,7 +28,7 @@ export class NotifyService implements OnDestroy {
   private startRecievingNotifies(hub: HubConnection) {
     hub.on('notify', (ntf: NotificationBase) => {
       if(!this.bindings.has(ntf.type)) {
-        console.log('notify')
+        console.log('notify', ntf)
         return;
       }
 

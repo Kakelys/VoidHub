@@ -4,7 +4,7 @@ import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
 import { RouterModule } from "@angular/router";
 import { SharedModule } from "src/shared/shared.module";
-import { ErrorMessageListComponent } from "../error-message-list/error-message-list.component";
+import { ErrorMessageListComponent } from "../utils/error-message-list/error-message-list.component";
 import { TranslateModule } from "@ngx-translate/core";
 import { PasswordRecoverRequestComponent } from './password-recover-request/password-recover-request.component';
 import { PasswordRecoverComponent } from './password-recover/password-recover.component';

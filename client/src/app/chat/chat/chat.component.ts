@@ -14,7 +14,7 @@ import { ReplaySubject, debounceTime, fromEvent, take, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/shared/models/user.model';
 import { NotifyService } from 'src/app/notify/notify.service';
-import { NewMessageNotification } from 'src/app/notify/new-message-notification.model';
+import { NewMessageNotification } from 'src/app/notify/models/new-message-notification.model';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

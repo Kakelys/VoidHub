@@ -8,7 +8,7 @@ import { ToastrExtension } from 'src/shared/toastr.extension';
 import { Offset } from 'src/shared/offset.model';
 import { environment as env } from 'src/environments/environment';
 import { NotifyService } from 'src/app/notify/notify.service';
-import { NewMessageNotification } from 'src/app/notify/new-message-notification.model';
+import { NewMessageNotification } from 'src/app/notify/models/new-message-notification.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Router } from '@angular/router';
 
