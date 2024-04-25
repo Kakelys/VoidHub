@@ -10,12 +10,21 @@
     <div class="grow max-w-7xl">
       <router-outlet></router-outlet>
     </div>
+    <div class="hidden xl:block mt-3 me-5 w-[164px]">
+      <app-right-menu class="sticky top-20">
+      </app-right-menu>
+    </div>
   </div>
 
   <div class="grow">
   </div>
 
-  <footer class="footer bg-neutral text-neutral-content p-5 rounded-t mt-3">
+  <div class="block xl:hidden w-[164px] ms-12 mt-3">
+    <app-online-stats containerClasses="bg-base-200 rounded p-3">
+    </app-online-stats>
+  </div>
+
+  <footer class="flex flex-row bg-neutral text-neutral-content p-5 rounded-t mt-3">
     <nav>
       <div class="footer-title">VoidHub 2023</div>
       <div class="dropdown dropdown-top">

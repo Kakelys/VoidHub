@@ -3,7 +3,13 @@
     <div routerLink="../new-section" *ngIf="user && user?.role == roles.ADMIN" class="mb-3 btn btn-neutral w-fit min-h-fit h-8">
       {{ 'lables.add-new-section' | translate }}
     </div>
-    <app-section class="pb-5" *ngFor="let el of sections" [data]="el" [user]="user">
+    <app-section
+      *ngFor="let el of sections; last as isLast"
+      [data]="el" [user]="user"
+      [ngClass]="{
+        'pb-5': !isLast
+      }"
+    >
     </app-section>
   </div>
 </app-limit-loader>

@@ -13,15 +13,12 @@ import { HttpExceptionInterceptor } from 'src/shared/error/http-exception.interc
 import { RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LimitterInterceptor } from 'src/app/limitter/limitter.interceptor';
-import { LimitterService } from './limitter/limitter.service';
 import { SearchBarComponent } from './forum/search/search-bar/search-bar.component';
 import { HashLocationStrategy, LocationStrategy, registerLocaleData } from '@angular/common';
 import { SignalrService } from 'src/shared/signalr.service';
 import { NotifyService } from './notify/notify.service';
-import { NewMessageListener } from './notify/new-message.listener';
 import { NewMessageComponent } from './notify/new-message/new-message.component';
-import { MenuComponent } from './menu/menu.component';
+import { MenuComponent } from './menu/left-menu/menu.component';
 import { SectionService } from './forum/services/section.service';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -29,6 +26,11 @@ import { LocalizeInterceptor } from 'src/shared/localize.interceptor';
 import { environment } from 'src/environments/environment';
 import ruLocale from '@angular/common/locales/ru';
 import jaLocale from '@angular/common/locales/ja';
+import { RightMenuComponent } from './menu/right-menu/right-menu.component';
+import { LimitterInterceptor } from './utils/limitter/limitter.interceptor';
+import { LimitterService } from './utils/limitter/limitter.service';
+import { OnlineStatsComponent } from './utils/online-stats/online-stats.component';
+import { NewMessageListener } from './notify/new-message/new-message.listener';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.localizationPrefix, '.json');
@@ -44,6 +46,8 @@ registerLocaleData(jaLocale);
     HomeComponent,
     NewMessageComponent,
     MenuComponent,
+    RightMenuComponent,
+    OnlineStatsComponent,
   ],
   imports: [
     SharedModule,

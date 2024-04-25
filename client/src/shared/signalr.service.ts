@@ -14,13 +14,13 @@ export class SignalrService implements OnDestroy {
   private destroy$ = new ReplaySubject(1);
 
   constructor(private auth: AuthService) {
-    this.auth.user$.pipe(takeUntil(this.destroy$))
-    .subscribe(user => {
-      if(user)
+    // to be sure, that all startup auth handlers completed
+    setTimeout(_ => {
+      this.auth.user$.pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
         this.start();
-      else
-        this.stop();
-    })
+      });
+    }, 1000)
   }
 
   ngOnDestroy(): void {

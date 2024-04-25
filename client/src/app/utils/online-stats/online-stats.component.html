@@ -1,0 +1,16 @@
+<div class="{{containerClasses}}">
+  <div class="text-sm">
+    Online users: {{anonimCount + users.length}}
+    <div class="text-secondary-content">
+      {{anonimCount}} guests
+    </div>
+  </div>
+  <div class="overflow-hidden">
+    <ng-container *ngFor="let user of users; last as isLast">
+      <a class="link no-underline" routerLink="/profile/{{user.id}}">{{user.username.trimEnd()}}</a><ng-container *ngIf="!isLast">, </ng-container>
+    </ng-container>
+    <ng-container *ngIf="this.users.length > 10">
+      ...
+    </ng-container>
+  </div>
+</div>
