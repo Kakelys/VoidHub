@@ -3,6 +3,7 @@ using ForumApi.Data.Models;
 using ForumApi.DTO.DChat;
 using ForumApi.DTO.DNotification;
 using ForumApi.DTO.Utils;
+using ForumApi.Hubs;
 using ForumApi.Services.ChatS.Interfaces;
 using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.Services.Utils.Interfaces;
@@ -61,7 +62,7 @@ namespace ForumApi.Controllers
                 var user = await accountService.GetUser(User.GetId());
                 var notification = new NewMessageNotification
                  {
-                    Type = "newMessage",
+                    Type = nameof(MessageType.newMessage),
                     Message = res.Item2,
                     Chat = res.Item1,
                     Sender = user
@@ -85,7 +86,7 @@ namespace ForumApi.Controllers
                 var chat = await chatService.Get(msgRes.Message.ChatId);
                 var notification = new NewMessageNotification
                  {
-                    Type = "newMessage",
+                    Type = nameof(MessageType.newMessage),
                     Message = msgRes.Message,
                     Chat = chat!.Chat,
                     Sender = msgRes.Sender

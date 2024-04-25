@@ -1,39 +1,70 @@
+using AutoMapper;
+using ForumApi.Data.Repository.Interfaces;
 using ForumApi.Services.Utils.Interfaces;
 using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using ForumApi.DTO.Utils;
+using ForumApi.DTO.Auth;
+using ForumApi.DTO.Notification;
 
 namespace ForumApi.Hubs
 {
-    public class MainHub(ISessionStorage sessionStorage) : Hub
+    public class MainHub(
+        ISessionStorage sessionStorage,
+        IAccountRepository accRep,
+        IMapper mapper,
+        INotifyService notifyService) : Hub
     {
-        #region conenction overrides
+        #region connection stuff
 
         [Authorize]
+        [AllowAnonymous]
         public override async Task OnConnectedAsync()
         {
             Console.WriteLine("session: on connect");
             if(Context.User?.Identity?.IsAuthenticated == false)
             {
-                Context.Abort();
+                // add to anonymous
+                sessionStorage.AddAnonymous(Context.ConnectionId);
+                await base.OnConnectedAsync();
                 return;
             }
 
             var userId = Context!.User!.GetId();
-            sessionStorage.Add(Context.ConnectionId, userId);
-            Console.WriteLine($"add user: {userId} {Context.ConnectionId}");
-            
+            var user = accRep.FindById(userId).First();
+
+            sessionStorage.Add(mapper.Map<User>(user), Context.ConnectionId, userId);
+
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             Console.WriteLine("session: on disconnect");
-            sessionStorage.Remove(Context.ConnectionId);
+            var userId = sessionStorage.Get(Context.ConnectionId);
+            if(userId != -1)
+            {
+                sessionStorage.Remove(Context.ConnectionId);
+            }
+            else
+            {
+                sessionStorage.RemoveAnonymous(Context.ConnectionId);
+            }
 
             await base.OnDisconnectedAsync(exception);
         }
 
+        public async Task GetConnectionsData()
+        {
+            var users = sessionStorage.Users.ToList();
+            await notifyService.Notify(Context.ConnectionId, new ConnectionsDataNotification
+            {
+                Type = MessageType.connectionsData.ToString(),
+                TotalCount = sessionStorage.AnonymousContexts.Count() + users.Count,
+                Users = users
+            });
+        }
         #endregion
     }
 }
