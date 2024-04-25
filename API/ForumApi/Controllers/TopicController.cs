@@ -1,11 +1,9 @@
 using ForumApi.Data.Models;
-using ForumApi.DTO.DSearch;
 using ForumApi.DTO.DTopic;
 using ForumApi.DTO.Utils;
 using ForumApi.Utils.Extensions;
 using ForumApi.Controllers.Filters;
 using ForumApi.Services.ForumS.Interfaces;
-using ForumApi.Services.Utils.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ForumApi.Data.Repository.Interfaces;
@@ -18,7 +16,6 @@ namespace ForumApi.Controllers
     public class TopicController(
         ITopicService topicService,
         IPostService postService,
-        ISearchService searchService,
         IRepositoryManager rep,
         IFileService fileService,
         ILikeService likeService
@@ -75,36 +72,6 @@ namespace ForumApi.Controllers
             }
 
             return Ok(topic);
-        }
-
-        [Authorize]
-        [AllowAnonymous]
-        [HttpGet("search")]
-        public async Task<IActionResult> Search([FromQuery] SearchDto search, [FromQuery] SearchParams searchParams, [FromQuery] Page page)
-        {
-            var isAuthed = User.Identity?.IsAuthenticated == true;
-            var prms = new SearchParams
-            {
-                Sort = searchParams.Sort,
-                WithPostContent = searchParams.WithPostContent
-            };
-
-            if(isAuthed && (User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
-            {
-                prms.OnlyDeleted = searchParams.OnlyDeleted;
-            }
-
-            var res = await searchService.SearchTopics(search.Query, prms, page);
-            if(isAuthed)
-            {
-                var userId = User.GetId();
-                foreach(var post in res.Data)
-                {
-                    await likeService.UpdateLikeStatus(userId, post.Post);
-                }
-            }
-
-            return Ok(res);
         }
 
         [HttpPost]

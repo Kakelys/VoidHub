@@ -7,15 +7,24 @@
       <app-menu class="sticky top-20">
       </app-menu>
     </div>
-    <div class="grow max-w-7xl">
+    <div class="grow max-w-7xl items-center">
       <router-outlet></router-outlet>
+    </div>
+    <div class="hidden xl:block mt-3 me-5 w-[164px]">
+      <app-right-menu class="sticky top-20">
+      </app-right-menu>
     </div>
   </div>
 
   <div class="grow">
   </div>
 
-  <footer class="footer bg-neutral text-neutral-content ps-5 pt-3 rounded-t mt-3">
+  <div class="block xl:hidden w-[164px] ms-12 mt-3">
+    <app-online-stats containerClasses="bg-base-200 rounded p-3">
+    </app-online-stats>
+  </div>
+
+  <footer class="flex flex-row bg-neutral text-neutral-content p-5 rounded-t mt-3">
     <nav>
       <div class="footer-title">VoidHub 2023</div>
       <div class="dropdown dropdown-top">
@@ -26,7 +35,6 @@
           </svg>
         </div>
         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-          <li><a (click)="changeLanguage('ja')">日本語</a></li>
           <li><a (click)="changeLanguage('en')">English</a></li>
           <li><a (click)="changeLanguage('ru')">Русский</a></li>
         </ul>

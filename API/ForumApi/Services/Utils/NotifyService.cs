@@ -1,6 +1,7 @@
 using ForumApi.DTO.DNotification;
 using ForumApi.Hubs;
 using ForumApi.Services.Utils.Interfaces;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ForumApi.Services.Utils
@@ -9,10 +10,22 @@ namespace ForumApi.Services.Utils
     {
         public async Task Notify(int accountId, NotificationBase notification)
         {
-            var contextIds = sessStorage.Get(accountId);
-            var ctx = hubContext.Clients.Clients(contextIds);
+            var connectedUser = sessStorage.Get(accountId);
+            var ctx = hubContext.Clients.Clients(connectedUser.ConnectionIds);
 
             await ctx.SendAsync("notify", notification);
+        }
+
+        public async Task Notify(string contextId, NotificationBase notification)
+        {
+            var ctx = hubContext.Clients.Client(contextId);
+
+            await ctx.SendAsync("notify", notification);
+        }
+
+        public async Task NotifyAll(NotificationBase notification)
+        {
+            await hubContext.Clients.All.SendAsync("notify", notification);
         }
     }
 }

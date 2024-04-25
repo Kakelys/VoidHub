@@ -9,7 +9,6 @@
     <div class="flex flex-col">
       <div class="flex flex-row" *ngIf="user && user?.role == roles.ADMIN">
         <app-title-editor
-          class="grow"
           [title]="data.section.title"
           (onSave)="onEdit($event)"
         >
@@ -45,6 +44,10 @@
             <label class="label">{{ 'lables.hidden' | translate }}</label>
           </div>
         </app-title-editor>
+        <div>
+          <app-delete (onConfirm)="onDelete()"></app-delete>
+        </div>
+        <div class="grow"></div>
         <div>
           <button class="btn btn-neutral w-fit min-h-fit h-8"
             [routerLink]="['/forum/section', data.section.id, 'new-forum']"

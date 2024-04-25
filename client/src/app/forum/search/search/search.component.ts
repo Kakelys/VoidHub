@@ -9,6 +9,9 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/shared/models/user.model';
 import { StringExtension } from 'src/shared/string.extension';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SearchElementType } from '../../models/search-element.enum';
+import { environment } from 'src/environments/environment';
+import { Roles } from 'src/shared/roles.enum';
 
 @Component({
   selector: 'app-search',
@@ -22,11 +25,15 @@ export class SearchComponent {
   searchParams : SearchParams;
   searchPage: Page = new Page(1);
   query = '';
+  resTypes = SearchElementType;
 
   currentPage = 1;
   errorMessages = [];
 
   user: User;
+
+  resourceUrl = environment.resourceURL;
+  roles = Roles;
 
   constructor(
     private router: Router,
@@ -47,12 +54,14 @@ export class SearchComponent {
       let newSearchParams: SearchParams = {
         sort:'',
         withPostContent:false,
-        onlyDeleted: false
+        onlyDeleted: false,
+        partialTitle: false
       };
 
       newSearchParams.sort = params["sort"] ?? '';
       newSearchParams.withPostContent = StringExtension.ConvertToBoolean(params["withPostContent"]) ?? false;
       newSearchParams.onlyDeleted = StringExtension.ConvertToBoolean(params["onlyDeleted"]) ?? false;
+      newSearchParams.partialTitle = StringExtension.ConvertToBoolean(params["partialTitle"]) ?? false;
 
       let newSearchPage = new Page(
         +params["pageNumber"] ? +params["pageNumber"] : this.searchPage.pageNumber,

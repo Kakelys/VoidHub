@@ -1,57 +1,87 @@
+using ForumApi.DTO.Auth;
+using ForumApi.DTO.Utils;
 using ForumApi.Services.Utils.Interfaces;
 
 namespace ForumApi.Services.Utils
 {
     public class SessionStorage : ISessionStorage
     {
-        private readonly Dictionary<int, List<string>> _idToContextId = [];
+        private readonly Dictionary<int, ConnectedUser> _idToContextId = [];
         private readonly Dictionary<string, int> _contextIdToId = [];
+        private readonly HashSet<string> _anonimContexts = [];
 
-        public void Add(string context, int id)
+        public IEnumerable<string> AnonymousContexts => _anonimContexts.ToList();
+        public IEnumerable<User> Users => _idToContextId.Values.Where(u => u.ConnectionIds.Count > 0).Select(l => l.User);
+
+        public void Add(User user, string connectionId, int id)
         {
-            _contextIdToId.TryAdd(context, id);
-            if(_idToContextId.TryGetValue(id, out List<string>? value))
-                value.Add(context);
+            _contextIdToId.TryAdd(connectionId, id);
+            if(_idToContextId.TryGetValue(id, out ConnectedUser? value))
+            {
+                value.ConnectionIds.Add(connectionId);
+            }
             else
-                _idToContextId.Add(id, [context]);
+            {
+                _idToContextId.Add(id, new ConnectedUser(){User = user, ConnectionIds = [connectionId]});
+            }
         }
 
-        public List<string> Get(int id)
+        public ConnectedUser? Get(int id)
         {
-            if(!_idToContextId.TryGetValue(id, out List<string>? value))
-                return [];
+            if(!_idToContextId.TryGetValue(id, out ConnectedUser? value))
+                return null;
 
             return value;
         }
 
-        public void Remove(string context)
+        public int Get(string contextId)
+        {
+            if(_contextIdToId.TryGetValue(contextId, out var value))
+                return value;
+
+            return -1;
+        }
+
+        public ConnectedUser? Remove(string context)
         {
             if(!_contextIdToId.TryGetValue(context, out int value))
-                return;
+                return null;
 
             //remove context
             var id = value;
             _contextIdToId.Remove(context);
 
             // remove from list of context
-            var ctx = _idToContextId[id].Find(c => c == context);
-            if(ctx == null)
-                return;
+            var connectionId = _idToContextId[id].ConnectionIds.Find(c => c == context);
+            if(connectionId == null)
+                return null;
 
-            _idToContextId[id].Remove(ctx);
+            _idToContextId[id].ConnectionIds.Remove(connectionId);
+
+            return _idToContextId[id];
         }
 
         public void Remove(int id)
         {
-            if(!_idToContextId.TryGetValue(id, out List<string>? value))
+            if(!_idToContextId.TryGetValue(id, out ConnectedUser? value))
                 return;
 
-            var ctxs = value;
+            var ctxs = value.ConnectionIds;
             _idToContextId.Remove(id);
             foreach(var ctx in ctxs)
             {
                 _contextIdToId.Remove(ctx);
             }
+        }
+
+        public void AddAnonymous(string context)
+        {
+            _anonimContexts.Add(context);
+        }
+
+        public void RemoveAnonymous(string context)
+        {
+            _anonimContexts.Remove(context);
         }
     }
 }

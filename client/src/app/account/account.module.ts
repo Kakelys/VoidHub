@@ -9,7 +9,7 @@ import { AdminComponentsModule } from "../forum/admin/admin-components.module";
 import { BanMenuComponent } from "../forum/admin/ban-menu/ban-menu.component";
 import { RoleMenuComponent } from "../forum/admin/role-menu/role-menu.component";
 import { canActivateAdmin, canActivateModer } from "../forum/admin/role.guard";
-import { ErrorMessageListComponent } from "../error-message-list/error-message-list.component";
+import { ErrorMessageListComponent } from "../utils/error-message-list/error-message-list.component";
 import { RenameMenuComponent } from "../forum/admin/rename-menu/rename-menu.component";
 import { ChatService } from "../chat/services/chat.service";
 import { AccountTopicsComponent } from './topics/topics.component';

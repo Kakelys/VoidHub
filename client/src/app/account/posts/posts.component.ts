@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import Editor from 'ckeditor5/build/ckeditor';
 import { User } from 'src/shared/models/user.model';
 import { AuthService } from 'src/app/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-posts',
@@ -41,7 +42,8 @@ export class AccountPostsComponent implements OnInit, OnDestroy {
   private accService: AccountService,
   private route: ActivatedRoute,
   private toastr: ToastrService,
-  private auth: AuthService) {
+  private auth: AuthService,
+  private trans: TranslateService) {
     this.auth.user$
     .pipe(takeUntil(this.destroy$))
     .subscribe(user => {
@@ -74,7 +76,10 @@ export class AccountPostsComponent implements OnInit, OnDestroy {
     let newId = id;
 
     if(!Number(newId)) {
-      this.toastr.error("Wrong account id");
+      this.trans.get('forms-errors.wrong-account-id')
+      .subscribe(str => {
+        this.toastr.error(str);
+      })
       return;
     }
 

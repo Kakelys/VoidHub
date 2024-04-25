@@ -9,7 +9,7 @@ import { MainComponent } from './main/main.component';
 import { TopicComponent } from './topic/topic/topic.component';
 import { NewSectionComponent } from './section/new-section/new-section.component';
 import { SharedModule } from "src/shared/shared.module";
-import { ErrorMessageListComponent } from "../error-message-list/error-message-list.component";
+import { ErrorMessageListComponent } from "../utils/error-message-list/error-message-list.component";
 import { SectionService } from "./services/section.service";
 import { NewForumComponent } from './forum/new-forum/new-forum.component';
 import { ForumService } from "./services/forum.service";
@@ -33,6 +33,7 @@ import { BreadcrumbService } from "./services/breadcrumb.service";
 import { SharedForumModule } from "./shared.forum.module";
 import { canActivateAdmin } from "./admin/role.guard";
 import { TranslateModule } from "@ngx-translate/core";
+import { NewTopicPageComponent } from "./topic/new-topic-page/new-topic-page.component";
 
 @NgModule({
   providers: [
@@ -58,6 +59,7 @@ import { TranslateModule } from "@ngx-translate/core";
     ForumElementComponent,
     RecentComponent,
     BreadcrumbComponent,
+    NewTopicPageComponent
   ],
   imports: [
     SharedModule,
@@ -77,6 +79,7 @@ import { TranslateModule } from "@ngx-translate/core";
           {path: '', redirectTo: 'sections', pathMatch: 'full'},
           {path:'sections', component: SectionListComponent},
           {path:'new-section', component: NewSectionComponent},
+          {path:'new-topic', component: NewTopicPageComponent},
           {path:'recent', component: RecentComponent},
           {path:'section/:id/new-forum', component: NewForumComponent},
           {path:'topic/:id/:page', component: TopicComponent},

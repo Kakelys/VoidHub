@@ -6,6 +6,7 @@ import { NgFormExtension } from 'src/shared/ng-form.extension';
 import { AccountService } from '../../services/account.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpException } from 'src/shared/models/http-exception.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-role-menu',
@@ -26,7 +27,8 @@ export class RoleMenuComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private accountService: AccountService,
-    private toastr: ToastrService) {}
+    private toastr: ToastrService,
+    private trans: TranslateService) {}
 
   ngOnInit(): void {
     this.userIdBlocked = this.adminService.userIdBlocked;
@@ -46,7 +48,9 @@ export class RoleMenuComponent implements OnInit {
 
     this.accountService.updateRole(form.value.username, form.value.roleName).subscribe({
       next: () => {
-        this.toastr.success('Role updated successfully');
+        this.trans.get('labels.role-updated-successfully').subscribe(str => {
+          this.toastr.success(str);
+        })
       },
       error: (err: HttpException) => {
         this.errorMessages = err.errors;

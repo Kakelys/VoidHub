@@ -8,6 +8,7 @@ import { ToastrExtension } from 'src/shared/toastr.extension';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { TopicService } from '../../services/topic.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-upload-images',
@@ -34,7 +35,8 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
     private postService: PostService,
     private topicService: TopicService,
     private uploadService: UploadService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private trans: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +94,10 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
       return;
 
     if(files[0] > env.maxAvatarSize) {
-      this.toastr.error(`File size must be less than ${env.maxAvatarSize / 1024} KB`);
+      this.trans.get('forms-errors.file-size')
+      .subscribe(str => {
+        this.toastr.error(`${str} ${env.maxAvatarSize / 1024} KB`);
+      })
       return;
     }
 
@@ -115,7 +120,10 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
   copyToClipBoard(url: string) {
     navigator.clipboard.writeText(url)
     .then(_ => {
-      this.toastr.success("Copied!")
+      this.trans.get('labels.copied')
+      .subscribe(str => {
+        this.toastr.success(str + "!")
+      })
     })
   }
 

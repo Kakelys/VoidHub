@@ -1,7 +1,8 @@
 <div class="flex flex-row border rounded border-primary-content mx-12 bg-neutral h-[70vh]">
   <div #chatsContainer class="flex flex-col overflow-auto basis-1/4 border-r-2 border-primary-content">
     <a
-      class="group cursor-pointer"
+      class="group cursor-pointer link no-underline"
+
       *ngFor="let chat of chats; last as isLast"
       routerLink="/chats/{{chat.chat.id}}">
       <div class="px-1 py-2 group-hover:text-secondary-content">
@@ -12,7 +13,7 @@
             </div>
           </div>
           <div class="flex flex-col flex-grow">
-            <div class="flex flex-row justify-between">
+            <div class="flex flex-row justify-between" routerLinkActive="text-accent-focus">
               <div>
                 <div *ngIf="!chat.chat.isGroup; else groupName">
                   <div *ngIf="chat?.anotherUser; else localChat">

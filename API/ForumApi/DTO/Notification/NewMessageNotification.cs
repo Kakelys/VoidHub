@@ -8,6 +8,6 @@ namespace ForumApi.DTO.DNotification
         public MessageDto Message { get; set; } = null!;
         public User Sender { get; set; } = null!;
         public ChatDto Chat { get; set; } = null!;
-        public User? AnotherUser { get; set; } = null!;
+        public User? AnotherUser { get; set; }
     }
 }

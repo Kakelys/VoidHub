@@ -62,7 +62,7 @@
   @apply text-cyan-200 hover:text-accent-focus
 }
 
-.ck-content p a {
+.ck-content p a,.ck-content a  {
   @apply link
 }
 
@@ -82,3 +82,13 @@
   visibility: collapse;
   height: 0px !important;
 }
+
+.ck-viewer .ck-editor__main .ck-focused {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.ck.ck-content ul li {
+  margin-left: 2em;
+}
+

@@ -22,7 +22,12 @@
     "password-not-equal": "Passwords not equal",
     "password-length": "Password must be at least 8 characters",
     "title-required": "Title is required",
-    "title-length": "Title length must be between 3 and 255 characters"
+    "title-length": "Title length must be between 3 and 255 characters",
+    "ban-time": "Ban time must be greater than current time",
+    "old-and-new-required": "Both old and new password must be filled",
+    "file-size": "File size must be less than",
+    "wrong-account-id": "Wrong account id",
+    "file-required": "File is required"
   },
   "forms": {
     "login": "login",
@@ -144,7 +149,10 @@
   "search": {
     "no-topics": "No topics found",
     "include-content": "Include topic content",
-    "only-deleted": "Only deleted"
+    "only-deleted": "Only deleted",
+    "no-results": "No results found",
+    "only-user": "only user search",
+    "only-topic": "only topic search"
   },
   "labels": {
     "order-position-on-main-page": "Order position on main page",
@@ -167,9 +175,21 @@
     "back-to-home-page": "Back to home page",
     "login-or-email": "login or email",
     "forgot-your-password": "Forgot your password",
-    "recover-instruction": "Follow the instructions in the email. If such a login or email exists and the email is confirmed, the email will be sent.",
     "password-recovering": "Password recovering",
-    "enter-new-password": "Enter new password"
-  },
-  "labels-using-new-password": "Done. Now you can login using new password"
+    "enter-new-password": "Enter new password",
+    "partial-match": "Partial match",
+    "recover-instruction": "Follow the instructions in the email. If such a login or email exists and the email is confirmed, the email will be sent",
+    "using-new-password": "Done. Now you can login using new password",
+    "user-banned": "User banned",
+    "user-unbanned": "User Unbanned",
+    "role-updated-successfully": "Role updated successfully",
+    "name-updated-successfully": "Name updated successfully",
+    "account-id-not-provided": "Account id not provided",
+    "avatar-updated-successfully": "Avatar updated successfully",
+    "account-updated-succ": "Account updated successfully",
+    "copied": "Copied",
+    "forum-updated": "Forum updated",
+    "guests": "guests",
+    "online-users": "Online users"
+  }
 }

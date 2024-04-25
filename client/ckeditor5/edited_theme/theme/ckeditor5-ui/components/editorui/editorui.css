@@ -16,10 +16,10 @@
 .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
 	@mixin ck-rounded-corners;
 
-	&.ck-focused {
+	/* &.ck-focused {
 		@mixin ck-focus-ring;
 		@mixin ck-box-shadow var(--ck-inner-shadow);
-	}
+	} */
 }
 
 .ck.ck-editor__editable_inline {

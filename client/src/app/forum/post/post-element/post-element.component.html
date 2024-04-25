@@ -18,7 +18,7 @@
         <div class="text-xs">
           {{post?.post.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
         </div>
-        <div class="flex flex-row mx-auto">
+        <div class="flex flex-row">
           <div class="text-xs" *ngIf="user && user?.id == post?.sender.id">
             <div class="btn btn-neutral min-h-min h-8" (click)="setEditMode(true)">
               {{ 'forms.edit' | translate }}
@@ -86,7 +86,7 @@
       [postId]="post.post.id"
       [topicId]="post.post.topicId"
       [content]="post.post.content"
-      [submitPlaceholder]="'Save'"
+      [submitPlaceholder]="'forms.save' | translate"
       (onCreate)="onPostEdit($event)"
       (onCancel)="setEditMode(false)">
     </app-post-editor>

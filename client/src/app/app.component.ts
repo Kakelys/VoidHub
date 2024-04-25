@@ -14,7 +14,7 @@ export class AppComponent {
     if(savedLocale)
       trans.use(savedLocale);
     else
-    localStorage.setItem('locale', 'en');
+      localStorage.setItem('locale', 'en');
   }
 
   changeLanguage(code: string) {

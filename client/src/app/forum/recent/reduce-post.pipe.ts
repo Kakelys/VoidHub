@@ -89,11 +89,15 @@ export class ReducePost implements PipeTransform {
       if (!insideTag) {
         symbolCount++;
       }
-      else if (char !== '<' && (char === ' ' || char === '\n')) {
-        tagNameReaded = true;
-      }
       else {
-        tagName += char;
+        // read tag name
+        if(char !== '<')
+        if (char === ' ' || char === '\n') {
+          tagNameReaded = true;
+        }
+        else if (!tagNameReaded) {
+          tagName += char;
+        }
       }
 
       result += char;

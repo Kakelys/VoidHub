@@ -1,10 +1,8 @@
-using ForumApi.DTO.DTopic;
-
 namespace ForumApi.DTO.DSearch
 {
-    public class SearchResponse
+    public class SearchResponse<T>
     {
         public int SearchCount { get; set; }
-        public List<TopicInfoResponse> Data { get; set; } = new();
+        public List<T> Data { get; set; } = new();     
     }
 }

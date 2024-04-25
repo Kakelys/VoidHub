@@ -11,7 +11,7 @@ namespace ForumApi.DTO.DSearch
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(locale["validators.query-required"])
-                .Length(1, 255)
+                .Length(3, 255)
                 .WithMessage(locale["validators.query-length"]);
         }
     }

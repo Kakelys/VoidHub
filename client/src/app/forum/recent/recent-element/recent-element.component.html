@@ -17,7 +17,7 @@
           </a>
           <div class="text-sm text-secondary-content">
             <div>
-              {{ 'lables.posted-date' | translate }}: {{post.post.createdAt | withtimezone | date:'h:mm a MMM d' }}
+              {{ 'lables.posted-date' | translate }}: {{post.post.createdAt | withtimezone | date:'h:mm a, d MMM' }}
             </div>
             <a class="link no-underline" routerLink="/profile/{{post.sender.id}}">
               <span class="text-secondary-content">{{ 'lables.author' | translate }}:</span> {{post.sender.username}}

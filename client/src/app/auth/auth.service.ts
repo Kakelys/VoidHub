@@ -6,7 +6,7 @@ import { Register } from "./models/register.model";
 import { AuthResponse } from "./models/auth-response.model";
 import { Login } from "./models/login.model";
 import { environment as env } from "src/environments/environment";
-import { jwtDecode } from "jwt-decode";
+import { JwtPayload, jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
@@ -77,7 +77,14 @@ export class AuthService
       return;
     }
 
-    const jwtPayload = jwtDecode(access);
+    let jwtPayload: JwtPayload = null;
+
+    try {
+      jwtPayload = jwtDecode(access);
+    } catch {}
+
+    if(!jwtPayload)
+      return;
 
     // milliseconds until force refresh token
     let ms = jwtPayload.exp * 1000 - new Date().valueOf();

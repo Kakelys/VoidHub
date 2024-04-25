@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { User } from 'src/shared/models/user.model';
 import { Roles } from 'src/shared/roles.enum';
-import { SectionService } from '../forum/services/section.service';
-import { SectionResponse } from '../forum/models/section-reponse.model';
+import { SectionService } from '../../forum/services/section.service';
+import { SectionResponse } from '../../forum/models/section-reponse.model';
 
 @Component({
   selector: 'app-menu',

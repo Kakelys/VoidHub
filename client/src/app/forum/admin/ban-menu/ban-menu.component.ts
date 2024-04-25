@@ -5,6 +5,7 @@ import { BanService } from '../services/ban.service';
 import { AdminService } from '../services/admin.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpException } from 'src/shared/models/http-exception.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-ban-menu',
@@ -37,7 +38,9 @@ export class BanMenuComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private banService: BanService,
-    private toastr: ToastrService) {}
+    private toastr: ToastrService,
+    private trans: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.userIdBlocked = this.adminService.userIdBlocked;
@@ -57,7 +60,10 @@ export class BanMenuComponent implements OnInit {
 
     if(banTime <= 0)
     {
-      this.errorMessages.push("Ban time must be greater than current time");
+      this.trans.get('forms-errors.ban-time').subscribe(str => {
+        this.toastr.error(str);
+      })
+
       return;
     }
 
@@ -75,7 +81,9 @@ export class BanMenuComponent implements OnInit {
           form.controls['reason'].setErrors(null);
           this.currentDate = new Date();
 
-          this.toastr.success("User banned")
+          this.trans.get('labels.user-banned').subscribe(str => {
+            this.toastr.success(str);
+          })
         },
         error: (err: HttpException) => {
           this.errorMessages = err.errors;
@@ -94,7 +102,9 @@ export class BanMenuComponent implements OnInit {
       .subscribe({
         next: _ => {
           this.currentDate = new Date();
-          this.toastr.success("User unbanned")
+          this.trans.get('labels.user-unbanned').subscribe(str => {
+            this.toastr.success(str);
+          })
         },
         error: errs => {
           this.errorMessages = errs;

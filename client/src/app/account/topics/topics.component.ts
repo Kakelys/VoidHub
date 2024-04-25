@@ -11,6 +11,7 @@ import { HttpException } from 'src/shared/models/http-exception.model';
 import { ToastrExtension } from 'src/shared/toastr.extension';
 import { User } from 'src/shared/models/user.model';
 import { AuthService } from 'src/app/auth/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-topics',
@@ -41,7 +42,8 @@ export class AccountTopicsComponent implements OnInit, OnDestroy {
   private accService: AccountService,
   private route: ActivatedRoute,
   private toastr: ToastrService,
-  private auth: AuthService) {
+  private auth: AuthService,
+  private trans: TranslateService) {
     this.auth.user$
     .pipe(takeUntil(this.destroy$))
     .subscribe(user => {
@@ -74,7 +76,10 @@ export class AccountTopicsComponent implements OnInit, OnDestroy {
     let newId = id;
 
     if(!Number(newId)) {
-      this.toastr.error("Wrong account id");
+      this.trans.get('forms-errors.wrong-account-id')
+      .subscribe(str => {
+        this.toastr.error(str);
+      })
       return;
     }
 

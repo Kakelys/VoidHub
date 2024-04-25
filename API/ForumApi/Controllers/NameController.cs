@@ -1,6 +1,7 @@
 using ForumApi.Data.Models;
 using ForumApi.DTO.DName;
 using ForumApi.Services.ForumS.Interfaces;
+using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,7 @@ namespace ForumApi.Controllers
         public async Task<IActionResult> GetForumNames()
         {
             List<Name>? res = null;
-            if(User.Identity?.IsAuthenticated == true && (User.IsInRole(Role.Admin) || User.IsInRole(Role.Moder)))
+            if(User.IsAdminOrModer())
             {
                 res = await namesService.GetForums(true);
             }
