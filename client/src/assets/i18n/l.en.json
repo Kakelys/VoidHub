@@ -188,6 +188,8 @@
     "avatar-updated-successfully": "Avatar updated successfully",
     "account-updated-succ": "Account updated successfully",
     "copied": "Copied",
-    "forum-updated": "Forum updated"
+    "forum-updated": "Forum updated",
+    "guests": "guests",
+    "online-users": "Online users"
   }
 }

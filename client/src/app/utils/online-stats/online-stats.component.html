@@ -1,8 +1,8 @@
 <div class="{{containerClasses}}">
   <div class="text-sm">
-    Online users: {{anonimCount + users.length}}
+    {{ 'labels.online-users' | translate }}: {{anonimCount + users.length}}
     <div class="text-secondary-content">
-      {{anonimCount}} guests
+      {{anonimCount}} {{ 'labels.guests' | translate }}
     </div>
   </div>
   <div class="overflow-hidden">
