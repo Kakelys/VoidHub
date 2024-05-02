@@ -190,6 +190,10 @@
     "copied": "Copied",
     "forum-updated": "Forum updated",
     "guests": "guests",
-    "online-users": "Online users"
+    "online-users": "Online users",
+    "total-topics": "Total topics",
+    "total-posts": "Total posts",
+    "total-users": "Total users",
+    "last-user": "New user"
   }
 }

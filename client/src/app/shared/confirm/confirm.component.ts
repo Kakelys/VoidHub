@@ -11,7 +11,7 @@ export class ConfirmComponent {
   confirmContent: string = 'Are you sure?';
 
   @Input()
-  confirmContainerClasses = 'btn btn-info min-h-min h-8 max-w-fit'
+  confirmContainerClasses = 'btn btn-info min-h-min max-w-fit'
 
   @Input()
   containerClasses = 'btn btn-ghost min-h-min h-fit w-fit p-1 rounded';

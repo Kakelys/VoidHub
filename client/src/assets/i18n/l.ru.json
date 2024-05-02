@@ -115,7 +115,11 @@
     "copied": "Скопировано",
     "forum-updated": "Форум обновлен",
     "guests": "гостей",
-    "online-users": "Пользователей в сети"
+    "online-users": "Пользователей в сети",
+    "last-user": "Новый польз-ль",
+    "total-posts": "Всего постов",
+    "total-topics": "Всего тем",
+    "total-users": "Всего польз-лей"
   },
   "lables": {
     "add-new-section": "Добавить новый раздел",

@@ -29,8 +29,10 @@ import ruLocale from '@angular/common/locales/ru';
 import { RightMenuComponent } from './menu/right-menu/right-menu.component';
 import { LimitterInterceptor } from './utils/limitter/limitter.interceptor';
 import { LimitterService } from './utils/limitter/limitter.service';
-import { OnlineStatsComponent } from './utils/online-stats/online-stats.component';
 import { NewMessageListener } from './notify/new-message/new-message.listener';
+import { GeneralStatsComponent } from './utils/stats/general-stats/general-stats.component';
+import { OnlineStatsComponent } from './utils/stats/online-stats/online-stats.component';
+import { StatsService } from './utils/stats/stats.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.localizationPrefix, '.json');
@@ -47,6 +49,7 @@ registerLocaleData(ruLocale);
     MenuComponent,
     RightMenuComponent,
     OnlineStatsComponent,
+    GeneralStatsComponent,
   ],
   imports: [
     SharedModule,
@@ -76,6 +79,7 @@ registerLocaleData(ruLocale);
     SignalrService,
     NotifyService,
     SectionService,
+    StatsService,
     NewMessageListener,
     {
       provide: LocationStrategy,

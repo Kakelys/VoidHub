@@ -18,7 +18,7 @@ export class OnlineStatsComponent {
   users: User[] = new Array();
 
   @Input()
-  containerClasses = 'bg-neutral rounded p-3'
+  containerClasses = 'bg-base-200 rounded p-3'
 
   constructor(
     notifyService: NotifyService,

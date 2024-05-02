@@ -10,7 +10,7 @@
     <div class="grow max-w-7xl items-center">
       <router-outlet></router-outlet>
     </div>
-    <div class="hidden xl:block mt-3 me-5 w-[164px]">
+    <div class="hidden xl:block mt-3 me-5 w-[225px]">
       <app-right-menu class="sticky top-20">
       </app-right-menu>
     </div>
@@ -19,8 +19,10 @@
   <div class="grow">
   </div>
 
-  <div class="block xl:hidden w-[164px] ms-12 mt-3">
-    <app-online-stats containerClasses="bg-base-200 rounded p-3">
+  <div class="flex flex-row xl:hidden ms-12 mt-3">
+    <app-general-stats containerClasses="w-[200px] h-full bg-base-200 rounded p-3">
+    </app-general-stats>
+    <app-online-stats class="ms-3" containerClasses="h-full w-[200px] bg-base-200 rounded p-3">
     </app-online-stats>
   </div>
 
