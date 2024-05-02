@@ -28,5 +28,7 @@ namespace ForumApi.Options
         public int LimitPerAccount { get; set; } = 0;
         [Required]
         public string FileType { get; set; } = "";
+        [Required]
+        public int GarbageFileDeleteDelay { get ; set; } = 0;
     }
 }

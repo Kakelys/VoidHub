@@ -1,16 +1,18 @@
 using ForumApi.Data.Repository.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
+using ForumApi.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace ForumApi.Utils.Background
 {
     public class GarbageFileService(
         ILogger<GarbageFileService> logger,
-        IServiceScopeFactory scope) : IHostedService
+        IServiceScopeFactory scope,
+        IOptions<ImageOptions> imgOptions) : IHostedService
     {
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            DeleteNotLinkedFiles(cancellationToken);
+            _ = DeleteNotLinkedFiles(cancellationToken);
             return Task.CompletedTask;
         }
 
@@ -19,7 +21,7 @@ namespace ForumApi.Utils.Background
             return Task.CompletedTask;
         }
 
-        private async Task DeleteNotLinkedFiles(CancellationToken cancellationToken) 
+        private async Task DeleteNotLinkedFiles(CancellationToken cancellationToken)
         {
             while(!cancellationToken.IsCancellationRequested)
             {
@@ -44,7 +46,7 @@ namespace ForumApi.Utils.Background
 
                 await scp.DisposeAsync();
 
-                await Task.Delay(1000 * 60 * 12, CancellationToken.None);
+                await Task.Delay(imgOptions.Value.GarbageFileDeleteDelay, CancellationToken.None);
             }
         }
     }
