@@ -46,7 +46,7 @@ namespace ForumApi.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = Role.Admin)]
         [BanFilter]
-        public async Task<IActionResult> Update(int id, SectionEdit sectionDto)
+        public async Task<IActionResult> Update(int id, [FromBody] SectionEdit sectionDto)
         {
             var section = await sectionService.Update(id, sectionDto);
             return Ok(section);

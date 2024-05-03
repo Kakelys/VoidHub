@@ -43,7 +43,7 @@ namespace ForumApi.Utils.Extensions
             return ruleBuilder
                 .Must(i => i != null)
                 .WithMessage(locale["validators.image-required"])
-                .Must(i => _extensions.Contains(Path.GetExtension(i.FileName)))
+                .Must(i => _extensions.Contains(Path.GetExtension(i!.FileName)))
                 .WithMessage($"{locale["validators.image-format"]}: {string.Join(", ", _extensions)}")
                 .Must(i => i?.Length < imgOptions.ImageMaxSize)
                 .WithMessage($"{locale["validators.image-size"]} {imgOptions.ImageMaxSize / 1024} KB");

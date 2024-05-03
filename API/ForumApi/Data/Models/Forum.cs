@@ -9,6 +9,7 @@ namespace ForumApi.Data.Models
         public string Title { get; set; } = null!;
         public DateTime? DeletedAt { get; set; }
         public bool IsClosed { get; set; }
+        public string ImagePath { get; set; } = null!;
 
         [JsonIgnore]
         public virtual  Section Section { get; set; } = null!;

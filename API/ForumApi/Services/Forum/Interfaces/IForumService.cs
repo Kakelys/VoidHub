@@ -8,7 +8,7 @@ namespace ForumApi.Services.ForumS.Interfaces
     {
         Task<ForumResponse?> Get(int forumId, Params prms);
         Task<Forum> Create(ForumEdit forumDto);
-        Task<Forum> Update(int forumId, ForumEdit forumDto);
+        Task<Forum> Update(int forumId, ForumEdit forumDto, string newImagePath);
         Task Delete(int forumId);
     }
 }

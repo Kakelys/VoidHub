@@ -15,6 +15,7 @@ import { NameService } from '../../services/name.service';
 import { HttpException } from 'src/shared/models/http-exception.model';
 import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
+import { ForumResponse } from '../../models/forum-response.model';
 
 
 @Component({
@@ -24,7 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ForumComponent implements OnDestroy {
   topics: Topic[] = [];
-  forum: Forum = null;
+  forumRes: ForumResponse = null;
 
   user: User = null;
   private destroy$ = new ReplaySubject<boolean>(1);
@@ -38,6 +39,8 @@ export class ForumComponent implements OnDestroy {
   limitNames = environment.limitNames;
   roles = Roles;
   names: Name[] = null;
+
+  imgFile: File | null;
 
   constructor(
     private authService: AuthService,
@@ -81,8 +84,8 @@ export class ForumComponent implements OnDestroy {
 
       let loadDeleted = this.router.url.indexOf("deleted") != -1;
       this.forumService.getForum(this.forumId, loadDeleted ? {onlyDeleted: true} : {})
-        .subscribe((forum: Forum) => {
-          this.forum = forum;
+        .subscribe((forum: ForumResponse) => {
+          this.forumRes = forum;
           if(!isFirst)
             this.loadTopicsPage();
         });
@@ -114,11 +117,28 @@ export class ForumComponent implements OnDestroy {
       });
   }
 
+
+  handleFileInput(target) {
+    this.imgFile = target.files[0];
+    console.log(this.imgFile);
+  }
+
   onEdit(data) {
-    this.forumService.updateForum(this.forum.id, data)
+    let formData = new FormData();
+    Object.keys(data).forEach(k => {
+      if(k && data[k]) {
+        console.log(k, data[k]);
+        formData.append(k, data[k]);
+      }
+    })
+    formData.set("img", this.imgFile);
+    if(!this.imgFile)
+      formData.delete("img");
+
+    this.forumService.updateForum(this.forumRes.forum.id, formData)
       .subscribe({
         next: (forum:any) => {
-          this.forum.title = forum.title;
+          this.forumRes.forum.title = forum.title;
           this.trans.get('labels.forum-updated').subscribe(str => {
             this.toastr.success(str);
           })
@@ -126,7 +146,6 @@ export class ForumComponent implements OnDestroy {
         error: (err:HttpException) => {
           ToastrExtension.handleErrors(this.toastr, err.errors);
         }
-
       })
   }
 
@@ -146,7 +165,7 @@ export class ForumComponent implements OnDestroy {
   }
 
   onDelete() {
-    this.forumService.deleteForum(this.forum.id).subscribe({
+    this.forumService.deleteForum(this.forumRes.forum.id).subscribe({
       next: () => {
         this.router.navigate(['../../'], {relativeTo: this.route});
       },

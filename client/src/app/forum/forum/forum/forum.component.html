@@ -1,29 +1,29 @@
 <div class="flex flex-col bg-base-200 rounded-lg">
   <app-limit-loader [limit]="1" [reqName]="limitNames.forumLoad">
-      <div *ngIf="!forum" class="text-center text-2xl font-bold my-3">
+      <div *ngIf="!forumRes" class="text-center text-2xl font-bold my-3">
         {{ 'forum.not-found' | translate }}
       </div>
   </app-limit-loader>
 
-  <div *ngIf="forum" class="flex flex-col">
+  <div *ngIf="forumRes" class="flex flex-col">
     <ul *ngIf="user && (user.role == roles.ADMIN || user.role == roles.MODER)" class="w-fit menu menu-vertical lg:menu-horizontal rounded-box">
       <li>
-        <a class="link no-underline" routerLink="/forum/{{forum.id}}" routerLinkActive="bg-base-100" [routerLinkActiveOptions]="{exact: true}">
+        <a class="link no-underline" routerLink="/forum/{{forumRes.forum.id}}" routerLinkActive="bg-base-100" [routerLinkActiveOptions]="{exact: true}">
           {{ 'menu.recent' | translate }}
         </a>
       </li>
       <li>
-        <a class="link no-underline" routerLink="/forum/{{forum.id}}/deleted" routerLinkActive="bg-base-100" >
+        <a class="link no-underline" routerLink="/forum/{{forumRes.forum.id}}/deleted" routerLinkActive="bg-base-100" >
           {{ 'search.only-deleted' | translate }}
         </a>
       </li>
     </ul>
     <div class="ms-6 mt-3 flex flex-col">
-      <app-breadcrumb [from]="'forum'" [id]="forum.id"></app-breadcrumb>
-      <div class="text-3xl font-bold">{{forum.title}}</div>
+      <app-breadcrumb [from]="'forum'" [id]="forumRes.forum.id"></app-breadcrumb>
+      <div class="text-3xl font-bold">{{forumRes.forum.title}}</div>
       <div class="text-xs text-secondary-content flex flex-row">
-        <div>{{ 'forum.topics' | translate }}: {{forum.topicsCount}}</div>
-        <div class="ms-3">{{ 'forum.posts' | translate }}: {{forum.postsCount}}</div>
+        <div>{{ 'forum.topics' | translate }}: {{forumRes.topicsCount}}</div>
+        <div class="ms-3">{{ 'forum.posts' | translate }}: {{forumRes.postsCount}}</div>
       </div>
     </div>
     <div class="flex flex-row mt-3 ms-6" *ngIf="user">
@@ -31,28 +31,43 @@
         <div class="flex flex-row my-auto" *ngIf="user.role == roles.ADMIN">
           <div>
             <app-title-editor
-              [title]="forum.title"
+              [title]="forumRes.forum.title"
               (onSave)="onEdit($event)"
               (onToggle)="onEditToggle($event)"
-              *ngIf="forum"
+              *ngIf="forumRes"
             >
             <label class="form-control w-full max-w-xs mb-2">
               <div class="label">
-                <span class="label-text">{{ 'forum.choose-section' | translate }}</span>
+                <span class="label-text">{{ 'forum.choose-section' | translate }}:</span>
               </div>
               <select
                 class="select select-bordered bg-neutral h-8 min-h-min"
                 id="sectionId"
                 name="sectionId"
-                [ngModel]="forum.sectionId"
+                [ngModel]="forumRes.forum.sectionId"
               >
                 <option *ngFor="let name of names" [value]="name.id"
                   [disabled]="!name.isSelectable"
-                  [selected]="name.id == forum.sectionId"
+                  [selected]="name.id == forumRes.forum.sectionId"
                 >
                   {{name.isSelectable ? '-- ' + name.title : name.title}}
                 </option>
               </select>
+            </label>
+            <label class="form-control w-full max-w-xs mt-2 mb-3">
+              <div class="label">
+                <span class="label-text">
+                  {{ 'labels.changing-image' | translate }}:
+                </span>
+              </div>
+              <input
+                type="file"
+                id="img"
+                name="img"
+                class="file-input file-input-bordered file-input-xs w-full text-sm"
+                ngModel
+                (change)="handleFileInput($event.target)"
+              />
             </label>
             </app-title-editor>
           </div>
@@ -67,7 +82,7 @@
         </div>
       </div>
 
-      <div (click)="toggleNewTopic()" *ngIf="!showNewTopic && !forum.isClosed" class="me-6 btn btn-neutral w-fit min-h-fit h-8">
+      <div (click)="toggleNewTopic()" *ngIf="!showNewTopic && !forumRes.forum.isClosed" class="me-6 btn btn-neutral w-fit min-h-fit h-8">
         {{ 'forum.new-topic' | translate }}
       </div>
     </div>
@@ -75,11 +90,11 @@
 
   <app-new-topic *ngIf="user && showNewTopic" (close)="toggleNewTopic()" (created)="onCreated($event)"></app-new-topic>
 
-  <div *ngIf="forum">
+  <div *ngIf="forumRes">
     <div class="ms-6 my-3">
       <app-paginator
         (changePage)="changePage($event)"
-        [max]="forum.topicsCount / page.pageSize"
+        [max]="forumRes.topicsCount / page.pageSize"
         [currentPage]="page.pageNumber">
       </app-paginator>
       <app-limit-loader [limit]="1" [reqName]="limitNames.topicsLoad">
@@ -99,7 +114,7 @@
       <div class="my-3">
         <app-paginator
           (changePage)="changePage($event)"
-          [max]="forum.topicsCount / page.pageSize"
+          [max]="forumRes.topicsCount / page.pageSize"
           [currentPage]="page.pageNumber">
         </app-paginator>
       </div>

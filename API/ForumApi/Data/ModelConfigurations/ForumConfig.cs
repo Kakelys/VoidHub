@@ -19,6 +19,9 @@ namespace ForumApi.Data.ModelConfigurations
             builder.Property(f => f.DeletedAt)
                 .HasDefaultValue(null);
 
+            builder.Property(f => f.ImagePath)
+                    .HasDefaultValue("forum_default.png");
+
             builder.HasOne(f => f.Section)
                 .WithMany(s => s.Forums)
                 .HasForeignKey(f => f.SectionId);

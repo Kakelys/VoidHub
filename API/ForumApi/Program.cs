@@ -34,6 +34,11 @@ if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.PostImageFolder}"))
   Directory.CreateDirectory($"{imageSettings.Folder}/{imageSettings.PostImageFolder}");
 }
 
+if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.ForumFolder}"))
+{
+  Directory.CreateDirectory($"{imageSettings.Folder}/{imageSettings.ForumFolder}");
+}
+
 builder.Services.AddRepository(builder.Configuration);
 builder.Services.AddAppServices();
 
@@ -86,6 +91,12 @@ app.UseMiddleware<QueryTokenMiddleware>();
 if(!File.Exists($"{imageSettings.Folder}/{imageSettings.AvatarDefault}"))
 {
   app.Logger.LogWarning($"Default avatar in {imageSettings.Folder}/{imageSettings.AvatarDefault} not found.");
+}
+
+//check for default forum
+if(!File.Exists($"{imageSettings.Folder}/{imageSettings.ForumDefault}"))
+{
+  app.Logger.LogWarning($"Default forum in {imageSettings.Folder}/{imageSettings.ForumDefault} not found.");
 }
 
 app.UseStaticFiles();

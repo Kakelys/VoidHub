@@ -13,7 +13,11 @@ namespace ForumApi.Options
         [Required]
         public string PostImageFolder { get; set; } = "";
         [Required]
+        public string ForumFolder { get; set; } = "";
+        [Required]
         public string AvatarDefault { get; set; } = "";
+        [Required]
+        public string ForumDefault { get; set; } = "";
         [Required]
         public int ResizeWidth { get; set; } = 0;
         [Required]
