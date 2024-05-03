@@ -120,7 +120,10 @@
     "total-posts": "Всего постов",
     "total-topics": "Всего тем",
     "total-users": "Всего польз-лей",
-    "changing-image": "Изменение изображения"
+    "changing-image": "Изменение изображения",
+    "old": "Старое",
+    "popular": "Популярное",
+    "recent": "Новое"
   },
   "lables": {
     "add-new-section": "Добавить новый раздел",

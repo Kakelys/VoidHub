@@ -72,6 +72,19 @@
             {{ 'search.only-deleted' | translate }}
           </div>
         </div>
+        <div class="mt-3">
+          <select
+            name="sort"
+            id="sort"
+            class="select select-bordered min-h-min h-8"
+            [ngModel]="searchParams.sort ? searchParams.sort : sortTypes.New"
+            required
+          >
+            <option value="{{sortTypes.New}}" selected>{{ 'labels.recent' | translate }}</option>
+            <option value="{{sortTypes.Old}}">{{ 'labels.old' | translate }}</option>
+            <option value="{{sortTypes.MostLiked}}">{{ 'labels.popular' | translate }}</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>

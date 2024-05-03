@@ -3,6 +3,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { User } from 'src/shared/models/user.model';
 import { Roles } from 'src/shared/roles.enum';
+import { SearchParams } from '../forum/models/search-params.model';
 
 @Component({
   selector: 'app-header',
@@ -12,6 +13,7 @@ import { Roles } from 'src/shared/roles.enum';
 export class HeaderComponent implements OnDestroy {
 
   private readonly destroy$ = new ReplaySubject<boolean>(1);
+  defaultSearch:SearchParams = {sort: '', withPostContent: false, onlyDeleted: false, partialTitle: true}
 
   user: User = null;
   roles = Roles;

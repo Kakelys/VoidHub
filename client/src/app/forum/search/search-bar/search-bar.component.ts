@@ -1,3 +1,4 @@
+import { SearchSort } from './../search-sort.enum';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -8,7 +9,6 @@ import { Roles } from 'src/shared/roles.enum';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SearchParams } from '../../models/search-params.model';
 import { TranslateModule } from '@ngx-translate/core';
-
 
 @Component({
   selector: 'app-search-bar',
@@ -21,7 +21,7 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule
   ]
 })
-export class SearchBarComponent {
+export class SearchBarComponent  {
 
   @Input()
   searchQuery = '';
@@ -37,6 +37,7 @@ export class SearchBarComponent {
 
   roles = Roles;
   user: User;
+  sortTypes = SearchSort;
 
   constructor(
     private router: Router,
@@ -55,8 +56,9 @@ export class SearchBarComponent {
     {
       queryParams: {
         query: form.value.search,
+        ...this.searchParams,
         ...form.value,
-        v: new Date().getMilliseconds()
+        v: new Date().getMilliseconds(),
       },
       queryParamsHandling: 'merge'
     });

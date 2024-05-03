@@ -195,6 +195,9 @@
     "total-posts": "Total posts",
     "total-users": "Total users",
     "last-user": "New user",
-    "changing-image": "Changing image"
+    "changing-image": "Changing image",
+    "recent": "Recent",
+    "old": "Old",
+    "popular": "Popular"
   }
 }

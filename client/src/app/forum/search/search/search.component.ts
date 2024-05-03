@@ -12,6 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SearchElementType } from '../../models/search-element.enum';
 import { environment } from 'src/environments/environment';
 import { Roles } from 'src/shared/roles.enum';
+import { SearchSort } from '../search-sort.enum';
 
 @Component({
   selector: 'app-search',
@@ -52,13 +53,13 @@ export class SearchComponent {
     .queryParams.subscribe(params => {
       // mb just use ...params instead
       let newSearchParams: SearchParams = {
-        sort:'',
+        sort: SearchSort.New.toString(),
         withPostContent:false,
         onlyDeleted: false,
         partialTitle: false
       };
 
-      newSearchParams.sort = params["sort"] ?? '';
+      newSearchParams.sort = params["sort"] ? params["sort"] : SearchSort.New.toString();
       newSearchParams.withPostContent = StringExtension.ConvertToBoolean(params["withPostContent"]) ?? false;
       newSearchParams.onlyDeleted = StringExtension.ConvertToBoolean(params["onlyDeleted"]) ?? false;
       newSearchParams.partialTitle = StringExtension.ConvertToBoolean(params["partialTitle"]) ?? false;
