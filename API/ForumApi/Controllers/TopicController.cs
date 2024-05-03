@@ -77,7 +77,7 @@ namespace ForumApi.Controllers
         [HttpPost]
         [Authorize]
         [BanFilter]
-        public async Task<IActionResult> Create(TopicNew topicDto)
+        public async Task<IActionResult> Create([FromBody] TopicNew topicDto)
         {
             await rep.BeginTransaction();
             try
@@ -102,7 +102,7 @@ namespace ForumApi.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = $"{Role.Admin},{Role.Moder}")]
         [BanFilter]
-        public async Task<IActionResult> Update(int id, TopicEdit topicDto)
+        public async Task<IActionResult> Update(int id, [FromBody] TopicEdit topicDto)
         {
             var topic = await topicService.Update(id, topicDto);
             return Ok(topic);

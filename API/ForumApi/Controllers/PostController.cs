@@ -52,7 +52,7 @@ namespace ForumApi.Controllers
         [HttpPost]
         [Authorize]
         [BanFilter]
-        public async Task<IActionResult> Create(PostEditDto postDto)
+        public async Task<IActionResult> Create([FromBody] PostEditDto postDto)
         {
             await _rep.BeginTransaction();
             try
@@ -78,7 +78,7 @@ namespace ForumApi.Controllers
         [Authorize]
         [PermissionActionFilter<Post>]
         [BanFilter]
-        public async Task<IActionResult> Update(int id, PostEditDto postDto)
+        public async Task<IActionResult> Update(int id, [FromBody] PostEditDto postDto)
         {
             var post = await _postService.Update(id, postDto);
             return Ok(post);

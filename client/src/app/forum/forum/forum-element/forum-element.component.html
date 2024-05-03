@@ -1,45 +1,54 @@
 <div class="group">
   <div class="flex flex-row items-center my-2">
     <div class="basis-8/12 h-full">
-      <a routerLink="/forum/{{forum.id}}" class="link no-underline text-lg">
-        {{forum.title}}
-      </a>
+      <div class="flex flex-row">
+        <div class="avatar">
+          <div class="w-10 rounded">
+            <img src="{{resourceUrl}}/{{forumRes.forum.imagePath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}"/>
+          </div>
+        </div>
+        <div class="h-fit my-auto ms-3">
+          <a routerLink="/forum/{{forumRes.forum.id}}" class="align-middle link no-underline text-lg">
+            {{forumRes.forum.title}}
+          </a>
+        </div>
+      </div>
     </div>
     <div class="basis-1/12 text-center">
-      {{forum.postsCount}}
+      {{forumRes.postsCount}}
     </div>
     <div class="basis-1/12 text-center">
-      {{forum.topicsCount}}
+      {{forumRes.topicsCount}}
     </div>
     <div class="basis-3/12">
-      <div class="flex flex-row" *ngIf="forum?.lastTopic">
+      <div class="flex flex-row" *ngIf="forumRes?.lastTopic">
         <div class="me-2 my-auto">
           <div class="avatar">
             <div class="w-10 rounded">
-              <a routerLink="/profile/{{forum.lastTopic.user.id}}">
-                <img src="{{resourceUrl}}/{{forum.lastTopic.user.avatarPath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}"/>
+              <a routerLink="/profile/{{forumRes.lastTopic.user.id}}">
+                <img src="{{resourceUrl}}/{{forumRes.lastTopic.user.avatarPath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}"/>
               </a>
             </div>
           </div>
         </div>
-        <div class="flex flex-col text-sm" *ngIf="forum.lastTopic">
+        <div class="flex flex-col text-sm" *ngIf="forumRes.lastTopic">
           <div class="text-secondary-content text-xs">
-            {{forum.lastTopic.updatedAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
+            {{forumRes.lastTopic.updatedAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
           </div>
           <div>
             <span class="text-secondary-content text-xs">{{ 'forum.topic' | translate }}: </span>
             <a class="link no-underline"
-              routerLink="/forum/topic/{{forum.lastTopic.id}}"
+              routerLink="/forum/topic/{{forumRes.lastTopic.id}}"
             >
-              {{forum.lastTopic.title | truncate}}
+              {{forumRes.lastTopic.title | truncate}}
             </a>
           </div>
           <div>
             <span class="text-secondary-content text-xs">{{ 'forum.author' | translate }}: </span>
             <a class="link no-underline"
-              routerLink="/profile/{{forum.lastTopic.user.id}}"
+              routerLink="/profile/{{forumRes.lastTopic.user.id}}"
             >
-              {{forum.lastTopic.user.username}}
+              {{forumRes.lastTopic.user.username}}
             </a>
           </div>
         </div>

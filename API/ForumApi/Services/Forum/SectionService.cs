@@ -41,8 +41,7 @@ namespace ForumApi.Services.ForumS
                         })
                         .Select(ff => new ForumResponse
                         {
-                            Id = ff.Forum.Id,
-                            Title = ff.Forum.Title,
+                            Forum = _mapper.Map<ForumDto>(ff.Forum),
                             TopicsCount = ff.Topics.Count(),
                             PostsCount = ff.Topics.SelectMany(t => t.Posts).Count(p=> p.DeletedAt == null),
                             LastTopic = ff.Topics
@@ -67,7 +66,6 @@ namespace ForumApi.Services.ForumS
                 }).ToListAsync();
         }
 
-        
         public async Task<List<SectionDtoResponse>> GetDtoSections(bool includeHidden = false)
         {
             var predicate = PredicateBuilder.New<Section>(s => true);
@@ -112,7 +110,6 @@ namespace ForumApi.Services.ForumS
 
             if(entity.Forums.Count > 0)
                 throw new NotFoundException(locale["errors.no-section-with-forum-delete"]);
-
 
             _rep.Section.Value.Delete(entity);
             await _rep.Save();

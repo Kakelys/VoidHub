@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace ForumApi.DTO.DBan
 {
-    public class BadnEditValidator : AbstractValidator<BanEdit>
+    public class BanEditValidator : AbstractValidator<BanEdit>
     {
-        public BadnEditValidator(IJsonStringLocalizer locale)
+        public BanEditValidator(IJsonStringLocalizer locale)
         {
             RuleFor(b => b.Username)
                 .NotEmpty()

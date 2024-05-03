@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SectionService } from '../../services/section.service';
 import { User } from 'src/shared/models/user.model';
 import { Roles } from 'src/shared/roles.enum';
-import { SectionResponse } from '../../models/section-reponse.model';
+import { SectionFullResponse } from '../../models/section-full-response.model';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpException } from 'src/shared/models/http-exception.model';
@@ -20,7 +20,7 @@ export class SectionElementComponent {
   onSectionDeleted = new EventEmitter<number>();
 
   @Input()
-  data: SectionResponse;
+  data: SectionFullResponse;
 
   @Input()
   user: User;

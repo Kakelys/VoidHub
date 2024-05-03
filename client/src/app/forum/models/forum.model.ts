@@ -5,9 +5,5 @@ export class Forum {
   public title: string;
   public sectionId: number;
   public isClosed: number;
-
-  public postsCount: number;
-  public topicsCount: number;
-
-  public lastTopic: LastTopic;
+  public imagePath: string;
 }

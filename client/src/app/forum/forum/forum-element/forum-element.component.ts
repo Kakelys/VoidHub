@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Forum } from '../../models/forum.model';
 import { environment as env } from 'src/environments/environment';
+import { ForumResponse } from '../../models/forum-response.model';
 
 
 @Component({
@@ -10,7 +10,7 @@ import { environment as env } from 'src/environments/environment';
 })
 export class ForumElementComponent {
   @Input()
-  forum: Forum;
+  forumRes: ForumResponse;
 
   resourceUrl = env.resourceURL;
 }

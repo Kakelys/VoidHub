@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace ForumApi.DTO.DPost
 {
-    public class PostValidator : AbstractValidator<PostEditDto>
+    public class PostEditValidator : AbstractValidator<PostEditDto>
     {
-        public PostValidator(IJsonStringLocalizer locale)
+        public PostEditValidator(IJsonStringLocalizer locale)
         {
             RuleFor(p => p.Content)
             .NotEmpty()

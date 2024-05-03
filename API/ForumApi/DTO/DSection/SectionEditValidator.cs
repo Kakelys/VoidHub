@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace ForumApi.DTO.DSection
 {
-    public class SectionDtoValidator : AbstractValidator<SectionEdit>
+    public class SectionEditValidator : AbstractValidator<SectionEdit>
     {
-        public SectionDtoValidator(IJsonStringLocalizer locale)
+        public SectionEditValidator(IJsonStringLocalizer locale)
         {
             RuleFor(x => x.Title)
                 .NotEmpty()

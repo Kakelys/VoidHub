@@ -30,7 +30,7 @@ namespace ForumApi.Controllers
 
         [HttpGet("general")]
         //[ResponseCache(Duration = 300)]
-        public async Task<IActionResult> GetGeneral() 
+        public async Task<IActionResult> GetGeneral()
         {
             var data = new GeneralStats 
             {

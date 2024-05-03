@@ -8,7 +8,7 @@ namespace ForumApi.DTO.DFile
 {
     public class NewImageValidator : AbstractValidator<NewFileDto>
     {
-        public NewImageValidator(IOptions<ImageOptions> imageOptions, IJsonStringLocalizer locale) 
+        public NewImageValidator(IOptions<ImageOptions> imageOptions, IJsonStringLocalizer locale)
         {
             var imgOptions = imageOptions.Value;
 

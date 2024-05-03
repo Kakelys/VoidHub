@@ -116,7 +116,7 @@ namespace ForumApi.Controllers
         [HttpPatch("avatar")]
         [Authorize]
         [BanFilter]
-        public async Task<IActionResult> UpdateImageSelf(AccountDto accountDto)
+        public async Task<IActionResult> UpdateImageSelf([FromBody] AccountDto accountDto)
         {
             var validator = new AccountDtoImageValidator(options, locale);
             await validator.ValidateAndThrowAsync(accountDto);
@@ -125,7 +125,7 @@ namespace ForumApi.Controllers
             var fullPath = Path.Combine(_imageOptions.Folder, avatarPath);
 
             var image = imageService.Load(accountDto.Img);
-            imageService.ResizeWithAspect(image, _imageOptions.ResizeWidth, _imageOptions.ResizePostHeight);
+            imageService.ResizeWithAspect(image, _imageOptions.ResizeWidth, _imageOptions.ResizeHeight);
             imageService.Crop(image);
             await imageService.SaveImage(image, fullPath);
 

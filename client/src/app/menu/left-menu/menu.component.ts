@@ -4,7 +4,7 @@ import { AuthService } from '../../auth/auth.service';
 import { User } from 'src/shared/models/user.model';
 import { Roles } from 'src/shared/roles.enum';
 import { SectionService } from '../../forum/services/section.service';
-import { SectionResponse } from '../../forum/models/section-reponse.model';
+import { SectionResponse } from '../../forum/models/section-response.model';
 
 @Component({
   selector: 'app-menu',

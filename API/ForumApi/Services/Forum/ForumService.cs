@@ -26,10 +26,7 @@ namespace ForumApi.Services.ForumS
                 .FindByCondition(predicate)
                 .Select(f => new ForumResponse
                 {
-                    Id = f.Id,
-                    Title = f.Title,
-                    SectionId = f.SectionId,
-                    IsClosed = f.IsClosed,
+                    Forum = mapper.Map<ForumDto>(f),
                     PostsCount = f.Topics.Where(t => prms.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null).SelectMany(t => t.Posts).Count(p => p.DeletedAt == null),
                     TopicsCount = f.Topics.Count(t => prms.OnlyDeleted ? t.DeletedAt != null : t.DeletedAt == null)
                 }).FirstOrDefaultAsync();
@@ -43,13 +40,16 @@ namespace ForumApi.Services.ForumS
             return forum;
         }
 
-        public async Task<Forum> Update(int forumId, ForumEdit forumDto)
+        public async Task<Forum> Update(int forumId, ForumEdit forumDto, string? newImagePath)
         {
             var entity = await rep.Forum.Value
                 .FindByCondition(f => f.Id == forumId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-forum"]);
 
             mapper.Map(forumDto, entity);
+            if(!string.IsNullOrEmpty(newImagePath))
+                entity.ImagePath = newImagePath;
+
             await rep.Save();
 
             return entity;

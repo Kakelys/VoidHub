@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Forum } from '../../models/forum.model';
+import { ForumResponse } from '../../models/forum-response.model';
 
 @Component({
   selector: 'app-forum-list',
@@ -8,5 +9,5 @@ import { Forum } from '../../models/forum.model';
 })
 export class ForumListComponent {
   @Input()
-  data: Forum[] = [];
+  data: ForumResponse[] = [];
 }
