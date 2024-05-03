@@ -86,7 +86,9 @@
     "offsetlimit-size": "Limit must be greater than 0 and less than or equal to 100",
     "query-length": "Query must be between 1 and 255 characters",
     "reason-required": "Reason must not be empty",
-    "date-invalid": "Invalid date"
+    "date-invalid": "Invalid date",
+    "wrong-sort-param": "Wrong sort param",
+    "sort-empty": "Sort must be not empty"
   },
   "email": {
     "confirm-email": "Confirm Email",

@@ -8,10 +8,9 @@ namespace ForumApi.DTO.Utils
         public int ByAccountId { get; set; } = 0;
         public string OrderBy { get; set; } = "CreatedAt";
 
-
-        public static Params FromUser(Params prms) 
+        public static Params FromUser(Params prms)
         {
-            return new Params 
+            return new Params
             {
                 BelowTime = prms.BelowTime,
                 ByAccountId = prms.ByAccountId,

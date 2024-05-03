@@ -19,7 +19,6 @@ namespace ForumApi.Controllers
         [HttpGet]
         public async Task<IActionResult> Search([FromQuery] SearchDto search, [FromQuery] SearchParams searchParams, [FromQuery] Page page)
         {
-            Console.WriteLine($"{page.PageNumber}, {page.PageSize}");
             var res = new SearchResponse<object>();
             var prms = new SearchParams
             {
@@ -33,8 +32,9 @@ namespace ForumApi.Controllers
                 prms.OnlyDeleted = searchParams.OnlyDeleted;
             }
 
+            var forSwitch = search.Query[0..2].ToLower();
             search.Query = search.Query.Trim();
-            switch(search.Query[0..2])
+            switch(forSwitch)
             {
                 case "t:":
                     search.Query = search.Query[2..];

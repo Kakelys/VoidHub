@@ -116,7 +116,7 @@ namespace ForumApi.Controllers
         [HttpPatch("avatar")]
         [Authorize]
         [BanFilter]
-        public async Task<IActionResult> UpdateImageSelf([FromBody] AccountDto accountDto)
+        public async Task<IActionResult> UpdateImageSelf([FromForm] AccountDto accountDto)
         {
             var validator = new AccountDtoImageValidator(options, locale);
             await validator.ValidateAndThrowAsync(accountDto);

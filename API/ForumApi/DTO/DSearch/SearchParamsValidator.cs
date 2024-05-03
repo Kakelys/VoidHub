@@ -1,14 +1,19 @@
+using AspNetCore.Localizer.Json.Localizer;
 using FluentValidation;
+using ForumApi.DTO.DSearch.Sort;
 
 namespace ForumApi.DTO.DSearch
 {
     public class SearchParamsValidator : AbstractValidator<SearchParams>
     {
-        public SearchParamsValidator()
+        public SearchParamsValidator(IJsonStringLocalizer locale)
         {
             RuleFor(x => x.Sort)
-                .Must(x => x == "asc" || x == "desc" || x == "")
-                .WithMessage("Sort must be asc, desc or empty");
+                .Configure(c => c.CascadeMode = CascadeMode.Stop)
+                .NotEmpty()
+                .WithMessage(locale["validators.sort-empty"])
+                .IsInEnum()
+                .WithMessage(locale["validators.wrong-sort-param"]);
         }
     }
 }

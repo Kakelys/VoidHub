@@ -13,6 +13,7 @@ using AutoMapper;
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
 using ForumApi.DTO.DForum;
+using ForumApi.DTO.DSearch.Sort;
 
 namespace ForumApi.Services.Utils
 {
@@ -34,21 +35,13 @@ namespace ForumApi.Services.Utils
                     .Aggregate((a, b) => $"{a} | {b}");
             }
 
-            var predicators = new Dictionary<string, Expression<Func<Topic, bool>>>
-            {
-                [SearchParamNames.WordTitle] = t => t.SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)),
-                [SearchParamNames.WordContent] = t => t.Posts.First(p => p.AncestorId == null).SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)),
-                [SearchParamNames.PartialTitle] = t => EF.Functions.ILike(t.Title, $"%{query}%"),
-                [SearchParamNames.PartialContent] = t => EF.Functions.ILike(t.Posts.OrderByDescending(p => p.CreatedAt).First().Content ?? "", $"%{query}%"),
-            };
-
-            orPredicate.And(predicators[SearchParamNames.WordTitle]);
+            orPredicate.And(t => t.SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)));
 
             if(search.WithPostContent)
-                orPredicate.Or(predicators[SearchParamNames.WordContent]);
+                orPredicate.Or(t => t.Posts.First(p => p.AncestorId == null).SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)));
 
             if(search.PartialTitle)
-                orPredicate.Or(predicators[SearchParamNames.PartialTitle]);
+                orPredicate.Or(t => EF.Functions.ILike(t.Title, $"%{query}%"));
 
             // do search
             var q = rep.Topic.Value.FindByCondition(basePredicate, true).Where(orPredicate);
@@ -58,15 +51,7 @@ namespace ForumApi.Services.Utils
             ));
 
             //apply sort
-            if(string.IsNullOrEmpty(search.Sort))
-            {
-                q = ((IOrderedQueryable<Topic>)q).ThenByDescending(t => t.CreatedAt);
-            }
-            else
-            {
-                //TODO: replace with normal))
-                q = ((IOrderedQueryable<Topic>)q).ThenBy($"CreatedAt {search.Sort}");
-            }
+            q = q.ApplySort(SearchElementType.Topic, search.Sort);
 
             return new SearchResponse<TopicInfoResponse>
             {
@@ -88,6 +73,9 @@ namespace ForumApi.Services.Utils
 
             var q = rep.Account.Value
                 .FindByCondition(predicate);
+
+            //apply sort
+            q = q.ApplySort(SearchElementType.User, search.Sort);
 
             return new()
             {
