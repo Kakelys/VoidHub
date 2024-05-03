@@ -20,10 +20,19 @@
     </ul>
     <div class="ms-6 mt-3 flex flex-col">
       <app-breadcrumb [from]="'forum'" [id]="forumRes.forum.id"></app-breadcrumb>
-      <div class="text-3xl font-bold">{{forumRes.forum.title}}</div>
-      <div class="text-xs text-secondary-content flex flex-row">
-        <div>{{ 'forum.topics' | translate }}: {{forumRes.topicsCount}}</div>
-        <div class="ms-3">{{ 'forum.posts' | translate }}: {{forumRes.postsCount}}</div>
+      <div class="flex flex-row">
+        <div class="avatar">
+          <div class="w-16 rounded">
+            <img src="{{resourceUrl}}/{{forumRes.forum.imagePath}}" loading="lazy">
+          </div>
+        </div>
+        <div class="ms-3 flex flex-col">
+          <div class="text-3xl font-bold">{{forumRes.forum.title}}</div>
+          <div class="text-xs text-secondary-content flex flex-row">
+            <div>{{ 'forum.topics' | translate }}: {{forumRes.topicsCount}}</div>
+            <div class="ms-3">{{ 'forum.posts' | translate }}: {{forumRes.postsCount}}</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="flex flex-row mt-3 ms-6" *ngIf="user">

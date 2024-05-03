@@ -12,7 +12,7 @@ using ForumApi.DTO.DTopic;
 using AutoMapper;
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
-using ForumApi.DTO.DAccount;
+using ForumApi.DTO.DForum;
 
 namespace ForumApi.Services.Utils
 {
@@ -75,6 +75,7 @@ namespace ForumApi.Services.Utils
                 {
                     Sender = mapper.Map<User>(t.Author),
                     Topic = mapper.Map<TopicDto>(t),
+                    Forum = mapper.Map<ForumDto>(t.Forum),
                     Post = mapper.Map<PostDto>(t.Posts.OrderBy(p => p.CreatedAt).First())
                 }).ToListAsync()
             };

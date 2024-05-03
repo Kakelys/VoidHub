@@ -4,17 +4,33 @@
       {{ 'lables.deleted' | translate }}
     </div>
     <div class="flex flex-row my-2">
-      <div class="avatar">
-        <div class="w-10 rounded me-2">
-          <img src="{{resourceUrl}}/{{post.sender.avatarPath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}">
+      <div class="my-auto me-2">
+        <div class="avatar">
+          <div class="w-12 rounded me-2">
+            <img src="{{resourceUrl}}/{{post.sender.avatarPath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}">
+          </div>
         </div>
       </div>
-      <div class="flex flex-col">
-        <a class="align-middle link no-underline " routerLink="/forum/topic/{{post.topic.id}}">
+      <div class="flex flex-col text-sm">
+        <a routerLink="/forum/topic/{{post.topic.id}}" class="link no-underline text-lg">
           {{post.topic.title}}
         </a>
-        <div class="text-xs text-secondary-content">
-          {{post.post.createdAt | withtimezone | date:'MMM d h:mm a'}}
+        <div class="text-sm text-secondary-content">
+          {{post.post.createdAt | withtimezone | date:'h:mm a, d MMM' }}
+        </div>
+        <div class="flex flex-row -ms-7 -mt-1">
+          <div class="avatar">
+            <div class="w-6 rounded-full">
+              <a routerLink="/forum/{{post.forum.id}}">
+                <img src="{{resourceUrl}}/{{post.forum.imagePath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}">
+              </a>
+            </div>
+          </div>
+          <div class="h-fit my-auto ms-1">
+            <a class="link no-underline text-sm" routerLink="/forum/{{post.forum.id}}">
+              {{post.forum.title}}
+            </a>
+          </div>
         </div>
       </div>
     </div>

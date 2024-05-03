@@ -37,6 +37,7 @@ export class ForumComponent implements OnDestroy {
   page = new Page(1, 5);
 
   limitNames = environment.limitNames;
+  resourceUrl = environment.resourceURL;
   roles = Roles;
   names: Name[] = null;
 

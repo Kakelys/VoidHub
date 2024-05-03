@@ -1,7 +1,7 @@
 <div #postsContainer class="flex flex-col">
   <div class="flex-col bg-base-100 rounded my-2" *ngFor="let data of posts">
     <app-account-post-element
-      [post]="{topic: data.topic, post: data.post, sender: data.sender}" [user]="user" [enableDeliting]="false"
+      [post]="{topic: data.topic, post: data.post, sender: data.sender, forum: data.forum}" [user]="user" [enableDeliting]="false"
     >
     </app-account-post-element>
   </div>

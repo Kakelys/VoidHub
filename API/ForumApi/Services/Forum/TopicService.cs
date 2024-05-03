@@ -1,4 +1,3 @@
-using System.Threading;
 using AutoMapper;
 using ForumApi.Data.Models;
 using ForumApi.Data.Repository.Extensions;
@@ -12,6 +11,7 @@ using ForumApi.Services.ForumS.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using LinqKit;
 using AspNetCore.Localizer.Json.Localizer;
+using ForumApi.DTO.DForum;
 
 namespace ForumApi.Services.ForumS
 {
@@ -44,7 +44,7 @@ namespace ForumApi.Services.ForumS
         public async Task<List<TopicInfoResponse>> GetTopics(Offset offset, Params prms)
         {
             var predicate = PredicateBuilder.New<Topic>(t => true);
-            
+
             if(prms.BelowTime != null)
                 predicate.And(t => t.CreatedAt < prms.BelowTime.Value.ToUniversalTime());
 
@@ -63,6 +63,7 @@ namespace ForumApi.Services.ForumS
                 .TakeOffset(offset)
                 .Select(t => new {
                     Topic = t,
+                    t.Forum,
                     FirstPost = t.Posts
                         .Where(p => p.AncestorId == null)
                         .OrderBy(p => p.CreatedAt)
@@ -72,6 +73,7 @@ namespace ForumApi.Services.ForumS
                 {
                     Topic = mapper.Map<TopicDto>(t.Topic),
                     Sender = mapper.Map<User>(t.Topic.Author),
+                    Forum = mapper.Map<ForumDto>(t.Forum),
                     Post = mapper.Map<PostDto>(t.FirstPost),
                 })
                 .ToListAsync();

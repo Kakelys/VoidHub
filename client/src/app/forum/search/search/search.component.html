@@ -33,7 +33,7 @@
         <div [ngSwitch]="el.type">
           <div *ngSwitchCase="resTypes.Topic">
             <app-recent-element
-              [post]="{topic: el.data.topic, post: el.data.post, sender: el.data.sender}" [user]="user" [enableDeliting]="false"
+              [post]="{topic: el.data.topic, post: el.data.post, sender: el.data.sender, forum: el.data.forum}" [user]="user" [enableDeliting]="false"
             ></app-recent-element>
           </div>
           <div *ngSwitchCase="resTypes.User">

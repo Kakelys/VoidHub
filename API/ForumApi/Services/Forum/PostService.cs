@@ -12,7 +12,7 @@ using ForumApi.DTO.DTopic;
 using LinqKit;
 using ForumApi.Data.Repository.Extensions;
 using AspNetCore.Localizer.Json.Localizer;
-
+using ForumApi.DTO.DForum;
 
 namespace ForumApi.Services.ForumS
 {
@@ -41,7 +41,7 @@ namespace ForumApi.Services.ForumS
 
             var entity = rep.Post.Value.Create(post);
             await rep.Save();
-        
+
             // update ancestors comments counter
             await rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, 1);
 
@@ -126,7 +126,7 @@ namespace ForumApi.Services.ForumS
         public async Task<List<PostInfoResponse>> GetPosts(Offset offset, Params prms)
         {
             var predicate = PredicateBuilder.New<Post>(p => true);
-            
+
             if(prms.BelowTime != null)
                 predicate.And(t => t.CreatedAt < prms.BelowTime.Value.ToUniversalTime());
 
@@ -145,7 +145,8 @@ namespace ForumApi.Services.ForumS
             .Select(p => new PostInfoResponse
             {
                 Post = mapper.Map<PostDto>(p),
-                Topic = mapper.Map<TopicDto>(p.Topic), 
+                Topic = mapper.Map<TopicDto>(p.Topic),
+                Forum = mapper.Map<ForumDto>(p.Topic.Forum),
                 Sender = mapper.Map<User>(p.Author)
             })
             .ToListAsync();

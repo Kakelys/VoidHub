@@ -16,12 +16,24 @@
             {{post.topic.title}}
           </a>
           <div class="text-sm text-secondary-content">
-            <div>
-              {{ 'lables.posted-date' | translate }}: {{post.post.createdAt | withtimezone | date:'h:mm a, d MMM' }}
-            </div>
             <a class="link no-underline" routerLink="/profile/{{post.sender.id}}">
-              <span class="text-secondary-content">{{ 'lables.author' | translate }}:</span> {{post.sender.username}}
+              {{post.sender.username}}
             </a>
+            {{post.post.createdAt | withtimezone | date:'h:mm a, d MMM' }}
+          </div>
+          <div class="flex flex-row -ms-7 -mt-1">
+            <div class="avatar">
+              <div class="w-6 rounded-full">
+                <a routerLink="/forum/{{post.forum.id}}">
+                  <img src="{{resourceUrl}}/{{post.forum.imagePath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}">
+                </a>
+              </div>
+            </div>
+            <div class="h-fit my-auto ms-1">
+              <a class="link no-underline text-sm" routerLink="/forum/{{post.forum.id}}">
+                {{post.forum.title}}
+              </a>
+            </div>
           </div>
         </div>
       </div>
