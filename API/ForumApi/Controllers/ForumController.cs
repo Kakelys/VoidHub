@@ -9,6 +9,7 @@ using ForumApi.Utils.Extensions;
 using Microsoft.Extensions.Options;
 using ForumApi.Options;
 using ForumApi.Services.Utils.Interfaces;
+using ForumApi.Data.Repository.Interfaces;
 
 namespace ForumApi.Controllers
 {
@@ -18,7 +19,8 @@ namespace ForumApi.Controllers
         IForumService forumService,
         ITopicService topicService,
         IOptions<ImageOptions> imgOptions,
-        IImageService imageService) : ControllerBase
+        IImageService imageService,
+        IRepositoryManager rep) : ControllerBase
     {
         private readonly ImageOptions _imgOptions = imgOptions.Value;
 
@@ -71,7 +73,7 @@ namespace ForumApi.Controllers
             if(forumDto.Img != null)
             {
                 imagePath = $"{_imgOptions.ForumFolder}/{Guid.NewGuid()}{_imgOptions.FileType}";
-                var fullPath  = Path.Combine(_imgOptions.Folder, imagePath);
+                var fullPath = Path.Combine(_imgOptions.Folder, imagePath);
 
                 var image = imageService.Load(forumDto.Img);
                 imageService.ResizeWithAspect(image, _imgOptions.ResizeWidth, _imgOptions.ResizePostHeight);
@@ -79,7 +81,18 @@ namespace ForumApi.Controllers
                 await imageService.SaveImage(image, fullPath);
             }
 
+            var oldForum = rep.Forum.Value.FindByCondition(f => f.Id == id).FirstOrDefault();
             var forum = await forumService.Update(id, forumDto, imagePath);
+
+            // delete img 
+            if(!string.IsNullOrEmpty(imagePath)
+            && oldForum!.ImagePath != imagePath
+            && oldForum!.ImagePath != _imgOptions.ForumDefault
+            && System.IO.File.Exists($"{_imgOptions.Folder}/{oldForum!.ImagePath}"))
+            {
+                System.IO.File.Delete($"{_imgOptions.Folder}/{oldForum!.ImagePath}");
+            }
+
             return Ok(forum);
         }
 

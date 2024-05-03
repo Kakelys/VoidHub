@@ -121,14 +121,12 @@ export class ForumComponent implements OnDestroy {
 
   handleFileInput(target) {
     this.imgFile = target.files[0];
-    console.log(this.imgFile);
   }
 
   onEdit(data) {
     let formData = new FormData();
     Object.keys(data).forEach(k => {
       if(k && data[k]) {
-        console.log(k, data[k]);
         formData.append(k, data[k]);
       }
     })
@@ -140,6 +138,7 @@ export class ForumComponent implements OnDestroy {
       .subscribe({
         next: (forum:any) => {
           this.forumRes.forum.title = forum.title;
+          this.forumRes.forum.imagePath = forum.imagePath;
           this.trans.get('labels.forum-updated').subscribe(str => {
             this.toastr.success(str);
           })
