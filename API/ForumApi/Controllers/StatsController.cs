@@ -4,6 +4,7 @@ using ForumApi.DTO.Auth;
 using ForumApi.DTO.Notification;
 using ForumApi.DTO.Stats;
 using ForumApi.Services.Utils.Interfaces;
+using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ForumApi.Controllers
@@ -18,14 +19,7 @@ namespace ForumApi.Controllers
         [HttpGet("online")]
         public IActionResult GetOnlineUsers()
         {
-            var users = sessionStorage.Users.ToList();
-            var data = new ConnectionsDataNotification
-            {
-                TotalCount = sessionStorage.AnonymousContexts.Count() + users.Count,
-                Users = users
-            };
-
-            return Ok(data);
+            return Ok(sessionStorage.GetOnlineStats());
         }
 
         [HttpGet("general")]

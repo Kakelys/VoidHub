@@ -51,7 +51,10 @@ export class SignalrService implements OnDestroy {
   }
 
   public async stop() {
-    if(this.hub && this.hub.state != HubConnectionState.Disconnected)
+    if(this.hub && this.hub.state != HubConnectionState.Disconnected) {
+      console.log('signalR: disconnected')
       await this.hub.stop();
+      this.connected$.next(false);
+    }
   }
 }

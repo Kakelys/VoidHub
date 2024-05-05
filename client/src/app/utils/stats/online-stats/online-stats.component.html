@@ -1,15 +1,15 @@
 <div class="{{containerClasses}}">
   <div class="text-sm">
-    {{ 'labels.online-users' | translate }}: {{anonimCount + users.length}}
+    {{ 'labels.online-users' | translate }}: {{onlineStats.anonimCount + onlineStats.users.length}}
     <div class="text-secondary-content">
-      {{anonimCount}} {{ 'labels.guests' | translate }}
+      {{onlineStats.anonimCount}} {{ 'labels.guests' | translate }}
     </div>
   </div>
   <div class="overflow-hidden">
-    <ng-container *ngFor="let user of users; last as isLast">
+    <ng-container *ngFor="let user of onlineStats.users; last as isLast">
       <a class="link no-underline" routerLink="/profile/{{user.id}}">{{user.username.trimEnd()}}</a><ng-container *ngIf="!isLast">, </ng-container>
     </ng-container>
-    <ng-container *ngIf="this.users.length > 10">
+    <ng-container *ngIf="this.onlineStats.users.length > 10">
       ...
     </ng-container>
   </div>

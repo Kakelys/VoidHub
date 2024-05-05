@@ -1,7 +1,8 @@
 import { Subject } from 'rxjs';
 import { Component, Input } from '@angular/core';
 import { StatsService } from '../stats.service';
-import { GeneralStats } from './general-stats.model';
+import { GeneralStats } from '../general-stats.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-general-stats',
@@ -17,15 +18,9 @@ export class GeneralStatsComponent {
 
   constructor(statsService: StatsService) {
 
-    statsService.getGeneral().subscribe({
-      next: (data: GeneralStats) => {
-        this.stats = data;
-      },
-      error: err => {
-        console.error(err);
-      }
+    statsService.generalStats$.pipe(takeUntilDestroyed())
+    .subscribe(stats => {
+      this.stats = stats
     })
   }
-
-
 }

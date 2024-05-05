@@ -57,14 +57,9 @@ namespace ForumApi.Hubs
 
         public async Task GetConnectionsData()
         {
-            var users = sessionStorage.Users.ToList();
-            await notifyService.Notify(Context.ConnectionId, new ConnectionsDataNotification
-            {
-                Type = MessageType.connectionsData.ToString(),
-                TotalCount = sessionStorage.AnonymousContexts.Count() + users.Count,
-                Users = users
-            });
+            await notifyService.Notify(Context.ConnectionId, sessionStorage.GetOnlineStats());
         }
+
         #endregion
     }
 }

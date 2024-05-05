@@ -19,11 +19,13 @@
   <div class="grow">
   </div>
 
-  <div class="flex flex-row xl:hidden ms-12 mt-3">
-    <app-general-stats containerClasses="w-[200px] h-full bg-base-200 rounded p-3">
-    </app-general-stats>
-    <app-online-stats class="ms-3" containerClasses="h-full w-[200px] bg-base-200 rounded p-3">
-    </app-online-stats>
+  <div #bottomStats class="block xl:hidden ms-12 mt-3">
+    <div class="flex flex-row" *ngIf="!bottomStats.hidden">
+      <app-general-stats containerClasses="w-[200px] h-full bg-base-200 rounded p-3">
+      </app-general-stats>
+      <app-online-stats class="ms-3" containerClasses="h-full w-[200px] bg-base-200 rounded p-3">
+      </app-online-stats>
+    </div>
   </div>
 
   <footer class="flex flex-row bg-neutral text-neutral-content p-5 rounded-t mt-3">

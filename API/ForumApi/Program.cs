@@ -3,7 +3,6 @@ using ForumApi.Data.Repository;
 using ForumApi.Utils.Extensions;
 using ForumApi.Utils.Middlewares;
 using ForumApi.Options;
-using Microsoft.OpenApi.Models;
 using ForumApi.Hubs;
 using ForumApi.Utils.Background;
 
@@ -77,6 +76,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddHostedService<GarbageFileService>();
+builder.Services.AddHostedService<OnlineStatsUpdateService>();
 
 builder.Services.ConfigureLocalization();
 

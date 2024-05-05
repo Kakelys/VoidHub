@@ -21,6 +21,11 @@ namespace ForumApi.Options
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
+            services.AddOptions<UtilsOptions>()
+                .Bind(config.GetSection(UtilsOptions.Utils))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
             return services;
         }
     }
