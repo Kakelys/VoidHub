@@ -26,11 +26,7 @@ export class TopicComponent implements OnDestroy {
 
   topic: TopicDetail = null;
   posts: any[] = [];
-  names: {
-    title,
-    id,
-    isSelectable
-  }[];
+  names: Name[];
 
   user: User = null;
   roles = Roles;

@@ -43,6 +43,9 @@ namespace ForumApi.Services.Utils
             if(search.PartialTitle)
                 orPredicate.Or(t => EF.Functions.ILike(t.Title, $"%{query}%"));
 
+            if(search.ForumId > 0)
+                basePredicate.And(f => f.ForumId == search.ForumId);
+
             // do search
             var q = rep.Topic.Value.FindByCondition(basePredicate, true).Where(orPredicate);
 

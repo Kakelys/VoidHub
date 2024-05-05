@@ -54,12 +54,14 @@ export class SearchComponent {
       // mb just use ...params instead
       let newSearchParams: SearchParams = {
         sort: SearchSort.New.toString(),
+        forumId: 0,
         withPostContent:false,
         onlyDeleted: false,
         partialTitle: false
       };
 
       newSearchParams.sort = params["sort"] ? params["sort"] : SearchSort.New.toString();
+      newSearchParams.forumId = params["forumId"] ? params["forumId"] : 0;
       newSearchParams.withPostContent = StringExtension.ConvertToBoolean(params["withPostContent"]) ?? false;
       newSearchParams.onlyDeleted = StringExtension.ConvertToBoolean(params["onlyDeleted"]) ?? false;
       newSearchParams.partialTitle = StringExtension.ConvertToBoolean(params["partialTitle"]) ?? false;

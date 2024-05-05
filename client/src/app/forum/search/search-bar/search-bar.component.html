@@ -85,6 +85,29 @@
             <option value="{{sortTypes.MostLiked}}">{{ 'labels.popular' | translate }}</option>
           </select>
         </div>
+        <div>
+          <label class="form-control w-full max-w-xs">
+            <div class="label">
+              <span class="label-text">{{ 'labels.search-in-forum' | translate }}</span>
+            </div>
+            <select
+              class="select select-bordered min-h-min h-8 w-fit max-w-[50%]"
+              id="forumId"
+              name="forumId"
+              [ngModel]="0"
+            >
+              <option value="0">{{ 'labels.none' | translate }}</option>
+              <option
+                *ngFor="let name of names"
+                class=""
+                [value]="name.id"
+                [disabled]="!name.isSelectable"
+              >
+                {{name.isSelectable ? name.title : '-- ' + name.title}}
+              </option>
+            </select>
+          </label>
+        </div>
       </div>
     </div>
   </div>

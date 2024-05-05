@@ -24,7 +24,8 @@ namespace ForumApi.Controllers
             {
                 Sort = searchParams.Sort,
                 WithPostContent = searchParams.WithPostContent,
-                PartialTitle = searchParams.PartialTitle
+                PartialTitle = searchParams.PartialTitle,
+                ForumId = searchParams.ForumId,
             };
 
             if(User.IsAdminOrModer())
@@ -58,6 +59,7 @@ namespace ForumApi.Controllers
         {
             search.Query = search.Query.Trim();
             var topicRes = await searchService.SearchTopics(search.Query, prms, page);
+
             if(User.IsAuthed())
             {
                 var userId = User.GetId();
@@ -66,6 +68,7 @@ namespace ForumApi.Controllers
                     await likeService.UpdateLikeStatus(userId, post.Post);
                 }
             }
+
             res.SearchCount += topicRes.SearchCount;
             res.Data.AddRange(topicRes.Data.ConvertAll(t => new SearchElement
             {

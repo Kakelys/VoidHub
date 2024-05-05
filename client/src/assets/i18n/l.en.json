@@ -198,6 +198,8 @@
     "changing-image": "Changing image",
     "recent": "Recent",
     "old": "Old",
-    "popular": "Popular"
+    "popular": "Popular",
+    "none": "None",
+    "search-in-forum": "Search in forum"
   }
 }

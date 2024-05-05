@@ -123,7 +123,9 @@
     "changing-image": "Изменение изображения",
     "old": "Старое",
     "popular": "Популярное",
-    "recent": "Новое"
+    "recent": "Новое",
+    "none": "Нет",
+    "search-in-forum": "Поиск по форуму"
   },
   "lables": {
     "add-new-section": "Добавить новый раздел",

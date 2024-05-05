@@ -13,7 +13,7 @@ import { SearchParams } from '../forum/models/search-params.model';
 export class HeaderComponent implements OnDestroy {
 
   private readonly destroy$ = new ReplaySubject<boolean>(1);
-  defaultSearch:SearchParams = {sort: '', withPostContent: false, onlyDeleted: false, partialTitle: true}
+  defaultSearch:SearchParams = {sort: '', forumId: 0, withPostContent: false, onlyDeleted: false, partialTitle: true}
 
   user: User = null;
   roles = Roles;
