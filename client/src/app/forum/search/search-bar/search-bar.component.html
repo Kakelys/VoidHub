@@ -10,6 +10,11 @@
             class="stroke-base-content stroke-2"
           />
         </svg>
+        <div class="my-auto text-sm ms-2" *ngIf="!enableParams && isQueryFocused" >
+          <button type="button" class="link no-underline" routerLink="/forum/search" (click)="onSubmit(searchForm)">
+            {{ 'labels.extended' | translate }}
+          </button>
+        </div>
         <input
           type="text"
           name="query"
@@ -18,9 +23,11 @@
           class="join-item input min-h-fit h-8 bg-transparent focus:outline-none"
           autocomplete="search"
           [(ngModel)]="searchQuery"
-          autocomplete="on"
-        >
-          <ul tabindex="0" *ngIf="!searchQuery" class="dropdown-content cursor-default z-[1] shadow bg-base-200 rounded text-sm mt-2 px-2 py-1 w-full">
+          autocomplete="off"
+          (focus)="onQueryFocus($event)"
+          (blur)="onQueryBlur($event)"
+        />
+          <ul *ngIf="!searchQuery && isQueryFocused" class="dropdown-content cursor-default z-[1] shadow bg-base-200 rounded text-sm mt-2 px-2 py-1 w-full">
             <li>
               <kbd class="kbd kbd-sm">u:</kbd>
               <span class="text-gray-400"> {{ 'search.only-user' | translate }}</span>

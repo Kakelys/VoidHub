@@ -21,6 +21,9 @@
       </div>
     </ng-template>
     <div *ngIf="searchResult.data.length > 0; else emptySearch">
+      <div>
+        {{ 'labels.found' | translate }}: {{searchResult.searchCount}}
+      </div>
       <div class="py-1">
         <app-paginator
           (changePage)="changePage($event)"

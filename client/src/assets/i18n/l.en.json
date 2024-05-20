@@ -200,6 +200,10 @@
     "old": "Old",
     "popular": "Popular",
     "none": "None",
-    "search-in-forum": "Search in forum"
+    "search-in-forum": "Search in forum",
+    "signup": "Sign up",
+    "extended": "ext.",
+    "found": "Found",
+    "feedback": "Feedback"
   }
 }

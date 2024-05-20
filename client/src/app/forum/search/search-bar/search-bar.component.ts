@@ -3,7 +3,7 @@ import { SearchSort } from './../search-sort.enum';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from '../../../../shared/models/user.model';
 import { Roles } from 'src/shared/roles.enum';
@@ -22,6 +22,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     TranslateModule,
     ToastrModule
@@ -31,6 +32,8 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
   ]
 })
 export class SearchBarComponent implements OnInit {
+
+  isQueryFocused: boolean = false;
 
   @Input()
   searchQuery = '';
@@ -86,6 +89,16 @@ export class SearchBarComponent implements OnInit {
       },
       queryParamsHandling: 'merge'
     });
+  }
+
+  onQueryFocus(event: any) {
+    this.isQueryFocused = true;
+  }
+
+  onQueryBlur(event: any) {
+    setTimeout(_ => {
+      this.isQueryFocused = false;
+    }, 100)
   }
 }
 
