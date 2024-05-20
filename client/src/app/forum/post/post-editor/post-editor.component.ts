@@ -77,7 +77,12 @@ export class PostEditorComponent {
   }
 
   addImage(url: string): void {
-    this.editorInstance.execute( 'insertImage', { source: url } );
+    let ext = url.split('.').pop();
+
+    if(ext == 'mp4')
+      this.editorInstance.execute( 'mediaEmbed', url);
+    else
+      this.editorInstance.execute( 'insertImage', { source: url } );
   }
 
   onSubmit(form: NgForm): void {

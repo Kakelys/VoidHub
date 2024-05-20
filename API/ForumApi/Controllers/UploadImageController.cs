@@ -33,18 +33,25 @@ namespace ForumApi.Controllers
             var validator = new NewImageValidator(options, locale);
             await validator.ValidateAndThrowAsync(newFileDto);
 
+            var fileExt = Path.GetExtension(newFileDto.File!.FileName);
+
             var accountId = User.GetId();
             var fileDto = new FileDto
             {
                 PostId = newFileDto.PostId,
                 AccountId = accountId,
-                Path = $"{_imageOptions.PostImageFolder}/{accountId}{Guid.NewGuid()}{_imageOptions.FileType}",
+                Path = $"{_imageOptions.PostImageFolder}/{accountId}{Guid.NewGuid()}{fileExt}",
             };
 
             if(fileRep.Value.FindByCondition(f => f.AccountId == accountId).Count() > options.Value.LimitPerAccount)
                 throw new BadRequestException(locale["errors.image-limit-exceeded"]);
 
-            return Ok(await uploadService.UploadImage(newFileDto!.File!, fileDto));
+            if(RuleExtensions.imageDefaultExtensions.Contains(fileExt))
+            {
+                return Ok(await uploadService.UploadImage(newFileDto!.File!, fileDto));
+            }
+
+            return Ok(await uploadService.UploadVideo(newFileDto!.File!, fileDto));
         }
 
         [HttpDelete]
@@ -62,7 +69,7 @@ namespace ForumApi.Controllers
             if(files.Count(f => f.AccountId == accountId) != files.Count)
                 throw new ForbiddenException(locale["errors.no-permission"]);
 
-            await uploadService.DeleteImages(ids);
+            await uploadService.DeleteFiles(ids);
 
             return Ok();
         }
@@ -73,7 +80,7 @@ namespace ForumApi.Controllers
         [BanFilter]
         public async Task<IActionResult> DeleteImage(int id)
         {
-            await uploadService.DeleteImages([id]);
+            await uploadService.DeleteFiles([id]);
 
             return Ok();
         }

@@ -39,6 +39,7 @@ import {
 
 // custom styles
 import '../src/custom.css';
+import { settings } from './settings';
 
 // fast build and start
 // cd ./ckeditor5 && npm run build && cd .. && ng serve
@@ -179,6 +180,7 @@ class Editor extends ClassicEditor {
             return (
               '<div>' +
                 `<iframe src="https://www.youtube-nocookie.com/embed/${ id }${ time ? `?start=${ time }` : '' }" ` +
+                  'style="width: 100%; min-height: 400px;"' +
                   'frameborder="0" allow="autoplay; encrypted-media" allowfullscreen loading="lazy">' +
                 '</iframe>' +
               '</div>'
@@ -201,6 +203,21 @@ class Editor extends ClassicEditor {
                 'style="height:400px" csp frameborder="0" allowtransparency="true" allow="encrypted-media" loading="lazy"' +
               '/> ' +
             '</div>'
+            );
+          }
+        },
+        {
+          name: "apivideo",
+          url: [
+            /^localhost:5000\/images\/posts\/([0-9a-fA-F]+-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}).mp4/
+          ],
+          html: (match:any) => {
+            const src = match[ 1 ];
+
+            return (
+              "<video style='width: 100%; min-height: 400px; max-height: 450px;' controls='controls' preload='metadata'>" +
+                `<source src="${settings.api.url}:${settings.api.port}/images/posts/${src}.mp4" type="video/mp4">` +
+              "</video>"
             );
           }
         }

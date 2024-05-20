@@ -50,7 +50,7 @@ namespace ForumApi.Services.Utils
                 TransparentColorMode = PngTransparentColorMode.Preserve,
                 SkipMetadata = true,
             };
-            
+
             await using var stream = new FileStream(path, FileMode.Create);
             await image.SaveAsync(stream, encoder);
         }

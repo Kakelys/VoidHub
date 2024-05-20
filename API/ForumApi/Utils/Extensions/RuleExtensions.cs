@@ -37,14 +37,16 @@ namespace ForumApi.Utils.Extensions
                 .WithMessage(locale["validators.username-characters"]);
         }
 
-        private readonly static string[] _extensions = {".jpg", ".jpeg", ".png", ".gif", ".bmp"};
-        public static IRuleBuilderOptions<T, IFormFile?> ImgRules<T>(this IRuleBuilder<T, IFormFile?> ruleBuilder, IJsonStringLocalizer locale, ImageOptions imgOptions)
+        public readonly static string[] imageDefaultExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+        public static IRuleBuilderOptions<T, IFormFile?> ImgRules<T>(this IRuleBuilder<T, IFormFile?> ruleBuilder, IJsonStringLocalizer locale, ImageOptions imgOptions, string[]? extensions = null)
         {
+            extensions ??= imageDefaultExtensions;
+
             return ruleBuilder
                 .Must(i => i != null)
                 .WithMessage(locale["validators.image-required"])
-                .Must(i => _extensions.Contains(Path.GetExtension(i!.FileName)))
-                .WithMessage($"{locale["validators.image-format"]}: {string.Join(", ", _extensions)}")
+                .Must(i => extensions.Contains(Path.GetExtension(i!.FileName)))
+                .WithMessage($"{locale["validators.image-format"]}: {string.Join(", ", extensions)}")
                 .Must(i => i?.Length < imgOptions.ImageMaxSize)
                 .WithMessage($"{locale["validators.image-size"]} {imgOptions.ImageMaxSize / 1024} KB");
         }

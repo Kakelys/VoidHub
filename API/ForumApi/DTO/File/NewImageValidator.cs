@@ -8,6 +8,8 @@ namespace ForumApi.DTO.DFile
 {
     public class NewImageValidator : AbstractValidator<NewFileDto>
     {
+        public readonly static string[] supportedVideoFormats = [".mp4"];
+
         public NewImageValidator(IOptions<ImageOptions> imageOptions, IJsonStringLocalizer locale)
         {
             var imgOptions = imageOptions.Value;
@@ -18,7 +20,7 @@ namespace ForumApi.DTO.DFile
 
             RuleFor(r => r.File)
                 .Configure(c => c.CascadeMode = CascadeMode.Stop)
-                .ImgRules(locale, imgOptions);
+                .ImgRules(locale, imgOptions, [..RuleExtensions.imageDefaultExtensions, ..supportedVideoFormats]);
         }
     }
 }
