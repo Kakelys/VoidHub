@@ -56,17 +56,17 @@
           <div *ngFor="let sect of sections">
             <div class="collapse collapse-arrow join-item border border-neutral">
               <input type="radio" name="sectionItem" tabindex="-1"/>
-              <div class="collapse-title font-medium">
+              <div class="collapse-title font-medium max-w-[164px] truncate">
                 {{sect.section.title}}
               </div>
-              <div class="collapse-content">
+              <div class="collapse-content max-w-[164px]">
                 <a
                   class="link no-underline group"
                   *ngFor="let forum of sect.forums"
                   routerLink="/forum/{{forum.id}}"
                 >
-                  <div class="border-b-[1px] border-neutral group-hover:border-secondary-content mt-1 py-0.5" routerLinkActive="border-accent">
-                    {{forum.title | slice:0:10}}{{forum.title.length > 10 ? '...' : ''}}
+                  <div class="border-b-[1px] border-neutral group-hover:border-secondary-content mt-1 py-0.5 truncate" routerLinkActive="border-accent">
+                    {{ forum.title }}
                   </div>
                 </a>
               </div>

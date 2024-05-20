@@ -7,10 +7,10 @@ namespace ForumApi.Services.Utils.Interfaces
     {
         void Add(User user, string connectionId, int id);
         void AddAnonymous(string contextId);
-        ConnectedUser Remove(string contextId);
+        ConnectedUser? Remove(string contextId);
         void Remove(int id);
         void RemoveAnonymous(string contextId);
-        ConnectedUser Get(int id);
+        ConnectedUser? Get(int id);
         int Get(string contextId);
 
         IEnumerable<string> AnonymousContexts { get; }

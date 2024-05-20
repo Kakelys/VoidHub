@@ -42,17 +42,17 @@ namespace ForumApi.Services.Utils
             return -1;
         }
 
-        public ConnectedUser? Remove(string context)
+        public ConnectedUser? Remove(string contextId)
         {
-            if(!_contextIdToId.TryGetValue(context, out int value))
+            if(!_contextIdToId.TryGetValue(contextId, out int value))
                 return null;
 
             //remove context
             var id = value;
-            _contextIdToId.Remove(context);
+            _contextIdToId.Remove(contextId);
 
             // remove from list of context
-            var connectionId = _idToContextId[id].ConnectionIds.Find(c => c == context);
+            var connectionId = _idToContextId[id].ConnectionIds.Find(c => c == contextId);
             if(connectionId == null)
                 return null;
 

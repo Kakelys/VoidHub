@@ -28,9 +28,11 @@ namespace ForumApi.Services.Utils
             var forTsQuery = "";
 
             query = query.Replace(":", "");
+
             if(!string.IsNullOrEmpty(query))
             {
                 forTsQuery = query.Split(' ')
+                    .Where(q => !string.IsNullOrEmpty(q))
                     .Select(w => $"{w}:*")
                     .Aggregate((a, b) => $"{a} | {b}");
             }

@@ -12,7 +12,7 @@
             class="input-sm bg-neutral mt-2 input input-bordered "
             id="title"
             name="title"
-            placeholder="Title"
+            placeholder="{{ 'forms.title' | translate }}"
             [ngClass]="{
               'input-error': newForumForm.controls['title']?.touched && newForumForm.controls['title'].errors?.['required']
             }"

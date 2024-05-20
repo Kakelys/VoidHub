@@ -57,7 +57,6 @@ export class CommentsComponent implements OnInit, OnDestroy {
     fromEvent(window, 'scroll')
     .pipe(takeUntil(this.fullLoad$), debounceTime(300))
     .subscribe((e:any) => {
-      console.log(1);
       const currentScroll = e.target.documentElement.scrollTop + e.target.documentElement.clientHeight;
       const blockEnd = this.commentsContainer.nativeElement.offsetHeight + this.commentsContainer.nativeElement.offsetTop;
 
@@ -79,7 +78,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
 
     let offset = new Offset(this.posts.length, this.postOnPage);
 
-    this.postService.getComments(this.postId, offset, this.loadTime).subscribe({
+    this.postService.getComments(this.postId, offset, null).subscribe({
       next: (posts: any[]) => {
         if(posts.length == 0 || posts.length < this.postOnPage) {
           this.canLoadMore = false;
@@ -101,6 +100,7 @@ export class CommentsComponent implements OnInit, OnDestroy {
         this.onCommentsCounterUpdated.emit(this.commentsCount + 1);
         this.commentsCount += 1;
         this.canLoadMore = true;
+
         this.loadNextPosts();
 
         //clear the editor
