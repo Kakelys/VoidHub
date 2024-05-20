@@ -17,13 +17,23 @@ namespace ForumApi.Services.Email
         IOptions<JwtOptions> jwtOptions,
         IJsonStringLocalizer locale,
         IRepositoryManager rep,
-        IConfiguration config) : IConfirmService
+        IConfiguration config,
+        ILogger<ConfirmService> logger) : IConfirmService
     {
         private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
         public async Task ConfirmEmail(string base64Token)
         {
-            var base64Encoded = Convert.FromBase64String(base64Token);
+            byte[]? base64Encoded;
+            try
+            {
+                base64Encoded = Convert.FromBase64String(base64Token);
+            }
+            catch(Exception ex)
+            {
+                logger.LogWarning(ex, "Confirm token not parsed");
+                throw new BadRequestException(locale["errors.invalid-token"]);
+            }
             var token = Encoding.UTF8.GetString(base64Encoded);
 
             if(!tokenService.Validate(token, _jwtOptions.ConfirmSecret))
