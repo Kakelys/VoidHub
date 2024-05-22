@@ -20,8 +20,7 @@ namespace ForumApi.DTO.DSearch.Sort
 
         private static IQueryable<Topic> ForTopic(IQueryable<Topic> query, SearchSortTypes sortType)
         {
-            Console.WriteLine(sortType);
-            return sortType switch 
+            return sortType switch
             {
                 SearchSortTypes.Old => query.OrderBy(t => t.CreatedAt),
                 SearchSortTypes.MostLiked => query.OrderByDescending(t => 

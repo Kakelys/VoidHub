@@ -19,7 +19,7 @@
           {{post?.post.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
         </div>
         <div class="flex flex-row">
-          <div class="text-xs" *ngIf="user && user?.id == post?.sender.id">
+          <div class="text-xs" *ngIf="user && user?.id == post?.sender.id && !isTopicClosed">
             <div class="btn btn-neutral min-h-min h-8" (click)="setEditMode(true)">
               {{ 'forms.edit' | translate }}
             </div>

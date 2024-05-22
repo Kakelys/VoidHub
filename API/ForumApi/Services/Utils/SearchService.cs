@@ -31,8 +31,7 @@ namespace ForumApi.Services.Utils
 
             if(!string.IsNullOrEmpty(query))
             {
-                forTsQuery = query.Split(' ')
-                    .Where(q => !string.IsNullOrEmpty(q))
+                forTsQuery = query.Split(" ", StringSplitOptions.RemoveEmptyEntries)
                     .Select(w => $"{w}:*")
                     .Aggregate((a, b) => $"{a} | {b}");
             }
@@ -40,7 +39,7 @@ namespace ForumApi.Services.Utils
             orPredicate.And(t => t.SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)));
 
             if(search.WithPostContent)
-                orPredicate.Or(t => t.Posts.First(p => p.AncestorId == null).SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)));
+                orPredicate.Or(t => t.Posts.OrderByDescending(p => p.CreatedAt).First(p => p.AncestorId == null).SearchVector.Matches(EF.Functions.ToTsQuery("english", forTsQuery)));
 
             if(search.PartialTitle)
                 orPredicate.Or(t => EF.Functions.ILike(t.Title, $"%{query}%"));

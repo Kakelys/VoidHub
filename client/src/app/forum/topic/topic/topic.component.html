@@ -107,7 +107,13 @@
         </div>
 
         <div class="mt-3">
-          <app-post [post]="{topic: topic.topic, post: topic.post, sender: topic.sender, forum: null}" [user]="user" [enableDeliting]="false" [enableComments]="false" ></app-post>
+          <app-post
+            [post]="{topic: topic.topic, post: topic.post, sender: topic.sender, forum: null}"
+            [user]="user"
+            [enableDeliting]="false"
+            [enableComments]="false"
+            [isTopicClosed]="topic.topic.isClosed" >
+          </app-post>
         </div>
       </div>
       <div class="my-3">
