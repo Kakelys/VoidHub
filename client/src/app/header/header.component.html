@@ -1,91 +1,132 @@
-<div class="navbar border-neutral mb-2 bg-base-100" style="border-bottom-width: 1px;">
-  <div class="group">
-    <a class="text-xl btn btn-link no-underline hover:no-underline" routerLink="/forum">
-      <span class="text-base-content group-hover:text-secondary-content">
-        VOID<span class="text-accent group-hover:text-accent-focus">HUB</span>
-      </span>
-    </a>
-  </div>
-  <div class="ms-5 flex-1 text-lg">
-    <div class="flex flex-row xl:hidden my-auto">
-      <a class="font-medium link no-underline my-auto" routerLink="/forum/recent">
-        <div class="flex flex-col">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 mx-auto" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" class="stroke-base-content" stroke-width="1.5"/>
-            <path d="M12 8V12L14.5 14.5" class="stroke-base-content" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div class="text-xs" routerLinkActive="text-accent-focus">
-            {{ 'menu.recent' | translate }}
-          </div>
+<div class="border-neutral mb-2 bg-base-100" style="border-bottom-width: 1px">
+    <div class="navbar max-w-[1280px] mx-auto">
+        <div class="group">
+            <a class="text-xl btn btn-link no-underline hover:no-underline" routerLink="/forum">
+                <span class="text-base-content group-hover:text-secondary-content">
+                    VOID<span class="text-accent group-hover:text-accent-focus">HUB</span>
+                </span>
+            </a>
         </div>
-      </a>
-      <!--
-        <a class="ms-5 text-transparent bg-clip-text bg-gradient-to-br from-amber-300 to-red-500 text-lg font-medium cursor-pointer">
-          Donation
-        </a>
-      -->
-      <a class="ms-5 font-medium link no-underline my-auto"
-        routerLink="/forum/admin-panel"
-        *ngIf="user?.role == roles.ADMIN || user?.role == roles.MODER"
-      >
-        <div class="flex flex-col">
-          <svg class="w-4 mx-auto" viewBox="0 0 17 17" >
-            <path d="M0 0v17h17v-17h-17zM16 16h-15v-15h15v15zM4 10.232v2.768h1v-2.768c0.738-0.218 1.281-0.894 1.281-1.701s-0.543-1.483-1.281-1.701v-2.83h-1v2.83c-0.738 0.218-1.281 0.894-1.281 1.701s0.543 1.484 1.281 1.701zM4.5 7.75c0.431 0 0.781 0.351 0.781 0.781s-0.35 0.781-0.781 0.781-0.781-0.35-0.781-0.781 0.35-0.781 0.781-0.781zM8 8.107v4.893h1v-4.893c0.738-0.218 1.281-0.894 1.281-1.701s-0.543-1.483-1.281-1.701v-0.705h-1v0.705c-0.738 0.218-1.281 0.894-1.281 1.701s0.543 1.484 1.281 1.701zM8.5 5.625c0.431 0 0.781 0.351 0.781 0.781s-0.35 0.782-0.781 0.782-0.781-0.351-0.781-0.782 0.35-0.781 0.781-0.781zM12.5 13.417c0.982 0 1.781-0.799 1.781-1.781 0-0.808-0.543-1.483-1.281-1.701v-5.935h-1v5.935c-0.738 0.218-1.281 0.894-1.281 1.701 0 0.982 0.799 1.781 1.781 1.781zM12.5 10.854c0.431 0 0.781 0.351 0.781 0.781s-0.351 0.781-0.781 0.781-0.781-0.351-0.781-0.781 0.35-0.781 0.781-0.781z"
-              class="fill-base-content"
-            />
-          </svg>
-          <div class="text-xs my-auto" routerLinkActive="text-accent-focus">
-            {{'menu.admin-panel'|translate}}
-          </div>
+        <div class="ms-5 flex-1 text-lg">
+            <div class="flex flex-row xl:hidden my-auto">
+                <a class="font-medium link no-underline my-auto" routerLink="/forum/recent">
+                    <div class="flex flex-col">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-4 mx-auto"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                        >
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                class="stroke-base-content"
+                                stroke-width="1.5"
+                            />
+                            <path
+                                d="M12 8V12L14.5 14.5"
+                                class="stroke-base-content"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                        <div class="text-xs" routerLinkActive="text-accent-focus">
+                            {{ 'menu.recent' | translate }}
+                        </div>
+                    </div>
+                </a>
+                <a
+                    class="ms-5 font-medium link no-underline my-auto"
+                    routerLink="/forum/admin-panel"
+                    *ngIf="user?.role == roles.ADMIN || user?.role == roles.MODER"
+                >
+                    <div class="flex flex-col">
+                        <svg class="w-4 mx-auto" viewBox="0 0 17 17">
+                            <path
+                                d="M0 0v17h17v-17h-17zM16 16h-15v-15h15v15zM4 10.232v2.768h1v-2.768c0.738-0.218 1.281-0.894 1.281-1.701s-0.543-1.483-1.281-1.701v-2.83h-1v2.83c-0.738 0.218-1.281 0.894-1.281 1.701s0.543 1.484 1.281 1.701zM4.5 7.75c0.431 0 0.781 0.351 0.781 0.781s-0.35 0.781-0.781 0.781-0.781-0.35-0.781-0.781 0.35-0.781 0.781-0.781zM8 8.107v4.893h1v-4.893c0.738-0.218 1.281-0.894 1.281-1.701s-0.543-1.483-1.281-1.701v-0.705h-1v0.705c-0.738 0.218-1.281 0.894-1.281 1.701s0.543 1.484 1.281 1.701zM8.5 5.625c0.431 0 0.781 0.351 0.781 0.781s-0.35 0.782-0.781 0.782-0.781-0.351-0.781-0.782 0.35-0.781 0.781-0.781zM12.5 13.417c0.982 0 1.781-0.799 1.781-1.781 0-0.808-0.543-1.483-1.281-1.701v-5.935h-1v5.935c-0.738 0.218-1.281 0.894-1.281 1.701 0 0.982 0.799 1.781 1.781 1.781zM12.5 10.854c0.431 0 0.781 0.351 0.781 0.781s-0.351 0.781-0.781 0.781-0.781-0.351-0.781-0.781 0.35-0.781 0.781-0.781z"
+                                class="fill-base-content"
+                            />
+                        </svg>
+                        <div class="text-xs my-auto" routerLinkActive="text-accent-focus">
+                            {{ 'menu.admin-panel' | translate }}
+                        </div>
+                    </div>
+                </a>
+                <a
+                    class="ms-5 font-medium link no-underline my-auto"
+                    routerLink="/chats"
+                    *ngIf="user"
+                >
+                    <div class="flex flex-col">
+                        <svg class="w-4 mx-auto" viewBox="0 0 24 24" fill="none">
+                            <path
+                                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z"
+                                class="stroke-base-content"
+                                stroke-width="1.5"
+                            />
+                        </svg>
+                        <div class="text-xs my-auto" routerLinkActive="text-accent-focus">
+                            {{ 'menu.chats' | translate }}
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="grow"></div>
+            <app-search-bar class="mx-3" [searchParams]="defaultSearch"> </app-search-bar>
         </div>
-      </a>
-      <a
-        class="ms-5 font-medium link no-underline my-auto"
-        routerLink="/chats"
-        *ngIf="user"
-      >
-        <div class="flex flex-col">
-          <svg class="w-4 mx-auto" viewBox="0 0 24 24" fill="none">
-            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.04346 16.4525C3.22094 16.8088 3.28001 17.2161 3.17712 17.6006L2.58151 19.8267C2.32295 20.793 3.20701 21.677 4.17335 21.4185L6.39939 20.8229C6.78393 20.72 7.19121 20.7791 7.54753 20.9565C8.88837 21.6244 10.4003 22 12 22Z"
-              class="stroke-base-content" stroke-width="1.5"
-            />
-          </svg>
-          <div class="text-xs my-auto" routerLinkActive="text-accent-focus">
-            {{ 'menu.chats' | translate}}
-          </div>
+        <div>
+            <a
+                routerLink="/login"
+                *ngIf="!user; else userMenu"
+                class="btn bg-base-200 h-10 min-h-8 text-secondary-content"
+            >
+                <div class="flex items-center">
+                    <svg
+                        class="stroke-secondary-content fill-none stroke-2"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"
+                        ></path>
+                    </svg>
+                    <div class="ms-2">
+                        {{ 'signin' | translate }}
+                    </div>
+                </div>
+            </a>
+            <ng-template #userMenu>
+                <div class="dropdown">
+                    <div tabindex="0" class="btn m-1 bg-base-200 h-10 min-h-min">
+                        {{ user?.username }}
+                    </div>
+                    <ul
+                        tabindex="0"
+                        class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box"
+                    >
+                        <li>
+                            <a routerLink="/profile/{{ user?.id }}">{{
+                                'menu.profile' | translate
+                            }}</a>
+                        </li>
+                        <li>
+                            <a routerLink="/chats">{{ 'menu.chats' | translate }}</a>
+                        </li>
+                        <li>
+                            <a routerLink="/profile/settings">{{ 'menu.settings' | translate }}</a>
+                        </li>
+                        <li>
+                            <a class="bg-error mt-2" (click)="logout()">{{
+                                'menu.logout' | translate
+                            }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </ng-template>
         </div>
-      </a>
     </div>
-    <div class="grow">
-
-    </div>
-    <app-search-bar
-      class="mx-3"
-      [searchParams]="defaultSearch"
-    >
-    </app-search-bar>
-  </div>
-  <div class="me-5">
-    <a routerLink="/login" *ngIf="!user; else userMenu" class="btn bg-base-200 h-10 min-h-8 text-secondary-content">
-      <div class="flex items-center">
-        <svg class="stroke-secondary-content fill-none stroke-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path>
-        </svg>
-        <div class="ms-2" >
-          {{'signin'|translate}}
-        </div>
-      </div>
-    </a>
-    <ng-template #userMenu>
-      <div class="dropdown me-5">
-        <div tabindex="0" class="btn m-1 bg-base-200 h-10 min-h-min">{{user?.username}}</div>
-        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box">
-          <li><a routerLink="/profile/{{user?.id}}">{{'menu.profile'|translate}}</a></li>
-          <li><a routerLink="/chats">{{'menu.chats'|translate}}</a></li>
-          <li><a routerLink="/profile/settings">{{'menu.settings'|translate}}</a></li>
-          <li><a class="bg-error mt-2" (click)="logout()">{{'menu.logout'|translate}}</a></li>
-        </ul>
-      </div>
-    </ng-template>
-  </div>
 </div>
