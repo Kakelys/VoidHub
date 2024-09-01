@@ -87,7 +87,10 @@
                                 >
                                     <div
                                         class="border-b-[1px] border-neutral group-hover:border-secondary-content mt-1 py-0.5 truncate"
-                                        routerLinkActive="border-accent"
+                                        routerLinkActive="!border-accent"
+                                        [routerLinkActiveOptions]="{
+                                            exact: false,
+                                        }"
                                     >
                                         {{ forum.title }}
                                     </div>
