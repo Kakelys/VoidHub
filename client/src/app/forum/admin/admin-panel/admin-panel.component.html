@@ -1,16 +1,30 @@
 <div class="flex flex-col">
-  <div class="mb-2 flex flex-row">
-    <div class="btn btn-neutral min-h-fit h-8" routerLink="ban-menu" routerLinkActive="bg-base-100">
-      {{'menu.ban'|translate}}
+    <div class="mb-2 flex flex-row">
+        <div
+            class="btn btn-neutral min-h-fit h-8"
+            routerLink="ban-menu"
+            routerLinkActive="bg-base-100"
+        >
+            {{ 'menu.ban' | translate }}
+        </div>
+        <div
+            class="btn btn-neutral min-h-fit h-8 ms-3"
+            routerLink="role-menu"
+            *ngIf="user?.role === roles.ADMIN"
+            routerLinkActive="bg-base-100"
+        >
+            {{ 'menu.role' | translate }}
+        </div>
+        <div
+            class="btn btn-neutral min-h-fit h-8 ms-3"
+            routerLink="rename-menu"
+            *ngIf="user?.role === roles.MODER || user?.role === roles.ADMIN"
+            routerLinkActive="bg-base-100"
+        >
+            {{ 'menu.rename' | translate }}
+        </div>
     </div>
-    <div class="btn btn-neutral min-h-fit h-8 ms-3" routerLink="role-menu" *ngIf="user?.role == roles.ADMIN" routerLinkActive="bg-base-100">
-      {{'menu.role'|translate}}
+    <div class="w-fit" *ngIf="!skipRouting">
+        <router-outlet></router-outlet>
     </div>
-    <div class="btn btn-neutral min-h-fit h-8 ms-3" routerLink="rename-menu" *ngIf="user?.role == roles.MODER || user?.role == roles.ADMIN" routerLinkActive="bg-base-100">
-      {{'menu.rename'|translate}}
-    </div>
-  </div>
-  <div class="w-fit" *ngIf="!skipRouting">
-    <router-outlet></router-outlet>
-  </div>
 </div>

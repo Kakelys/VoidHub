@@ -1,6 +1,6 @@
-import { SearchElementType } from "./search-element.enum";
+import { SearchElementType } from './search-element.enum'
 
-export interface SearchElement {
-  type: SearchElementType;
-  data: any;
+export type SearchElement = {
+    type: SearchElementType
+    data: any
 }

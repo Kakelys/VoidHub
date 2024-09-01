@@ -1,6 +1,6 @@
-export class Section {
-  public id: number;
-  public title: string;
-  public isHidden: boolean;
-  public orderPosition: number;
+export type Section = {
+    id: number
+    title: string
+    isHidden: boolean
+    orderPosition: number
 }

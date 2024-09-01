@@ -1,5 +1,5 @@
-export interface Name {
-  id: number;
-  title: string;
-  isSelectable: boolean;
+export type Name = {
+    id: number
+    title: string
+    isSelectable: boolean
 }

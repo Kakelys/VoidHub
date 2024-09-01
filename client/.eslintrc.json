@@ -15,6 +15,9 @@
         "plugin:@angular-eslint/template/process-inline-templates",
         "prettier"
       ],
+      "plugins": [
+        "prettier"
+      ],
       "rules": {
         "@angular-eslint/directive-selector": [
           "error",
@@ -42,14 +45,7 @@
         "plugin:@angular-eslint/template/recommended",
         "plugin:@angular-eslint/template/accessibility"
       ],
-      "rules": {
-        "prettier/prettier": [
-          "error",
-          {
-            "parser": "angular"
-          }
-        ]
-      }
+      "rules": {}
     }
   ]
 }

@@ -1,64 +1,75 @@
 <div class="flex flex-col items-start max-w-min">
-  <div class="bg-base-200 rounded-2xl">
-    <form #newForumForm="ngForm" (ngSubmit)="onSubmit(newForumForm)" >
-      <div class="flex flex-col items-center p-5">
-        <div class="select-none pt-3 text-2xl text-secondary-content">
-          {{ 'forum.new-forum' | translate }}
-        </div>
-        <app-error-message-list [messages]="errorMessages"></app-error-message-list>
-        <div class="form-control">
-          <input
-            type="text"
-            class="input-sm bg-neutral mt-2 input input-bordered "
-            id="title"
-            name="title"
-            placeholder="{{ 'forms.title' | translate }}"
-            [ngClass]="{
-              'input-error': newForumForm.controls['title']?.touched && newForumForm.controls['title'].errors?.['required']
-            }"
-            ngModel
-            required
-            minlength="3"
-            maxlength="255"
-          >
-          <label class="flex flex-col items-start label pt-0.5">
-            <span
-              class="label-text-alt text-error"
-              *ngIf="newForumForm.controls['title']?.touched && newForumForm.controls['title'].errors?.['required']">
-              {{ 'forms-errors.title-required' | translate }}
-            </span>
-            <span
-              class="label-text-alt text-error"
-              *ngIf="newForumForm.controls['title']?.touched &&
-                (newForumForm.controls['title'].value.length < 3 || newForumForm.controls['title'].value.length > 255)">
-              {{ 'forms-errors.title-length' | translate }}
-            </span>
-          </label>
-        </div>
+    <div class="bg-base-200 rounded-2xl">
+        <form #newForumForm="ngForm" (ngSubmit)="onSubmit(newForumForm)">
+            <div class="flex flex-col items-center p-5">
+                <div class="select-none pt-3 text-2xl text-secondary-content">
+                    {{ 'forum.new-forum' | translate }}
+                </div>
+                <app-error-message-list [messages]="errorMessages"></app-error-message-list>
+                <div class="form-control">
+                    <input
+                        type="text"
+                        class="input-sm bg-neutral mt-2 input input-bordered"
+                        id="title"
+                        name="title"
+                        placeholder="{{ 'forms.title' | translate }}"
+                        [ngClass]="{
+                            'input-error':
+                                newForumForm.controls['title']?.touched &&
+                                newForumForm.controls['title'].errors?.['required'],
+                        }"
+                        ngModel
+                        required
+                        minlength="3"
+                        maxlength="255"
+                    />
+                    <label for="title" class="flex flex-col items-start label pt-0.5">
+                        <span
+                            class="label-text-alt text-error"
+                            *ngIf="
+                                newForumForm.controls['title']?.touched &&
+                                newForumForm.controls['title'].errors?.['required']
+                            "
+                        >
+                            {{ 'forms-errors.title-required' | translate }}
+                        </span>
+                        <span
+                            class="label-text-alt text-error"
+                            *ngIf="
+                                newForumForm.controls['title']?.touched &&
+                                (newForumForm.controls['title'].value.length < 3 ||
+                                    newForumForm.controls['title'].value.length > 255)
+                            "
+                        >
+                            {{ 'forms-errors.title-length' | translate }}
+                        </span>
+                    </label>
+                </div>
 
-        <label class="form-control w-full max-w-xs mb-2">
-          <div class="label">
-            <span class="label-text">{{ 'forum.choose-section' | translate }}</span>
-          </div>
-          <select
-            class="select select-bordered bg-neutral h-8 min-h-min"
-            id="sectionId"
-            name="sectionId"
-            [ngModel]="sectionId"
-          >
-            <option *ngFor="let name of names" [value]="name.id"
-              [disabled]="!name.isSelectable"
-              [selected]="name.id == sectionId"
-            >
-              {{name.isSelectable ? '-- ' + name.title : name.title}}
-            </option>
-          </select>
-        </label>
-        <button
-          class="my-3 btn btn-accent text-base-100 min-h-fit h-8">
-          {{ 'forms.create' | translate }}
-        </button>
-      </div>
-    </form>
-  </div>
+                <label class="form-control w-full max-w-xs mb-2">
+                    <div class="label">
+                        <span class="label-text">{{ 'forum.choose-section' | translate }}</span>
+                    </div>
+                    <select
+                        class="select select-bordered bg-neutral h-8 min-h-min"
+                        id="sectionId"
+                        name="sectionId"
+                        [ngModel]="sectionId"
+                    >
+                        <option
+                            *ngFor="let name of names"
+                            [value]="name.id"
+                            [disabled]="!name.isSelectable"
+                            [selected]="name.id === sectionId"
+                        >
+                            {{ name.isSelectable ? '-- ' + name.title : name.title }}
+                        </option>
+                    </select>
+                </label>
+                <button class="my-3 btn btn-accent text-base-100 min-h-fit h-8">
+                    {{ 'forms.create' | translate }}
+                </button>
+            </div>
+        </form>
+    </div>
 </div>

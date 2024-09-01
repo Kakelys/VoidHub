@@ -1,7 +1,8 @@
-import { User } from "src/shared/models/user.model";
-import { Message } from "./message.model";
+import { User } from 'src/shared/models/user.model'
 
-export interface MessageResponse {
-  message: Message;
-  sender: User;
+import { Message } from './message.model'
+
+export type MessageResponse = {
+    message: Message
+    sender: User
 }

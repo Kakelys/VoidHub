@@ -1,8 +1,8 @@
-import { User } from "../../../shared/models/user.model";
+import { User } from '../../../shared/models/user.model'
 
-export class PostEdit {
-  public id: number;
-  public content: string;
-  public createdAt: Date;
-  public user: User;
+export type PostEdit = {
+    id: number
+    content: string
+    createdAt: Date
+    user: User
 }

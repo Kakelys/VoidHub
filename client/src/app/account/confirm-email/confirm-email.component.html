@@ -1,13 +1,13 @@
 <app-limit-loader [limit]="1" [reqName]="limitNames.confirmEmail">
-  <div *ngIf="!confirmed" class="text-2xl text-warning">
-    {{ 'labels.email-not-confirmed' | translate }}
-  </div>
+    <div *ngIf="!confirmed" class="text-2xl text-warning">
+        {{ 'labels.email-not-confirmed' | translate }}
+    </div>
 </app-limit-loader>
 
 <div *ngIf="confirmed" class="flex flex-col w-fit text-2xl text-accent">
-  {{ 'labels.thank-for-confirming-email' | translate }}
+    {{ 'labels.thank-for-confirming-email' | translate }}
 
-  <a class="btn btn-info mt-5" routerLink="/">
-    {{ 'labels.back-to-home-page' | translate }}
-  </a>
+    <a class="btn btn-info mt-5" routerLink="/">
+        {{ 'labels.back-to-home-page' | translate }}
+    </a>
 </div>

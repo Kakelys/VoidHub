@@ -1,23 +1,21 @@
-import { Component } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { User } from 'src/shared/models/user.model';
+import { Component } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+
+import { User } from 'src/shared/models/user.model'
+
+import { AuthService } from '../auth/auth.service'
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
+    user: User
 
-  user: User;
-
-  constructor(authService: AuthService) {
-    authService.user$
-    .pipe(takeUntilDestroyed())
-    .subscribe(user => {
-      this.user = user;
-    })
-  }
-
+    constructor(authService: AuthService) {
+        authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
+            this.user = user
+        })
+    }
 }

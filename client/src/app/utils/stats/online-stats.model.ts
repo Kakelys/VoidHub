@@ -1,6 +1,6 @@
-import { User } from "src/shared/models/user.model";
+import { User } from 'src/shared/models/user.model'
 
-export interface OnlineStats {
-  anonimCount: number;
-  users: User[];
+export type OnlineStats = {
+    anonimCount: number
+    users: User[]
 }

@@ -1,25 +1,16 @@
-import { HttpHandler, HttpRequest } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-
-
+import { HttpHandler, HttpRequest } from '@angular/common/http'
+import { Injectable } from '@angular/core'
 
 @Injectable()
 export class LocalizeInterceptor {
-  constructor() {}
+    intercept(req: HttpRequest<any>, next: HttpHandler) {
+        const code = localStorage.getItem('locale')
+        if (!code) return next.handle(req)
 
-  intercept (
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ) {
+        const modifiedReq = req.clone({
+            headers: req.headers.append('Accept-Language', code),
+        })
 
-    let code = localStorage.getItem('locale');
-    if(!code)
-      return next.handle(req);
-
-    let modifiedReq = req.clone({
-      headers: req.headers.append('Accept-Language', code)
-    });
-
-    return next.handle(modifiedReq);
-  }
+        return next.handle(modifiedReq)
+    }
 }

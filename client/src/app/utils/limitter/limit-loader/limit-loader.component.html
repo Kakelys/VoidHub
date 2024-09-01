@@ -1,11 +1,10 @@
-<div class="{{containerClasses ?? 'flex flex-col items-center'}}" *ngIf="limit == activeReqs && !ignore; else loadContent">
-  <span class="loading loading-infinity loading-lg">
-  </span>
+<div
+    class="{{ containerClasses ?? 'flex flex-col items-center' }}"
+    *ngIf="limit === activeRequests && !ignore; else loadContent"
+>
+    <span class="loading loading-infinity loading-lg"> </span>
 </div>
 
-<ng-template #loadContent >
-  <ng-content>
-  </ng-content>
+<ng-template #loadContent>
+    <ng-content> </ng-content>
 </ng-template>
-
-

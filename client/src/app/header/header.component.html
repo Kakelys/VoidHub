@@ -40,7 +40,7 @@
                 <a
                     class="ms-5 font-medium link no-underline my-auto"
                     routerLink="/forum/admin-panel"
-                    *ngIf="user?.role == roles.ADMIN || user?.role == roles.MODER"
+                    *ngIf="user?.role === roles.ADMIN || user?.role === roles.MODER"
                 >
                     <div class="flex flex-col">
                         <svg class="w-4 mx-auto" viewBox="0 0 17 17">
@@ -120,9 +120,9 @@
                             <a routerLink="/profile/settings">{{ 'menu.settings' | translate }}</a>
                         </li>
                         <li>
-                            <a class="bg-error mt-2" (click)="logout()">{{
-                                'menu.logout' | translate
-                            }}</a>
+                            <button class="bg-error mt-2" (click)="logout()" (keypress)="logout()">
+                                {{ 'menu.logout' | translate }}
+                            </button>
                         </li>
                     </ul>
                 </div>

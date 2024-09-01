@@ -1,55 +1,66 @@
 <div class="flex flex-col">
-  <div class="group">
-    <div class="py-2 ms-8 flex flex-row items-center">
-      <div class="basis-8/12 h-full truncate">
-        <div class="flex flex-col">
-          <div class="flex flex-row">
-            <a routerLink="/forum/topic/{{topic.id}}" class="link no-underline font-semibold grow">
-              {{topic.title | truncate:70}}
-            </a>
-            <div *ngIf="topic.isPinned">
-              <app-pinned-icon></app-pinned-icon>
-            </div>
-            <div *ngIf="topic.isClosed" class="ms-1">
-              <app-closed-icon></app-closed-icon>
-            </div>
-          </div>
+    <div class="group">
+        <div class="py-2 ms-8 flex flex-row items-center">
+            <div class="basis-8/12 h-full truncate">
+                <div class="flex flex-col">
+                    <div class="flex flex-row">
+                        <a
+                            routerLink="/forum/topic/{{ topic.id }}"
+                            class="link no-underline font-semibold grow"
+                        >
+                            {{ topic.title | truncate: 70 }}
+                        </a>
+                        <div *ngIf="topic.isPinned">
+                            <app-pinned-icon></app-pinned-icon>
+                        </div>
+                        <div *ngIf="topic.isClosed" class="ms-1">
+                            <app-closed-icon></app-closed-icon>
+                        </div>
+                    </div>
 
-          <div class="text-xs text-secondary-content">
-            {{topic.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
-          </div>
-        </div>
-      </div>
-      <div class="basis-1/12">
-        <div class="text-center">
-          {{topic.postsCount}}
-        </div>
-      </div>
-      <div class="basis-3/12">
-        <div class="flex flex-row" *ngIf="topic?.lastPost">
-          <div class="me-2">
-            <div class="avatar">
-              <div class="w-10 rounded">
-                <a routerLink="/profile/{{topic.lastPost?.author.id}}">
-                  <img src="{{resourceUrl}}/{{topic.lastPost?.author?.avatarPath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}"/>
-                </a>
-              </div>
+                    <div class="text-xs text-secondary-content">
+                        {{ topic.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm' }}
+                    </div>
+                </div>
             </div>
-          </div>
-          <div>
-            <a
-              [routerLink]="['/','profile',topic.lastPost.author.id]"
-              class="flex flex-col link no-underline"
-            >
-              {{topic?.lastPost?.author.username}}
-            </a>
-            <div class="text-xs text-secondary-content">
-              {{topic?.lastPost?.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
+            <div class="basis-1/12">
+                <div class="text-center">
+                    {{ topic.postsCount }}
+                </div>
             </div>
-          </div>
+            <div class="basis-3/12">
+                <div class="flex flex-row" *ngIf="topic?.lastPost">
+                    <div class="me-2">
+                        <div class="avatar">
+                            <div class="w-10 rounded">
+                                <a routerLink="/profile/{{ topic.lastPost?.author.id }}">
+                                    <img
+                                        src="{{ resourceUrl }}/{{
+                                            topic.lastPost?.author?.avatarPath
+                                        }}"
+                                        loading="lazy"
+                                        alt="{{ 'profile.avatar' | translate }}"
+                                    />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <a
+                            [routerLink]="['/', 'profile', topic.lastPost.author.id]"
+                            class="flex flex-col link no-underline"
+                        >
+                            {{ topic?.lastPost?.author.username }}
+                        </a>
+                        <div class="text-xs text-secondary-content">
+                            {{
+                                topic?.lastPost?.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'
+                            }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+        <hr class="border-neutral mx-4 group-hover:border-primary-content" />
     </div>
-    <hr class="border-neutral mx-4 group-hover:border-primary-content">
-  </div>
 </div>

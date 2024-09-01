@@ -1,106 +1,116 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { User } from 'src/shared/models/user.model';
-import { PostService } from '../../services/post.service';
-import { Roles } from 'src/shared/roles.enum';
-import Editor from 'ckeditor5/build/ckeditor';
-import { environment } from 'src/environments/environment';
-import { PostInfo } from 'src/shared/models/post-info.model';
-import { HttpException } from 'src/shared/models/http-exception.model';
-import { ToastrService } from 'ngx-toastr';
-import { ToastrExtension } from 'src/shared/toastr.extension';
+import Editor from 'ckeditor5/build/ckeditor'
+import { ToastrService } from 'ngx-toastr'
+
+import { Component, EventEmitter, Input, Output } from '@angular/core'
+
+import { HttpException } from 'src/shared/models/http-exception.model'
+import { PostInfo } from 'src/shared/models/post-info.model'
+import { Post } from 'src/shared/models/post-model'
+import { User } from 'src/shared/models/user.model'
+import { Roles } from 'src/shared/roles.enum'
+import { ToastrExtension } from 'src/shared/toastr.extension'
+
+import { environment } from 'src/environments/environment'
+
+import { PostService } from '../../services/post.service'
 
 @Component({
-  selector: 'app-post',
-  templateUrl: './post-element.component.html',
-  styleUrls: ['./post-element.component.css']
+    selector: 'app-post',
+    templateUrl: './post-element.component.html',
+    styleUrls: ['./post-element.component.css'],
 })
 export class PostElementComponent {
-  editor = Editor as {create: any}
-  resourceUrl = environment.resourceURL;
+    editor = Editor as { create: any }
+    resourceUrl = environment.resourceURL
 
-  @Input()
-  post: PostInfo;
+    @Input()
+    post: PostInfo
 
-  @Input()
-  user: User;
+    @Input()
+    user: User
 
-  @Input()
-  enableDeliting: boolean = true;
+    @Input()
+    enableDeliting = true
 
-  @Input()
-  enableComments: boolean = true;
+    @Input()
+    enableComments = true
 
-  @Input()
-  isTopicClosed: boolean = false;
+    @Input()
+    isTopicClosed = false
 
-  @Input()
-  depth = 1;
+    @Input()
+    depth = 1
 
-  roles = Roles;
+    roles = Roles
 
-  @Output()
-  onDelete = new EventEmitter<number>();
+    @Output()
+    deleted = new EventEmitter<number>()
 
-  editMode = false;
-  commentsMode = false;
+    editMode = false
+    commentsMode = false
 
-  constructor(private postService: PostService,
-    private toastr: ToastrService) {
-  }
+    constructor(
+        private postService: PostService,
+        private toastr: ToastrService
+    ) {}
 
-  onPostEdit(data) {
-    this.postService.updatePost(this.post.post.id, data).subscribe({
-      next: (post: any) => {
-        this.editMode = false;
-        this.post.post.content = post.content;
-      },
-      error: (err: HttpException) => {
-        ToastrExtension.handleErrors(this.toastr, err.errors);
-      }
-    })
-  }
-
-  setEditMode(value: boolean) {
-    this.editMode = value;
-  }
-
-  onAdminDelete() {
-    this.postService.deletePost(this.post.post.id).subscribe({
-      next: _ => this.handleDelete(),
-    });
-  }
-
-  handleDelete() {
-    this.onDelete.emit(this.post.post.id);
-  }
-
-  toggleCommentsMode() {
-    this.commentsMode = !this.commentsMode;
-  }
-
-  updateCommentsCounter(count) {
-    this.post.post.commentsCount = count;
-  }
-
-  changeLikeState() {
-    if(!this.user)
-      return;
-
-    if(!this.post.post.isLiked) {
-      this.post.post.isLiked = true;
-      this.postService.like(this.post.post.id)
-      .subscribe({
-        next: _ => {this.post.post.likesCount++},
-        error: _ => {this.post.post.isLiked = false;}
-      })
+    onPostEdit(data) {
+        this.postService.updatePost(this.post.post.id, data).subscribe({
+            next: (post: Post) => {
+                this.editMode = false
+                this.post.post.content = post.content
+            },
+            error: (err: HttpException) => {
+                ToastrExtension.handleErrors(this.toastr, err.errors)
+            },
+        })
     }
-    else {
-      this.post.post.isLiked = false;
-      this.postService.unlike(this.post.post.id)
-      .subscribe({
-        next: _ => {this.post.post.likesCount--},
-        error: _ => {this.post.post.isLiked = true;}
-      })
+
+    setEditMode(value: boolean) {
+        this.editMode = value
     }
-  }
+
+    onAdminDelete() {
+        this.postService.deletePost(this.post.post.id).subscribe({
+            next: (_) => this.handleDelete(),
+        })
+    }
+
+    handleDelete() {
+        this.deleted.emit(this.post.post.id)
+    }
+
+    toggleCommentsMode() {
+        this.commentsMode = !this.commentsMode
+    }
+
+    updateCommentsCounter(count) {
+        this.post.post.commentsCount = count
+    }
+
+    changeLikeState() {
+        if (!this.user) return
+
+        if (!this.post.post.isLiked) {
+            this.post.post.isLiked = true
+            this.postService.like(this.post.post.id).subscribe({
+                next: (_) => {
+                    this.post.post.likesCount++
+                },
+                error: (_) => {
+                    this.post.post.isLiked = false
+                },
+            })
+        } else {
+            this.post.post.isLiked = false
+            this.postService.unlike(this.post.post.id).subscribe({
+                next: (_) => {
+                    this.post.post.likesCount--
+                },
+                error: (_) => {
+                    this.post.post.isLiked = true
+                },
+            })
+        }
+    }
 }

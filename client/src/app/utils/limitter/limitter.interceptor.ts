@@ -1,44 +1,41 @@
-import { HttpHandler, HttpRequest } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { finalize} from "rxjs";
-import { LimitterService } from "./limitter.service";
-import { environment as env } from "src/environments/environment";
+import { finalize } from 'rxjs'
+
+import { HttpHandler, HttpRequest } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+
+import { environment as env } from 'src/environments/environment'
+
+import { LimiterService } from './limitter.service'
 
 @Injectable()
-export class LimitterInterceptor {
+export class LimiterInterceptor {
+    constructor(private limiter: LimiterService) {}
 
-  constructor(private limitter: LimitterService){}
+    intercept(req: HttpRequest<any>, next: HttpHandler) {
+        const isSkip = req.headers.get(env.limitNames.skipParam) ?? false
+        if (isSkip) {
+            const reqMod = req.clone({ headers: req.headers.delete(env.limitNames.skipParam) })
+            return next.handle(reqMod)
+        }
 
-  intercept (
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ) {
-    let isSkip = req.headers.get(env.limitNames.skipParam) ?? false;
-    if(isSkip)
-    {
-      const reqMod = req.clone({ headers: req.headers.delete(env.limitNames.skipParam) });
-      return next.handle(reqMod);
+        const reqName = req.headers.get(env.limitNames.nameParam) ?? this.limiter.defaultName
+        const limitParam = req.headers.get(env.limitNames.limitParam) ?? this.limiter.defaultLimit
+        if (this.limiter.isOutOfLimit(reqName, this.limiter.defaultLimit + +limitParam)) {
+            throw new Error('Too much requests')
+        }
+
+        this.limiter.plus(reqName)
+
+        // modify req, removing all params
+        const headers = req.headers
+        headers.delete(env.limitNames.limitParam)
+        headers.delete(env.limitNames.nameParam)
+        const reqMod = req.clone({ headers: headers })
+
+        return next.handle(reqMod).pipe(
+            finalize(() => {
+                this.limiter.minus(reqName)
+            })
+        )
     }
-
-    let reqName = req.headers.get(env.limitNames.nameParam) ?? this.limitter.defaultName;
-    let limitParam = req.headers.get(env.limitNames.limitParam) ?? this.limitter.defaultLimit;
-    if(this.limitter.isOutOfLimit(reqName, this.limitter.defaultLimit + +limitParam)) {
-      throw new Error('Too much requests')
-    }
-
-    this.limitter.plus(reqName);
-
-    // modify req, removing all params
-    let headers = req.headers;
-    headers.delete(env.limitNames.limitParam);
-    headers.delete(env.limitNames.nameParam);
-    const reqMod = req.clone({ headers: headers});
-
-    return next.handle(reqMod)
-    .pipe(finalize(
-      () => {
-        this.limitter.minus(reqName);
-      },
-    ));
-  }
 }

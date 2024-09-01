@@ -1,30 +1,22 @@
-<div class="{{containerClasses}}" *ngIf="stats">
-  <div>
-    <div class="flex flex-row">
-      <div>
-        {{ 'labels.total-topics' | translate }}:
-      </div>
-      <div class="ms-auto">{{stats.topicCount}}</div>
+<div class="{{ containerClasses }}" *ngIf="stats">
+    <div>
+        <div class="flex flex-row">
+            <div>{{ 'labels.total-topics' | translate }}:</div>
+            <div class="ms-auto">{{ stats.topicCount }}</div>
+        </div>
+        <div class="flex flex-row">
+            <div>{{ 'labels.total-posts' | translate }}:</div>
+            <div class="ms-auto">{{ stats.postCount }}</div>
+        </div>
+        <div class="flex flex-row">
+            <div>{{ 'labels.total-users' | translate }}:</div>
+            <div class="ms-auto">{{ stats.userCount }}</div>
+        </div>
+        <div class="flex flex-row overflow-hidden" *ngIf="stats.lastUser">
+            <div>{{ 'labels.last-user' | translate }}:</div>
+            <a class="ms-auto link no-underline" routerLink="/profile/{{ stats.lastUser.id }}">
+                {{ stats.lastUser.username }}
+            </a>
+        </div>
     </div>
-    <div class="flex flex-row">
-      <div>
-        {{ 'labels.total-posts' | translate }}:
-      </div>
-      <div class="ms-auto">{{stats.postCount}}</div>
-    </div>
-    <div class="flex flex-row">
-      <div>
-        {{ 'labels.total-users' | translate }}:
-      </div>
-      <div class="ms-auto">{{stats.userCount}}</div>
-    </div>
-    <div class="flex flex-row overflow-hidden" *ngIf="stats.lastUser">
-      <div>
-        {{ 'labels.last-user' | translate }}:
-      </div>
-      <a class="ms-auto link no-underline" routerLink="/profile/{{stats.lastUser.id}}">
-        {{stats.lastUser.username}}
-      </a>
-    </div>
-  </div>
 </div>

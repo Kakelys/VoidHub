@@ -1,11 +1,12 @@
-import { User } from 'src/shared/models/user.model';
-import { Message } from '../../chat/models/message.model';
-import { NotificationBase } from './notifcation-base.model';
-import { Chat } from '../../chat/models/chat-model';
+import { User } from 'src/shared/models/user.model'
 
-export interface NewMessageNotification extends NotificationBase {
-  message: Message;
-  sender: User;
-  chat: Chat;
-  anotherUser: User;
+import { Chat } from '../../chat/models/chat-model'
+import { Message } from '../../chat/models/message.model'
+import { NotificationBase } from './notification-base.model'
+
+export type NewMessageNotification = NotificationBase & {
+    message: Message
+    sender: User
+    chat: Chat
+    anotherUser: User
 }

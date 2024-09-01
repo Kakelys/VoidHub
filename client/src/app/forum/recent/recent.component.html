@@ -1,11 +1,18 @@
-
 <div class="flex flex-col">
-  <div #topicsContainer>
-    <div *ngFor="let topic of topics" class="mb-2">
-      <app-recent-element [post]="{topic: topic.topic, post: topic.post, sender: topic.sender, forum: topic.forum}" [user]="user" [enableDeliting]="false">
-      </app-recent-element>
+    <div #topicsContainer>
+        <div *ngFor="let topic of topics" class="mb-2">
+            <app-recent-element
+                [post]="{
+                    topic: topic.topic,
+                    post: topic.post,
+                    sender: topic.sender,
+                    forum: topic.forum,
+                }"
+                [user]="user"
+                [enableDeliting]="false"
+            >
+            </app-recent-element>
+        </div>
     </div>
-  </div>
-  <app-limit-loader [limit]="1" [reqName]="limitNames.topicLoad">
-  </app-limit-loader>
+    <app-limit-loader [limit]="1" [reqName]="limitNames.topicLoad"> </app-limit-loader>
 </div>

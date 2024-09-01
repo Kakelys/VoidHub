@@ -1,6 +1,4 @@
-export class Login {
-  constructor(
-    public loginName: string,
-    public password: string
-  ) {}
+export type Login = {
+    loginName: string
+    password: string
 }

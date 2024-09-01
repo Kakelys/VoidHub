@@ -1,45 +1,42 @@
-import { Injectable, OnDestroy } from "@angular/core";
-import { HubConnection } from "@microsoft/signalr";
-import { ToastrService } from "ngx-toastr";
-import { SignalrService } from "src/shared/signalr.service";
-import { NotificationBase } from "./models/notifcation-base.model";
-import { ReplaySubject, Subject, takeUntil } from "rxjs";
+import { HubConnection } from '@microsoft/signalr'
+import { ReplaySubject, Subject, takeUntil } from 'rxjs'
+
+import { Injectable, OnDestroy } from '@angular/core'
+
+import { SignalrService } from 'src/shared/signalr.service'
+
+import { NotificationBase } from './models/notification-base.model'
 
 @Injectable()
 export class NotifyService implements OnDestroy {
+    private bindings: Map<string, Subject<NotificationBase>> = new Map()
+    private destroy$ = new ReplaySubject<boolean>()
 
-  private bindings: Map<string, Subject<NotificationBase>> = new Map();
-  private destroy$ = new ReplaySubject<boolean>();
+    constructor(private signalR: SignalrService) {
+        this.signalR.connected$.pipe(takeUntil(this.destroy$)).subscribe((val) => {
+            if (val) this.startReceivingNotifies(this.signalR.hub)
+        })
+    }
 
-  constructor(private signalR: SignalrService, private toastr: ToastrService) {
-    this.signalR.connected$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(val => {
-      if(val)
-        this.startRecievingNotifies(this.signalR.hub);
-    })
-  }
+    ngOnDestroy(): void {
+        this.destroy$.next(true)
+        this.destroy$.complete()
+    }
 
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.complete();
-  }
+    private startReceivingNotifies(hub: HubConnection) {
+        hub.on('notify', (ntf: NotificationBase) => {
+            if (!this.bindings.has(ntf.type)) {
+                console.log('notify', ntf)
+                return
+            }
 
-  private startRecievingNotifies(hub: HubConnection) {
-    hub.on('notify', (ntf: NotificationBase) => {
-      if(!this.bindings.has(ntf.type)) {
-        console.log('notify', ntf)
-        return;
-      }
+            this.bindings.get(ntf.type).next(ntf)
+        })
+    }
 
-      this.bindings.get(ntf.type).next(ntf);
-    })
-  }
+    getSubject(name: string): Subject<NotificationBase> {
+        if (!this.bindings.has(name)) this.bindings.set(name, new Subject<NotificationBase>())
 
-  getSubject(name: string) : Subject<NotificationBase> {
-    if(!this.bindings.has(name))
-      this.bindings.set(name, new Subject<NotificationBase>())
-
-    return this.bindings.get(name);
-  }
+        return this.bindings.get(name)
+    }
 }

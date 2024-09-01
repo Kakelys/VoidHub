@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core'
-import { AuthService } from './auth.service'
-import { HttpErrorResponse, HttpHandler, HttpRequest } from '@angular/common/http'
-import { catchError, switchMap, take, throwError } from 'rxjs'
-import { ToastrService } from 'ngx-toastr'
-import { HttpException } from 'src/shared/models/http-exception.model'
 import { TranslateService } from '@ngx-translate/core'
+import { ToastrService } from 'ngx-toastr'
+import { catchError, switchMap, take, throwError } from 'rxjs'
+
+import { HttpErrorResponse, HttpHandler, HttpRequest } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+
+import { HttpException } from 'src/shared/models/http-exception.model'
+
+import { AuthService } from './auth.service'
 
 @Injectable()
 export class AuthInterceptor {

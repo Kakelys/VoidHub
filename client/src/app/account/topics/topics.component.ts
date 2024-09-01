@@ -1,114 +1,116 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import Editor from 'ckeditor5/build/ckeditor';
-import { ReplaySubject, debounceTime, fromEvent, takeUntil } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { AccountService } from '../account.service';
-import { ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { TopicInfo } from 'src/app/forum/models/topic-info.model';
-import { Offset } from 'src/shared/offset.model';
-import { HttpException } from 'src/shared/models/http-exception.model';
-import { ToastrExtension } from 'src/shared/toastr.extension';
-import { User } from 'src/shared/models/user.model';
-import { AuthService } from 'src/app/auth/auth.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core'
+import Editor from 'ckeditor5/build/ckeditor'
+import { ToastrService } from 'ngx-toastr'
+import { ReplaySubject, debounceTime, fromEvent, takeUntil } from 'rxjs'
+
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { ActivatedRoute } from '@angular/router'
+
+import { HttpException } from 'src/shared/models/http-exception.model'
+import { User } from 'src/shared/models/user.model'
+import { Offset } from 'src/shared/offset.model'
+import { ToastrExtension } from 'src/shared/toastr.extension'
+
+import { AuthService } from 'src/app/auth/auth.service'
+import { TopicInfo } from 'src/app/forum/models/topic-info.model'
+
+import { environment } from 'src/environments/environment'
+
+import { AccountService } from '../account.service'
 
 @Component({
-  selector: 'app-topics',
-  templateUrl: './topics.component.html',
-  styleUrls: ['./topics.component.css']
+    selector: 'app-topics',
+    templateUrl: './topics.component.html',
+    styleUrls: ['./topics.component.css'],
 })
 export class AccountTopicsComponent implements OnInit, OnDestroy {
+    editor = Editor as { create: any }
+    topics: TopicInfo[] = []
+    user: User
 
-  editor = Editor as {create: any}
-  topics: TopicInfo[] = []
-  user: User;
+    loadTime = new Date()
+    postLimit = 10
+    canLoadMore = true
+    loading = false
+    id: number
 
-  loadTime = new Date();
-  postLimit = 10;
-  canLoadMore = true;
-  loading = false;
-  id: number;
+    limitNames = environment.limitNames
+    resourceUrl = environment.resourceURL
 
-  limitNames = environment.limitNames;
-  resourceUrl = environment.resourceURL;
+    @ViewChild('topicsContainer', { static: true })
+    topicsContainer: ElementRef
 
-  @ViewChild('topicsContainer', {static: true})
-  topicsContainer: ElementRef;
+    private destroy$ = new ReplaySubject<boolean>(1)
 
-  private destroy$ = new ReplaySubject<boolean>(1);
-
-  constructor(
-  private accService: AccountService,
-  private route: ActivatedRoute,
-  private toastr: ToastrService,
-  private auth: AuthService,
-  private trans: TranslateService) {
-    this.auth.user$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(user => {
-      this.user = user;
-    })
-  }
-
-  ngOnInit(): void {
-    this.route.parent.params.subscribe(params => {
-      this.handleId(params['id']);
-    })
-
-    fromEvent(window, 'scroll')
-    .pipe(takeUntil(this.destroy$), debounceTime(300))
-    .subscribe((e:any) => {
-      const currentScroll = e.target.documentElement.scrollTop + e.target.documentElement.clientHeight;
-      const blockEnd = this.topicsContainer.nativeElement.offsetHeight + this.topicsContainer.nativeElement.offsetTop;
-
-      if(currentScroll > blockEnd - blockEnd * 0.35)
-        this.loadNextPosts();
-    })
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.complete();
-  }
-
-  async handleId(id) {
-    let newId = id;
-
-    if(!Number(newId)) {
-      this.trans.get('forms-errors.wrong-account-id')
-      .subscribe(str => {
-        this.toastr.error(str);
-      })
-      return;
+    constructor(
+        private accService: AccountService,
+        private route: ActivatedRoute,
+        private toastr: ToastrService,
+        private auth: AuthService,
+        private trans: TranslateService
+    ) {
+        this.auth.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+            this.user = user
+        })
     }
 
-    if(newId == this.id)
-      return;
+    ngOnInit(): void {
+        this.route.parent.params.subscribe((params) => {
+            this.handleId(params['id'])
+        })
 
-    this.id = id;
-    this.loadNextPosts();
-  }
+        fromEvent(window, 'scroll')
+            .pipe(takeUntil(this.destroy$), debounceTime(300))
+            .subscribe((e: any) => {
+                const currentScroll =
+                    e.target.documentElement.scrollTop + e.target.documentElement.clientHeight
+                const blockEnd =
+                    this.topicsContainer.nativeElement.offsetHeight +
+                    this.topicsContainer.nativeElement.offsetTop
 
-  loadNextPosts() {
-    if(!this.canLoadMore || this.loading)
-      return;
-    this.loading = true;
+                if (currentScroll > blockEnd - blockEnd * 0.35) this.loadNextPosts()
+            })
+    }
 
-    const offset = new Offset(this.topics.length, this.postLimit);
+    ngOnDestroy(): void {
+        this.destroy$.next(true)
+        this.destroy$.complete()
+    }
 
-    this.accService.getTopics(this.id, this.loadTime, offset)
-    .subscribe({
-      next: (data: TopicInfo[]) => {
-        if(!data || data.length < this.postLimit) {
-          this.canLoadMore = false;
+    async handleId(id) {
+        const newId = id
+
+        if (!Number(newId)) {
+            this.trans.get('forms-errors.wrong-account-id').subscribe((str) => {
+                this.toastr.error(str)
+            })
+            return
         }
 
-        this.topics.push(...data);
-      },
-      error: (err : HttpException) =>
-        ToastrExtension.handleErrors(this.toastr, err.errors),
-      complete: () => {this.loading = false}
-    })
-  }
+        if (newId == this.id) return
+
+        this.id = id
+        this.loadNextPosts()
+    }
+
+    loadNextPosts() {
+        if (!this.canLoadMore || this.loading) return
+        this.loading = true
+
+        const offset = new Offset(this.topics.length, this.postLimit)
+
+        this.accService.getTopics(this.id, this.loadTime, offset).subscribe({
+            next: (data: TopicInfo[]) => {
+                if (!data || data.length < this.postLimit) {
+                    this.canLoadMore = false
+                }
+
+                this.topics.push(...data)
+            },
+            error: (err: HttpException) => ToastrExtension.handleErrors(this.toastr, err.errors),
+            complete: () => {
+                this.loading = false
+            },
+        })
+    }
 }

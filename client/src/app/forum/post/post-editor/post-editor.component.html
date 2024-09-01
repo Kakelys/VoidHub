@@ -1,71 +1,65 @@
 <form #newPostForm="ngForm" (ngSubmit)="onSubmit(newPostForm)">
-  <div class="flex flex-col">
-    <div class="form-control">
-      <div class="form-control w-full">
-        <ckeditor
-          (ready)="onEditorReady($event)"
-          class="bg-neutral"
-          classes="rounded-b bg-neutral min-h-24"
-          id="content"
-          name="content"
-          [config]="{placeholder: inputPlaceholder}"
-          [editor]="editor"
-          [(ngModel)]="content">
-        </ckeditor>
-        <label class="label">
-          <span class="label-text-alt">
-            <span
-              [ngClass]="{
-                'text-error': content?.length > 24000
-              }">
-              {{content?.length ?? 0}}
-            </span>
-            / 24000 <span class="text-xs text-secondary-content">({{ 'lables.include-styles' | translate }})</span>
-          </span>
-        </label>
-      </div>
-    </div>
+    <div class="flex flex-col">
+        <div class="form-control">
+            <div class="form-control w-full">
+                <ckeditor
+                    id="content"
+                    name="content"
+                    class="bg-neutral"
+                    classes="rounded-b bg-neutral min-h-24"
+                    [config]="{ placeholder: inputPlaceholder }"
+                    [editor]="editor"
+                    [(ngModel)]="content"
+                    (ready)="onEditorReady($event)"
+                >
+                </ckeditor>
+                <label for="content" class="label">
+                    <span class="label-text-alt">
+                        <span
+                            [ngClass]="{
+                                'text-error': content?.length > 24000,
+                            }"
+                        >
+                            {{ content?.length ?? 0 }}
+                        </span>
+                        / 24000
+                        <span class="text-xs text-secondary-content"
+                            >({{ 'lables.include-styles' | translate }})</span
+                        >
+                    </span>
+                </label>
+            </div>
+        </div>
 
-    <app-upload-images
-      [postId]="postId"
-      (onPaste)="addImage($event)"
-      (onFilesUpdates)="onFilesUpdated($event)"
-    ></app-upload-images>
+        <app-upload-images
+            [postId]="postId"
+            (inserted)="addImage($event)"
+            (filesUpdated)="onFilesUpdated($event)"
+        ></app-upload-images>
 
-    <div class="form-control hidden">
-      <input
-        type="number"
-        name="topicId"
-        id="topicId"
-        [ngModel]="topicId"
-      >
-      <input
-        type="number"
-        name="postId"
-        id="postId"
-        [ngModel]="postId"
-      >
-      <input
-        type="number"
-        name="ancestorId"
-        id="ancestorId"
-        [ngModel]="ancestorId"
-      >
-    </div>
+        <div class="form-control hidden">
+            <input type="number" name="topicId" id="topicId" [ngModel]="topicId" />
+            <input type="number" name="postId" id="postId" [ngModel]="postId" />
+            <input type="number" name="ancestorId" id="ancestorId" [ngModel]="ancestorId" />
+        </div>
 
-    <div class="flex flex-row">
-      <app-limit-loader [limit]="1">
-        <button class="btn btn-success min-h-fit h-8">
-          {{submitPlaceholder}}
-        </button>
-      </app-limit-loader>
-      <button
-        type="button"
-        [class]="cancelClassesReplacement ? cancelClassesReplacement : 'btn btn-info ms-5 min-h-fit h-8'"
-        (click)="onCancelClick()"
-      >
-        {{cancelPlaceholder}}
-      </button>
+        <div class="flex flex-row">
+            <app-limit-loader [limit]="1">
+                <button class="btn btn-success min-h-fit h-8">
+                    {{ submitPlaceholder }}
+                </button>
+            </app-limit-loader>
+            <button
+                type="button"
+                [class]="
+                    cancelClassesReplacement
+                        ? cancelClassesReplacement
+                        : 'btn btn-info ms-5 min-h-fit h-8'
+                "
+                (click)="onCancelClick()"
+            >
+                {{ cancelPlaceholder }}
+            </button>
+        </div>
     </div>
-  </div>
 </form>

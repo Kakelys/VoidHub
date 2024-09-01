@@ -1,30 +1,39 @@
 <div *ngIf="pages.length > 0" class="flex flex-row">
-  <div class="flex flex-row"*ngIf="currentPage > min+range">
-    <div
-      (click)="changePageClick(min)"
-      class="px-2 mx-0.5 btn bg-neutral min-h-min h-6">
-      {{min}}
+    <div class="flex flex-row" *ngIf="currentPage > min + range">
+        <div
+            tabindex="1"
+            class="px-2 mx-0.5 btn bg-neutral min-h-min h-6"
+            (click)="changePageClick(min)"
+            (keypress)="changePageClick(min)"
+        >
+            {{ min }}
+        </div>
+        <div>. . .</div>
     </div>
-    <div>
-      . . .
-    </div>
-  </div>
 
-  <div *ngFor="let page of pages"
-    class="px-2 mx-0.5 btn min-h-min h-6 text-content-base"
-    [ngClass] = "{'bg-base-content text-neutral': page == currentPage, 'bg-neutral': page != currentPage}"
-    (click)="changePageClick(page)">
-      {{page}}
-  </div>
-
-  <div class="flex flex-row"*ngIf="currentPage < max-range">
-    <div>
-      . . .
-    </div>
     <div
-      (click)="changePageClick(max)"
-      class="px-2 mx-0.5 btn bg-neutral min-h-min h-6">
-      {{max}}
+        tabindex="1"
+        class="px-2 mx-0.5 btn min-h-min h-6 text-content-base"
+        [ngClass]="{
+            'bg-base-content text-neutral': page === currentPage,
+            'bg-neutral': page !== currentPage,
+        }"
+        *ngFor="let page of pages"
+        (click)="changePageClick(page)"
+        (keypress)="changePageClick(page)"
+    >
+        {{ page }}
     </div>
-  </div>
+
+    <div class="flex flex-row" *ngIf="currentPage < max - range">
+        <div>. . .</div>
+        <div
+            tabindex="1"
+            class="px-2 mx-0.5 btn bg-neutral min-h-min h-6"
+            (click)="changePageClick(max)"
+            (keypress)="changePageClick(max)"
+        >
+            {{ max }}
+        </div>
+    </div>
 </div>

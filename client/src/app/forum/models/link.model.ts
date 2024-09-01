@@ -1,4 +1,4 @@
-export interface Link {
-  type: string;
-  data: any;
+export type Link = {
+    type: string
+    data: any
 }

@@ -1,48 +1,61 @@
 <div class="flex flex-col w-fit">
-  <app-error-message-list [messages]="errorMessages"></app-error-message-list>
+    <app-error-message-list [messages]="errorMessages"></app-error-message-list>
 
-  <form #roleChangeForm="ngForm" (ngSubmit)="onSubmit(roleChangeForm)">
-    <div class="form-control">
-      <input
-        type="text"
-        name="username"
-        id="username"
-        placeholder="{{'forms.username'|translate}}"
-        class="input-sm bg-neutral input input-bordered"
-        [ngClass]="{
-          'input-error': roleChangeForm.controls['username']?.touched && roleChangeForm.controls['username'].invalid,
-          'btn-disabled': userIdBlocked
-        }"
-        [ngModel]="username"
-        required
-        autocomplete="on"
-      />
-    </div>
-    <div class="mt-2 form-control">
-      <select
-        class="select bg-neutral min-h-min h-8"
-        id="roleName"
-        name="roleName"
-        [ngClass]="{
-          'input-error': roleChangeForm.controls['roleName']?.touched && roleChangeForm.controls['roleName'].invalid,
-          'select-bordered': !(roleChangeForm.controls['roleName']?.touched && roleChangeForm.controls['roleName'].invalid)
-        }"
-        [ngModel]="'forms.pick-role'|translate"
-      >
-        <option disabled selected>{{ 'forms.pick-role'|translate }}</option>
-        <option *ngFor="let role of roles" [value]="role">{{'roles.' + role | lowercase | translate}}</option>
-      </select>
-    </div>
+    <form #roleChangeForm="ngForm" (ngSubmit)="onSubmit(roleChangeForm)">
+        <div class="form-control">
+            <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder="{{ 'forms.username' | translate }}"
+                class="input-sm bg-neutral input input-bordered"
+                [ngClass]="{
+                    'input-error':
+                        roleChangeForm.controls['username']?.touched &&
+                        roleChangeForm.controls['username'].invalid,
+                    'btn-disabled': userIdBlocked,
+                }"
+                [ngModel]="username"
+                required
+                autocomplete="on"
+            />
+        </div>
+        <div class="mt-2 form-control">
+            <select
+                class="select bg-neutral min-h-min h-8"
+                id="roleName"
+                name="roleName"
+                [ngClass]="{
+                    'input-error':
+                        roleChangeForm.controls['roleName']?.touched &&
+                        roleChangeForm.controls['roleName'].invalid,
+                    'select-bordered': !(
+                        roleChangeForm.controls['roleName']?.touched &&
+                        roleChangeForm.controls['roleName'].invalid
+                    ),
+                }"
+                [ngModel]="'forms.pick-role' | translate"
+            >
+                <option disabled selected>{{ 'forms.pick-role' | translate }}</option>
+                <option *ngFor="let role of roles" [value]="role">
+                    {{ 'roles.' + role | lowercase | translate }}
+                </option>
+            </select>
+        </div>
 
-    <div class="mt-2 flex flex-row">
-      <app-limit-loader [limit]="1">
-        <button class="btn btn-success min-h-fit h-8">
-          {{'forms.save'|translate}}
-        </button>
-        <button type="button" class="ms-3 btn btn-error min-h-fit  h-8" (click)="onCancelClick()">
-          {{'forms.cancel'|translate}}
-        </button>
-      </app-limit-loader>
-    </div>
-  </form>
+        <div class="mt-2 flex flex-row">
+            <app-limit-loader [limit]="1">
+                <button class="btn btn-success min-h-fit h-8">
+                    {{ 'forms.save' | translate }}
+                </button>
+                <button
+                    type="button"
+                    class="ms-3 btn btn-error min-h-fit h-8"
+                    (click)="onCancelClick()"
+                >
+                    {{ 'forms.cancel' | translate }}
+                </button>
+            </app-limit-loader>
+        </div>
+    </form>
 </div>

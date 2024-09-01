@@ -1,4 +1,4 @@
 export class Jwt {
-  public accessToken: string;
-  public refreshToken: string;
+    public accessToken: string
+    public refreshToken: string
 }

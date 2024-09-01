@@ -1,6 +1,7 @@
-import { User } from "src/shared/models/user.model";
-import { NotificationBase } from "./notifcation-base.model";
+import { User } from 'src/shared/models/user.model'
 
-export interface UserNotification extends NotificationBase {
-  user: User;
+import { NotificationBase } from './notification-base.model'
+
+export type UserNotification = NotificationBase & {
+    user: User
 }

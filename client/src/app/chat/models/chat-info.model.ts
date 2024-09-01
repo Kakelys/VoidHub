@@ -1,7 +1,8 @@
-import { User } from "src/shared/models/user.model";
-import { Chat } from "./chat-model";
+import { User } from 'src/shared/models/user.model'
 
-export interface ChatInfo {
-  chat: Chat;
-  members: User[]
+import { Chat } from './chat-model'
+
+export type ChatInfo = {
+    chat: Chat
+    members: User[]
 }

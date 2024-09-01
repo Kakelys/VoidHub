@@ -1,107 +1,153 @@
 <div class="flex flex-col">
-  <div class="flex flex-row bg-neutral border border-secondary-content rounded min-h-32"
-  [ngClass]="{
-    'hidden': editMode
-  }">
-    <div class="flex-none w-36 px-5 py-5 text-center border-e border-secondary-content">
-      <div class="flex flex-col items-center">
-        <div class="avatar">
-          <div class="w-12 rounded">
-            <a routerLink="/profile/{{post?.sender.id}}">
-              <img src="{{resourceUrl}}/{{post?.sender?.avatarPath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}"/>
-            </a>
-          </div>
-        </div>
-        <a class="link no-underline" routerLink="/profile/{{post?.sender.id}}">
-          {{post?.sender.username}}
-        </a>
-        <div class="text-xs">
-          {{post?.post.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm'}}
-        </div>
-        <div class="flex flex-row">
-          <div class="text-xs" *ngIf="user && user?.id == post?.sender.id && !isTopicClosed">
-            <div class="btn btn-neutral min-h-min h-8" (click)="setEditMode(true)">
-              {{ 'forms.edit' | translate }}
+    <div
+        class="flex flex-row bg-neutral border border-secondary-content rounded min-h-32"
+        [ngClass]="{
+            hidden: editMode,
+        }"
+    >
+        <div class="flex-none w-36 px-5 py-5 text-center border-e border-secondary-content">
+            <div class="flex flex-col items-center">
+                <div class="avatar">
+                    <div class="w-12 rounded">
+                        <a routerLink="/profile/{{ post?.sender.id }}">
+                            <img
+                                src="{{ resourceUrl }}/{{ post?.sender?.avatarPath }}"
+                                loading="lazy"
+                                alt="{{ 'profile.avatar' | translate }}"
+                            />
+                        </a>
+                    </div>
+                </div>
+                <a class="link no-underline" routerLink="/profile/{{ post?.sender.id }}">
+                    {{ post?.sender.username }}
+                </a>
+                <div class="text-xs">
+                    {{ post?.post.createdAt | withtimezone | date: 'dd.MM.yyyy HH:mm' }}
+                </div>
+                <div class="flex flex-row">
+                    <div
+                        class="text-xs"
+                        *ngIf="user && user?.id === post?.sender.id && !isTopicClosed"
+                    >
+                        <div
+                            tabindex="1"
+                            class="btn btn-neutral min-h-min h-8"
+                            (click)="setEditMode(true)"
+                            (keypress)="setEditMode(true)"
+                        >
+                            {{ 'forms.edit' | translate }}
+                        </div>
+                    </div>
+                    <div class="my-auto" *ngIf="enableDeliting">
+                        <div class="text-xs" *ngIf="user">
+                            <app-delete
+                                *ngIf="user?.role === roles.ADMIN || user?.role === roles.MODER"
+                                (confirmed)="onAdminDelete()"
+                            >
+                            </app-delete>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="my-auto" *ngIf="enableDeliting">
-            <div class="text-xs" *ngIf="user">
-                <app-delete *ngIf="user?.role == roles.ADMIN || user?.role == roles.MODER" (onConfirm)="onAdminDelete()">
-                </app-delete>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="flex flex-col overflow-auto w-full">
-      <div class="mx-8 grow">
-        <ckeditor [ngModel]="post.post.content" [editor]="editor" [disabled]="true" class="ck-viewer"></ckeditor>
-      </div>
-      <div class="flex flex-row">
-        <div class="btn btn-ghost p-0 min-h-min w-fit h-6 mb-1 ms-1" (click)="changeLikeState()">
-          <div class="flex flex-row mx-2">
-            <div class="my-auto">
-              <div>
-                {{post.post?.likesCount}}
-              </div>
+        <div class="flex flex-col overflow-auto w-full">
+            <div class="mx-8 grow">
+                <ckeditor
+                    [ngModel]="post.post.content"
+                    [editor]="editor"
+                    [disabled]="true"
+                    class="ck-viewer"
+                ></ckeditor>
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 fill-none" viewBox="0 0 24 24"
-              [ngClass]="{
-                'fill-red-500': post.post.isLiked
-              }"
-            >
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z"
-                class="stroke-base-content"
-                [ngClass]="{
-                  'stroke-red-500': post.post.isLiked
-                }"
-                stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-        </div>
-        <div class="btn btn-ghost p-0 min-h-min w-fit h-6 mb-1 ms-1" *ngIf="enableComments" (click)="toggleCommentsMode()">
-          <div class="flex flex-row mx-2">
-            <div class="my-auto" *ngIf="post.post?.commentsCount > 0">
-              <div>
-                {{post.post?.commentsCount}}
-              </div>
+            <div class="flex flex-row">
+                <div
+                    tabindex="1"
+                    class="btn btn-ghost p-0 min-h-min w-fit h-6 mb-1 ms-1"
+                    (click)="changeLikeState()"
+                    (keypress)="changeLikeState()"
+                >
+                    <div class="flex flex-row mx-2">
+                        <div class="my-auto">
+                            <div>
+                                {{ post.post?.likesCount }}
+                            </div>
+                        </div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 fill-none"
+                            viewBox="0 0 24 24"
+                            [ngClass]="{
+                                'fill-red-500': post.post.isLiked,
+                            }"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z"
+                                class="stroke-base-content"
+                                [ngClass]="{
+                                    'stroke-red-500': post.post.isLiked,
+                                }"
+                                stroke-width="1"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    </div>
+                </div>
+                <div
+                    tabindex="1"
+                    class="btn btn-ghost p-0 min-h-min w-fit h-6 mb-1 ms-1"
+                    (click)="toggleCommentsMode()"
+                    (keypress)="toggleCommentsMode()"
+                    *ngIf="enableComments"
+                >
+                    <div class="flex flex-row mx-2">
+                        <div class="my-auto" *ngIf="post.post?.commentsCount > 0">
+                            <div>
+                                {{ post.post?.commentsCount }}
+                            </div>
+                        </div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 fill-none"
+                            viewBox="0 0 24 24"
+                        >
+                            <g>
+                                <path
+                                    d="M5.59961 19.9203L7.12357 18.7012L7.13478 18.6926C7.45249 18.4384 7.61281 18.3101 7.79168 18.2188C7.95216 18.1368 8.12328 18.0771 8.2998 18.0408C8.49877 18 8.70603 18 9.12207 18H17.8031C18.921 18 19.4806 18 19.908 17.7822C20.2843 17.5905 20.5905 17.2842 20.7822 16.9079C21 16.4805 21 15.9215 21 14.8036V7.19691C21 6.07899 21 5.5192 20.7822 5.0918C20.5905 4.71547 20.2837 4.40973 19.9074 4.21799C19.4796 4 18.9203 4 17.8002 4H6.2002C5.08009 4 4.51962 4 4.0918 4.21799C3.71547 4.40973 3.40973 4.71547 3.21799 5.0918C3 5.51962 3 6.08009 3 7.2002V18.6712C3 19.7369 3 20.2696 3.21846 20.5433C3.40845 20.7813 3.69644 20.9198 4.00098 20.9195C4.35115 20.9191 4.76744 20.5861 5.59961 19.9203Z"
+                                    class="stroke-base-content stroke-1"
+                                />
+                            </g>
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 fill-none" viewBox="0 0 24 24">
-              <g>
-                <path d="M5.59961 19.9203L7.12357 18.7012L7.13478 18.6926C7.45249 18.4384 7.61281 18.3101 7.79168 18.2188C7.95216 18.1368 8.12328 18.0771 8.2998 18.0408C8.49877 18 8.70603 18 9.12207 18H17.8031C18.921 18 19.4806 18 19.908 17.7822C20.2843 17.5905 20.5905 17.2842 20.7822 16.9079C21 16.4805 21 15.9215 21 14.8036V7.19691C21 6.07899 21 5.5192 20.7822 5.0918C20.5905 4.71547 20.2837 4.40973 19.9074 4.21799C19.4796 4 18.9203 4 17.8002 4H6.2002C5.08009 4 4.51962 4 4.0918 4.21799C3.71547 4.40973 3.40973 4.71547 3.21799 5.0918C3 5.51962 3 6.08009 3 7.2002V18.6712C3 19.7369 3 20.2696 3.21846 20.5433C3.40845 20.7813 3.69644 20.9198 4.00098 20.9195C4.35115 20.9191 4.76744 20.5861 5.59961 19.9203Z"
-                  class="stroke-base-content stroke-1"
-                />
-              </g>
-            </svg>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-  <div *ngIf="editMode">
-    <app-post-editor
-      *ngIf="user"
-      [postId]="post.post.id"
-      [topicId]="post.post.topicId"
-      [content]="post.post.content"
-      [submitPlaceholder]="'forms.save' | translate"
-      (onCreate)="onPostEdit($event)"
-      (onCancel)="setEditMode(false)">
-    </app-post-editor>
-  </div>
-  <div *ngIf="commentsMode">
-      <app-comments
-        [postId]="post.post.id"
-        [topicId]="post.post.topicId"
-        [user]="user"
-        [commentsCount]="post.post.commentsCount"
-        [depth]="depth + 1"
-        [isTopicClosed]="isTopicClosed"
-        (onCommentsCounterUpdated)="updateCommentsCounter($event)"
-        (onClose)="toggleCommentsMode()"
-      ></app-comments>
-  </div>
+    <div *ngIf="editMode">
+        <app-post-editor
+            *ngIf="user"
+            [postId]="post.post.id"
+            [topicId]="post.post.topicId"
+            [content]="post.post.content"
+            [submitPlaceholder]="'forms.save' | translate"
+            (onCreate)="onPostEdit($event)"
+            (onCancel)="setEditMode(false)"
+        >
+        </app-post-editor>
+    </div>
+    <div *ngIf="commentsMode">
+        <app-comments
+            [postId]="post.post.id"
+            [topicId]="post.post.topicId"
+            [user]="user"
+            [commentsCount]="post.post.commentsCount"
+            [depth]="depth + 1"
+            [isTopicClosed]="isTopicClosed"
+            (onCommentsCounterUpdated)="updateCommentsCounter($event)"
+            (onClose)="toggleCommentsMode()"
+        ></app-comments>
+    </div>
 </div>
-

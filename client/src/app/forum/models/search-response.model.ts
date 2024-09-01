@@ -1,7 +1,6 @@
-import { SearchElement } from "./search-element.model";
-import { TopicInfo } from "./topic-info.model";
+import { SearchElement } from './search-element.model'
 
-export interface SearchResponse {
-  searchCount: number;
-  data: SearchElement[];
+export type SearchResponse = {
+    searchCount: number
+    data: SearchElement[]
 }

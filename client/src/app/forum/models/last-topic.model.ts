@@ -1,9 +1,8 @@
-import { User } from "src/shared/models/user.model";
+import { User } from 'src/shared/models/user.model'
 
-export class LastTopic {
-  public id: number;
-  public title: string;
-  public updatedAt: Date;
-
-  public user: User;
+export type LastTopic = {
+    id: number
+    title: string
+    updatedAt: Date
+    user: User
 }

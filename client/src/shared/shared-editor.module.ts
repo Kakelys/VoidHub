@@ -1,12 +1,9 @@
-import { NgModule } from "@angular/core";
-import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular'
+
+import { NgModule } from '@angular/core'
 
 @NgModule({
-  imports: [
-    CKEditorModule,
-  ],
-  exports: [
-    CKEditorModule,
-  ]
+    imports: [CKEditorModule],
+    exports: [CKEditorModule],
 })
-export class SharedEditorModule{}
+export class SharedEditorModule {}

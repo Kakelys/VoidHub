@@ -23,12 +23,20 @@
   "useTabs": false,
   "vueIndentScriptAndStyle": false,
   "withNodeModules": false,
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports"
+  ],
   "importOrder": [
-    "^core/(.*)$",
-    "^components/(.*)$",
-    "^pages/(.*)$",
+    "^@angular/(.*)$",
+    "^src/shared(.*)$",
+    "^src/app(.*)$",
+    "^src/(.*)$",
     "^assets/(.*)$",
     "^[./]"
+  ],
+  "importOrderParserPlugins": [
+    "typescript",
+    "decorators-legacy"
   ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true

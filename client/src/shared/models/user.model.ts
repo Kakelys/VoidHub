@@ -1,8 +1,8 @@
-export class User {
-  public id: number;
-  public username: string;
-  public email: string;
-  public role: string;
-  public avatarPath: string;
-  public isEmailConfirmed: boolean;
+export type User = {
+    id: number
+    username: string
+    email: string
+    role: string
+    avatarPath: string
+    isEmailConfirmed: boolean
 }

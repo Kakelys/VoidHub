@@ -1,7 +1,8 @@
-import { User } from "src/shared/models/user.model";
-import { NotificationBase } from "./notifcation-base.model";
+import { User } from 'src/shared/models/user.model'
 
-export interface ConnectionsDataNotification extends NotificationBase {
-  totalCount: number;
-  users: User[];
+import { NotificationBase } from './notification-base.model'
+
+export type ConnectionsDataNotification = NotificationBase & {
+    totalCount: number
+    users: User[]
 }

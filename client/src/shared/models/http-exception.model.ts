@@ -1,5 +1,5 @@
-export interface HttpException {
-  statusCode: number;
-  errors: string[];
-  error: any;
+export type HttpException = {
+    statusCode: number
+    errors: string[]
+    error: any
 }
