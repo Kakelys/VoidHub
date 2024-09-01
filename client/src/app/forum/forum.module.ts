@@ -17,6 +17,7 @@ import { ForumListComponent } from './forum/forum-list/forum-list.component'
 import { ForumComponent } from './forum/forum/forum.component'
 import { NewForumComponent } from './forum/new-forum/new-forum.component'
 import { MainComponent } from './main/main.component'
+import { PaginatorV2Component } from './paginator2/paginator.component'
 import { PaginatorComponent } from './paginator/paginator.component'
 import { RecentComponent } from './recent/recent.component'
 import { ReducePost } from './recent/reduce-post.pipe'
@@ -72,6 +73,7 @@ import { TopicComponent } from './topic/topic/topic.component'
         DeleteComponent,
         ErrorMessageListComponent,
         PaginatorComponent,
+        PaginatorV2Component,
         TopicElementComponent,
         PinnedIconComponent,
         ClosedIconComponent,
@@ -109,6 +111,7 @@ import { TopicComponent } from './topic/topic/topic.component'
                 ],
             },
         ]),
+        PaginatorV2Component,
     ],
     exports: [],
 })
