@@ -80,22 +80,15 @@ export class ForumComponent implements OnDestroy {
     }
 
     async handleForumIdChange(newForumId: number) {
-        const isFirst = !this.forumId
+        this.forumId = newForumId
 
-        if (+newForumId) {
-            if (this.forumId == newForumId) {
-                return
-            }
-            this.forumId = newForumId
+        const loadDeleted = this.router.url.indexOf('deleted') != -1
+        this.forumService.getForum(this.forumId, loadDeleted).subscribe((forum: ForumResponse) => {
+            if (!forum) return
 
-            const loadDeleted = this.router.url.indexOf('deleted') != -1
-            this.forumService
-                .getForum(this.forumId, loadDeleted ? { onlyDeleted: true } : {})
-                .subscribe((forum: ForumResponse) => {
-                    this.forumRes = forum
-                    if (!isFirst) this.loadTopicsPage()
-                })
-        }
+            this.forumRes = forum
+            this.loadTopicsPage()
+        })
     }
 
     changePage(page: number) {
