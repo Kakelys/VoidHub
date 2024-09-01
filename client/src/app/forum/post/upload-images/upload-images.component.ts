@@ -118,6 +118,7 @@ export class UploadImagesComponent implements OnInit, OnDestroy {
   }
 
   copyToClipBoard(url: string) {
+    // not working over http
     navigator.clipboard.writeText(url)
     .then(_ => {
       this.trans.get('labels.copied')

@@ -43,10 +43,10 @@ namespace ForumApi.Controllers
                 Path = $"{_imageOptions.PostImageFolder}/{accountId}{Guid.NewGuid()}{fileExt}",
             };
 
-            if(fileRep.Value.FindByCondition(f => f.AccountId == accountId).Count() > options.Value.LimitPerAccount)
+            if (fileRep.Value.FindByCondition(f => f.AccountId == accountId).Count() > options.Value.LimitPerAccount)
                 throw new BadRequestException(locale["errors.image-limit-exceeded"]);
 
-            if(RuleExtensions.imageDefaultExtensions.Contains(fileExt))
+            if (RuleExtensions.imageDefaultExtensions.Contains(fileExt))
             {
                 return Ok(await uploadService.UploadImage(newFileDto!.File!, fileDto));
             }
@@ -57,16 +57,16 @@ namespace ForumApi.Controllers
         [HttpDelete]
         [Authorize]
         [BanFilter]
-        public async Task<IActionResult> DeteleImages([FromQuery] int[] ids)
+        public async Task<IActionResult> DeleteImages([FromQuery] int[] ids)
         {
-            if(ids.Length == 0)
+            if (ids.Length == 0)
                 throw new BadRequestException(locale["errors.file-ids-not-provided"]);
 
             var accountId = User.GetId();
 
-            // check permission for delition
+            // check permission for deletion
             var files = await fileService.Get(ids);
-            if(files.Count(f => f.AccountId == accountId) != files.Count)
+            if (files.Count(f => f.AccountId == accountId) != files.Count)
                 throw new ForbiddenException(locale["errors.no-permission"]);
 
             await uploadService.DeleteFiles(ids);

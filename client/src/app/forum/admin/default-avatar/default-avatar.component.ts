@@ -36,7 +36,7 @@ export class DefaultAvatarComponent {
         next: _ => {
           this.trans.get("labels.avatar-updated-successfully")
           .subscribe(str => {
-            this.toastr.success("labels.avatar-updated-successfully");
+            this.toastr.success(str);
           })
         },
         error: (err: HttpException) => {

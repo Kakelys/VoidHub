@@ -68,10 +68,9 @@ builder.Services.AddCors(options =>
 
       // TODO: strange origin works with tunnels
       policy
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-            //.AllowCredentials();
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 

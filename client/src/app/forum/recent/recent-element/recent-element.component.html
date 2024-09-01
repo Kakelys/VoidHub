@@ -11,7 +11,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col truncate">
           <a routerLink="/forum/topic/{{post.topic.id}}" class="link no-underline text-xl">
             {{post.topic.title}}
           </a>
@@ -21,8 +21,8 @@
             </a>
             {{post.post.createdAt | withtimezone | date:'HH:mm, d MMM' }}
           </div>
-          <div class="flex flex-row -ms-7 -mt-1">
-            <div class="avatar">
+          <div class="flex flex-row -ms-1 -mt-1">
+            <div class="avatar absolute -ms-6">
               <div class="w-6 rounded-full">
                 <a routerLink="/forum/{{post.forum.id}}">
                   <img src="{{resourceUrl}}/{{post.forum.imagePath}}" loading="lazy" alt="{{ 'profile.avatar' | translate }}">

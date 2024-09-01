@@ -15,10 +15,14 @@
       <div>
         <div class="flex flex-row my-auto">
           <div class="text-3xl font-bold">
-            {{topic.topic.title}}
             <span *ngIf="topic.topic.deletedAt" class="text-error">
               {{ 'lables.deleted' | translate }}
             </span>
+
+            <div class="whitespace-pre-wrap break-all">
+              {{topic.topic.title}}
+            </div>
+
           </div>
 
           <div class="flex flex-row ms-3">

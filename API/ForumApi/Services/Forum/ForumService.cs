@@ -58,7 +58,7 @@ namespace ForumApi.Services.ForumS
         public async Task Delete(int forumId)
         {
             var entity = await rep.Forum.Value
-                .FindByCondition(f => f.DeletedAt == null && f.Id == forumId, true)
+                .FindByCondition(f => f.Id == forumId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-forum"]);
 
             if(entity.Topics.Count > 0)

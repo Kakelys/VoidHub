@@ -20,7 +20,7 @@
     <div class="basis-1/12 text-center">
       {{forumRes.topicsCount}}
     </div>
-    <div class="basis-3/12">
+    <div class="basis-3/12 truncate">
       <div class="flex flex-row" *ngIf="forumRes?.lastTopic">
         <div class="me-2 my-auto">
           <div class="avatar">
@@ -40,7 +40,7 @@
             <a class="link no-underline"
               routerLink="/forum/topic/{{forumRes.lastTopic.id}}"
             >
-              {{forumRes.lastTopic.title | truncate}}
+              {{forumRes.lastTopic.title | truncate:20}}
             </a>
           </div>
           <div>
