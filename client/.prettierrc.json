@@ -28,6 +28,9 @@
   ],
   "importOrder": [
     "^@angular/(.*)$",
+    "^(.*)/shared.module$",
+    "^(.*)/shared(.*)$",
+    "^(.*)/shared(.*module.*)$",
     "^src/shared(.*)$",
     "^src/app(.*)$",
     "^src/(.*)$",
@@ -36,7 +39,7 @@
   ],
   "importOrderParserPlugins": [
     "typescript",
-    "decorators-legacy"
+    "decorators"
   ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true
