@@ -16,7 +16,7 @@ namespace ForumApi.Services.ChatS;
 
 public class ChatService(
     IRepositoryManager rep,
-   IMapper mapper,
+    IMapper mapper,
     IJsonStringLocalizer locale) : IChatService
 {
     public async Task<(ChatDto, MessageDto)> CreatePersonal(int senderId, int targetId, string message)
@@ -142,10 +142,12 @@ public class ChatService(
     {
         return await rep.Chat.Value
             .FindByCondition(c => c.Id == chatId, true)
+            .Include(c => c.Members)
+                .ThenInclude(m => m.Account)
             .Select(c => new ChatInfo
             {
                 Chat = mapper.Map<ChatDto>(c),
-                Members = mapper.Map<List<User>>(c.Members.ConvertAll(c => c.Account))
+                Members = mapper.Map<List<User>>(c.Members.Select(c => c.Account).ToList())
             })
             .FirstOrDefaultAsync()
                 ?? throw new NotFoundException(locale["errors.no-chat"]);
