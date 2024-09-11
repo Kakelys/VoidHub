@@ -28,10 +28,7 @@
   ],
   "importOrder": [
     "^@angular/(.*)$",
-    "^(.*)/shared.module$",
-    "^(.*)/shared(.*)$",
-    "^(.*)/shared(.*module.*)$",
-    "^src/shared(.*)$",
+    "^(.*)/((.*)module.*)$",
     "^src/app(.*)$",
     "^src/(.*)$",
     "^assets/(.*)$",

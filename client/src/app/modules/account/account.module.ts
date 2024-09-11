@@ -1,31 +1,35 @@
+import { TranslateModule } from '@ngx-translate/core'
+
 import { NgModule } from '@angular/core'
 import { RouterModule } from '@angular/router'
-import { TranslateModule } from '@ngx-translate/core'
+
+import { AdminComponentsModule } from '../admin/admin-components.module'
+import { SharedForumModule } from '../forum/shared.forum.module'
+import { SharedEditorModule } from '../shared-editor.module'
+import { SharedModule } from '../shared.module'
+
 import { ErrorMessageListComponent } from 'src/app/common'
+
 import {
     BanMenuComponent,
-    canActivateAdmin,
-    RoleMenuComponent,
     RenameMenuComponent,
+    RoleMenuComponent,
+    canActivateAdmin,
     canActivateModer,
 } from '../admin'
 import { ChatService } from '../chat/services'
-import { AccountService, PostService } from '../forum'
-import { SharedEditorModule } from '../shared-editor.module'
+import { PostService } from '../forum'
 import {
+    AccountPostElementComponent,
+    AccountPostsComponent,
+    AccountTopicElementComponent,
+    AccountTopicsComponent,
+    ConfirmEmailComponent,
     ProfileComponent,
     SettingsComponent,
-    AccountTopicsComponent,
-    AccountPostsComponent,
-    AccountPostElementComponent,
-    AccountTopicElementComponent,
-    ConfirmEmailComponent,
 } from './components'
 import { canActivateSelf } from './guards/self.guard'
-import { EmailService } from './services'
-import { AdminComponentsModule } from '../admin/admin-components.module'
-import { SharedForumModule } from '../forum/shared.forum.module'
-import { SharedModule } from '../shared.module'
+import { AccountService, EmailService } from './services'
 
 @NgModule({
     declarations: [
