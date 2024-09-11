@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations;
 
-public class PostConfig
+public class PostConfig : IEntityTypeConfiguration<Post>
 {
-    public PostConfig(EntityTypeBuilder<Post> builder)
+    public void Configure(EntityTypeBuilder<Post> builder)
     {
         builder.HasKey(p => p.Id);
 

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations;
 
-public class BanConfig
+public class BanConfig : IEntityTypeConfiguration<Ban>
 {
-    public BanConfig(EntityTypeBuilder<Ban> builder)
+    public void Configure(EntityTypeBuilder<Ban> builder)
     {
         builder.HasKey(b => b.Id);
 

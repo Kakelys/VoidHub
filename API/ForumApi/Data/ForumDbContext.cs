@@ -22,21 +22,8 @@ public class ForumDbContext(DbContextOptions<ForumDbContext> options) : DbContex
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        _ = new AccountConfig(modelBuilder.Entity<Account>());
-        _ = new TokenConfig(modelBuilder.Entity<Token>());
-        _ = new SectionConfig(modelBuilder.Entity<Section>());
-        _ = new TopicConfig(modelBuilder.Entity<Topic>());
-        _ = new ForumConfig(modelBuilder.Entity<Forum>());
-        _ = new PostConfig(modelBuilder.Entity<Post>());
-        _ = new BanConfig(modelBuilder.Entity<Ban>());
-        _ = new FileConfig(modelBuilder.Entity<Models.File>());
-
-        _ = new ChatConfig(modelBuilder.Entity<Chat>());
-        _ = new ChatMemberConfig(modelBuilder.Entity<ChatMember>());
-        _ = new ChatMessageConfig(modelBuilder.Entity<ChatMessage>());
-
-        _ = new LikeConfig(modelBuilder.Entity<Like>());
-
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
     }
 }

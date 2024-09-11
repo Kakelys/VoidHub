@@ -1,11 +1,12 @@
 using ForumApi.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations;
 
-public class TokenConfig
+public class TokenConfig : IEntityTypeConfiguration<Token>
 {
-    public TokenConfig(EntityTypeBuilder<Token> builder)
+    public void Configure(EntityTypeBuilder<Token> builder)
     {
         builder.HasKey(t => t.Id);
 

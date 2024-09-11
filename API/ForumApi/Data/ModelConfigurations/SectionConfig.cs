@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations;
 
-public class SectionConfig
+public class SectionConfig : IEntityTypeConfiguration<Section>
 {
-    public SectionConfig(EntityTypeBuilder<Section> builder)
+    public void Configure(EntityTypeBuilder<Section> builder)
     {
         builder.HasKey(s => s.Id);
 

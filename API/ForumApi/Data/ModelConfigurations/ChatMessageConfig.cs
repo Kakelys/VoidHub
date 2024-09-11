@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations;
 
-public class ChatMessageConfig
+public class ChatMessageConfig : IEntityTypeConfiguration<ChatMessage>
 {
-    public ChatMessageConfig(EntityTypeBuilder<ChatMessage> builder)
+    public void Configure(EntityTypeBuilder<ChatMessage> builder)
     {
         builder.HasKey(c => c.Id);
 

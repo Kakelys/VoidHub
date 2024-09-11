@@ -9,7 +9,12 @@ public static class RepositoryService
     public static IServiceCollection AddRepository(this IServiceCollection services, IConfiguration config)
     {
         services.AddDbContext<ForumDbContext>(options =>
-            options.UseLazyLoadingProxies().UseNpgsql(config.GetConnectionString("ForumDb")));
+            options
+                .UseLazyLoadingProxies()
+                .UseNpgsql(config
+                    .GetConnectionString("ForumDb"),
+                        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+            );
 
         services.AddScoped<ITokenRepository, TokenRepository>()
             .AddScoped(provider => new Lazy<ITokenRepository>(() => provider.GetRequiredService<ITokenRepository>()));

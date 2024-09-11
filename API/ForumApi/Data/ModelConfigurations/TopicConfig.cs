@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations;
 
-public class TopicConfig
+public class TopicConfig : IEntityTypeConfiguration<Topic>
 {
-    public TopicConfig(EntityTypeBuilder<Topic> builder)
+    public void Configure(EntityTypeBuilder<Topic> builder)
     {
         builder.HasKey(t => t.Id);
 

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations;
 
-public class AccountConfig
+public class AccountConfig : IEntityTypeConfiguration<Account>
 {
-    public AccountConfig(EntityTypeBuilder<Account> builder)
+    public void Configure(EntityTypeBuilder<Account> builder)
     {
         builder.HasKey(a => a.Id);
 

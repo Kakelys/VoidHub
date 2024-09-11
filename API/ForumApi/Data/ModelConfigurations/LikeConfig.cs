@@ -1,11 +1,12 @@
 using ForumApi.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations;
 
-public class LikeConfig
+public class LikeConfig : IEntityTypeConfiguration<Like>
 {
-    public LikeConfig(EntityTypeBuilder<Like> builder)
+    public void Configure(EntityTypeBuilder<Like> builder)
     {
         builder.HasKey(l => new { l.AccountId, l.PostId });
 

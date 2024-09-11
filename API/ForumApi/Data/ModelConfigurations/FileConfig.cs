@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations;
 
-public class FileConfig
+public class FileConfig : IEntityTypeConfiguration<Models.File>
 {
-    public FileConfig(EntityTypeBuilder<Models.File> builder)
+    public void Configure(EntityTypeBuilder<Models.File> builder)
     {
         builder.HasKey(f => f.Id);
 

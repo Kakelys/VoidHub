@@ -1,11 +1,13 @@
 using ForumApi.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ForumApi.Data.ModelConfigurations;
 
-public class ChatMemberConfig
+public class ChatMemberConfig : IEntityTypeConfiguration<ChatMember>
 {
-    public ChatMemberConfig(EntityTypeBuilder<ChatMember> builder)
+
+    public void Configure(EntityTypeBuilder<ChatMember> builder)
     {
         builder.HasKey(c => c.Id);
 
