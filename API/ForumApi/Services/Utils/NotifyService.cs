@@ -1,31 +1,29 @@
 using ForumApi.DTO.DNotification;
 using ForumApi.Hubs;
 using ForumApi.Services.Utils.Interfaces;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.SignalR;
 
-namespace ForumApi.Services.Utils
+namespace ForumApi.Services.Utils;
+
+public class NotifyService(IHubContext<MainHub> hubContext, ISessionStorage sessionStorage) : INotifyService
 {
-    public class NotifyService(IHubContext<MainHub> hubContext, ISessionStorage sessStorage) : INotifyService
+    public async Task Notify(int accountId, NotificationBase notification)
     {
-        public async Task Notify(int accountId, NotificationBase notification)
-        {
-            var connectedUser = sessStorage.Get(accountId);
-            var ctx = hubContext.Clients.Clients(connectedUser.ConnectionIds);
+        var connectedUser = sessionStorage.Get(accountId);
+        var ctx = hubContext.Clients.Clients(connectedUser.ConnectionIds);
 
-            await ctx.SendAsync("notify", notification);
-        }
+        await ctx.SendAsync("notify", notification);
+    }
 
-        public async Task Notify(string contextId, NotificationBase notification)
-        {
-            var ctx = hubContext.Clients.Client(contextId);
+    public async Task Notify(string contextId, NotificationBase notification)
+    {
+        var ctx = hubContext.Clients.Client(contextId);
 
-            await ctx.SendAsync("notify", notification);
-        }
+        await ctx.SendAsync("notify", notification);
+    }
 
-        public async Task NotifyAll(NotificationBase notification)
-        {
-            await hubContext.Clients.All.SendAsync("notify", notification);
-        }
+    public async Task NotifyAll(NotificationBase notification)
+    {
+        await hubContext.Clients.All.SendAsync("notify", notification);
     }
 }

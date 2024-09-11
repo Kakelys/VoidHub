@@ -1,0 +1,29 @@
+<div class="ps-10 flex flex-col">
+    <div #commentsContainer>
+        <div *ngFor="let post of posts" class="my-2">
+            <app-post
+                [post]="post"
+                [user]="user"
+                [depth]="depth"
+                [enableComments]="depth < depthLimit"
+                [isTopicClosed]="isTopicClosed"
+                (onDelete)="onPostDelete($event)"
+            >
+            </app-post>
+        </div>
+    </div>
+
+    <app-limit-loader class="flex flex-col" [limit]="1"> </app-limit-loader>
+
+    <div class="mt-1" *ngIf="user && !isTopicClosed">
+        <app-post-editor
+            [ancestorId]="postId"
+            [topicId]="topicId"
+            [submitPlaceholder]="'forms.answer' | translate"
+            [cancelPlaceholder]="'forms.close' | translate"
+            [content]="editorContent"
+            (created)="onPostCreate($event)"
+            (canceled)="onCloseClicked()"
+        />
+    </div>
+</div>

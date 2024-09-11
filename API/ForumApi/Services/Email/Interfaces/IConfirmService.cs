@@ -1,8 +1,7 @@
-namespace ForumApi.Services.Email.Interfaces
+namespace ForumApi.Services.Email.Interfaces;
+
+public interface IConfirmService
 {
-    public interface IConfirmService
-    {
-        Task SendConfirmEmail(int accountId);
-        Task ConfirmEmail(string base64Token);
-    }
+    Task SendConfirmEmail(int accountId);
+    Task ConfirmEmail(string base64Token);
 }

@@ -1,0 +1,33 @@
+<div class="flex flex-col items-center">
+    <div class="text-3xl">
+        {{ 'home.welcome' | translate }} {{ 'home.to' | translate }} Void<span class="text-accent"
+            >Hub</span
+        >
+    </div>
+    <div class="py-8 flex flex-col items-center text-2xl">
+        <div>
+            {{ 'home.check' | translate }}
+            <a class="link link-hover" routerLink="/forum">{{ 'home.sections' | translate }}</a>
+            {{ 'home.sections-see' | translate }}
+        </div>
+        <div>
+            {{ 'home.or' | translate }}
+            <a class="link link-hover" routerLink="/forum/recent">{{
+                'home.recent' | translate
+            }}</a>
+            {{ 'home.recent-see' | translate }}
+        </div>
+    </div>
+    <div class="flex flex-col items-center text-2xl" *ngIf="!user">
+        {{ 'home.no-account' | translate }}
+        <a routerLink="/register">
+            <span class="link link-hover">{{ 'home.signup' | translate }}</span>
+            {{ 'home.create' | translate }}
+        </a>
+        {{ 'home.or' | translate }}
+        <a routerLink="/login">
+            <span class="link link-hover">{{ 'home.signin' | translate }}</span>
+            {{ 'home.signin-after' | translate }}
+        </a>
+    </div>
+</div>

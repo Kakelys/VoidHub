@@ -1,0 +1,17 @@
+<div class="dropdown">
+    <div tabindex="0" class="{{ containerClasses }}">
+        <ng-content> </ng-content>
+    </div>
+    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 rounded-box">
+        <li class="bg-none">
+            <div
+                tabindex="1"
+                class="{{ confirmContainerClasses }}"
+                (click)="confirmClick()"
+                (keypress)="confirmClick()"
+            >
+                {{ confirmContent }}
+            </div>
+        </li>
+    </ul>
+</div>

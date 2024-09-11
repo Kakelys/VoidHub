@@ -1,10 +1,9 @@
-namespace ForumApi.Hubs
+namespace ForumApi.Hubs;
+
+public enum MessageType
 {
-    public enum MessageType
-    {
-        newMessage,
-        userConnected,
-        userDisconnected,
-        connectionsData
-    }
+    newMessage,
+    userConnected,
+    userDisconnected,
+    connectionsData
 }

@@ -1,9 +1,8 @@
 using MimeKit.Text;
 
-namespace ForumApi.Services.Email.Interfaces
+namespace ForumApi.Services.Email.Interfaces;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task Send(string subject, string message, string email, TextFormat format);
-    }
+    Task Send(string subject, string message, string email, TextFormat format);
 }

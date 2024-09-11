@@ -190,6 +190,20 @@
     "copied": "Copied",
     "forum-updated": "Forum updated",
     "guests": "guests",
-    "online-users": "Online users"
+    "online-users": "Online users",
+    "total-topics": "Total topics",
+    "total-posts": "Total posts",
+    "total-users": "Total users",
+    "last-user": "New user",
+    "changing-image": "Changing image",
+    "recent": "Recent",
+    "old": "Old",
+    "popular": "Popular",
+    "none": "None",
+    "search-in-forum": "Search in forum",
+    "signup": "Sign up",
+    "extended": "ext.",
+    "found": "Found",
+    "feedback": "Feedback"
   }
 }

@@ -262,6 +262,12 @@ namespace ForumApi.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
+                        .HasDefaultValue("forum_default.png");
+
                     b.Property<bool>("IsClosed")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")

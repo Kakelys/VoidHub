@@ -3,36 +3,35 @@ using ForumApi.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ForumApi.Utils.Extensions
+namespace ForumApi.Utils.Extensions;
+
+public static class AppAuthService
 {
-    public static class AppAuthService
+    public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration config)
     {
-        public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration config)
+        services.AddAuthentication(options =>
         {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(o =>
-            {
-                var jwtKey = config.GetSection(JwtOptions.Jwt).Get<JwtOptions>() ??
-                    throw new ArgumentNullException("JwtOptions.AccessSecret");
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(o =>
+        {
+            var jwtKey = config.GetSection(JwtOptions.Jwt).Get<JwtOptions>()
+                ?? throw new ArgumentNullException("JwtOptions.AccessSecret");
 
-                o.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidIssuer = config["Jwt:Issuer"],
-                    ValidAudience = config["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtKey.AccessSecret)),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true
-                };
-            });
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = config["Jwt:Issuer"],
+                ValidAudience = config["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(jwtKey.AccessSecret)),
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true
+            };
+        });
 
-            return services;
-        }
+        return services;
     }
 }

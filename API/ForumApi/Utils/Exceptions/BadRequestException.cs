@@ -1,14 +1,12 @@
+namespace ForumApi.Utils.Exceptions;
 
-namespace ForumApi.Utils.Exceptions
+public class BadRequestException : BaseException
 {
-    public class BadRequestException : BaseException
+    public BadRequestException(string message) : base(message)
     {
-        public BadRequestException(string message) : base(message)
-        {
-        }
+    }
 
-        public BadRequestException(string message, Exception inner) : base(message, inner)
-        {
-        }
+    public BadRequestException(string message, Exception inner) : base(message, inner)
+    {
     }
 }

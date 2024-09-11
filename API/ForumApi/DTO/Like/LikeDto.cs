@@ -1,8 +1,7 @@
-namespace ForumApi.DTO.DLike
+namespace ForumApi.DTO.DLike;
+
+public class LikeDto
 {
-    public class LikeDto
-    {
-        public int AccountId { get; set; }
-        public int PostId { get; set; }        
-    }
+    public int AccountId { get; set; }
+    public int PostId { get; set; }
 }

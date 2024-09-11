@@ -1,12 +1,11 @@
-namespace ForumApi.Utils.Extensions
-{
-    public static class MapperService
-    {
-        public static IServiceCollection ConfigureAutoMapper(this IServiceCollection services)
-        {
-            services.AddAutoMapper(typeof(Program));
+namespace ForumApi.Utils.Extensions;
 
-            return services;
-        }
+public static class MapperService
+{
+    public static IServiceCollection ConfigureAutoMapper(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(Program));
+
+        return services;
     }
 }

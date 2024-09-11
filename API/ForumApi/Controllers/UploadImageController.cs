@@ -11,71 +11,77 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace ForumApi.Controllers
+namespace ForumApi.Controllers;
+
+[ApiController]
+[Route("api/v1/uploads/images")]
+public class UploadImageController(
+    IUploadService uploadService,
+    IFileService fileService,
+    IOptions<ImageOptions> options,
+    IJsonStringLocalizer locale,
+    Lazy<IFileRepository> fileRep
+) : ControllerBase
 {
-    [ApiController]
-    [Route("api/v1/uploads/images")]
-    public class UploadImageController(
-        IUploadService uploadService,
-        IFileService fileService,
-        IOptions<ImageOptions> options,
-        IJsonStringLocalizer locale,
-        Lazy<IFileRepository> fileRep
-    ) : ControllerBase
+    private readonly ImageOptions _imageOptions = options.Value;
+
+    [HttpPost]
+    [Authorize]
+    [BanFilter]
+    public async Task<IActionResult> UploadImage(NewFileDto newFileDto)
     {
-        private readonly ImageOptions _imageOptions = options.Value;
+        var validator = new NewImageValidator(options, locale);
+        await validator.ValidateAndThrowAsync(newFileDto);
 
-        [HttpPost]
-        [Authorize]
-        [BanFilter]
-        public async Task<IActionResult> UploadImage(NewFileDto newFileDto)
+        var fileExt = Path.GetExtension(newFileDto.File!.FileName);
+
+        var accountId = User.GetId();
+        var fileDto = new FileDto
         {
-            var validator = new NewImageValidator(options, locale);
-            await validator.ValidateAndThrowAsync(newFileDto);
+            PostId = newFileDto.PostId,
+            AccountId = accountId,
+            Path = $"{_imageOptions.PostImageFolder}/{accountId}{Guid.NewGuid()}{fileExt}",
+        };
 
-            var accountId = User.GetId();
-            var fileDto = new FileDto
-            {
-                PostId = newFileDto.PostId,
-                AccountId = accountId,
-                Path = $"{_imageOptions.PostImageFolder}/{accountId}{Guid.NewGuid()}{_imageOptions.FileType}",
-            };
+        if (fileRep.Value.FindByCondition(f => f.AccountId == accountId).Count() > options.Value.LimitPerAccount)
+            throw new BadRequestException(locale["errors.image-limit-exceeded"]);
 
-            if(fileRep.Value.FindByCondition(f => f.AccountId == accountId).Count() > options.Value.LimitPerAccount)
-                throw new BadRequestException(locale["errors.image-limit-exceeded"]);
-
+        if (RuleExtensions.imageDefaultExtensions.Contains(fileExt))
+        {
             return Ok(await uploadService.UploadImage(newFileDto!.File!, fileDto));
         }
 
-        [HttpDelete]
-        [Authorize]
-        [BanFilter]
-        public async Task<IActionResult> DeteleImages([FromQuery] int[] ids)
-        {
-            if(ids.Length == 0)
-                throw new BadRequestException(locale["errors.file-ids-not-provided"]);
+        return Ok(await uploadService.UploadVideo(newFileDto!.File!, fileDto));
+    }
 
-            var accountId = User.GetId();
+    [HttpDelete]
+    [Authorize]
+    [BanFilter]
+    public async Task<IActionResult> DeleteImages([FromQuery] int[] ids)
+    {
+        if (ids.Length == 0)
+            throw new BadRequestException(locale["errors.file-ids-not-provided"]);
 
-            // check permission for delition
-            var files = await fileService.Get(ids);
-            if(files.Count(f => f.AccountId == accountId) != files.Count)
-                throw new ForbiddenException(locale["errors.no-permission"]);
+        var accountId = User.GetId();
 
-            await uploadService.DeleteImages(ids);
+        // check permission for deletion
+        var files = await fileService.Get(ids);
+        if (files.Count(f => f.AccountId == accountId) != files.Count)
+            throw new ForbiddenException(locale["errors.no-permission"]);
 
-            return Ok();
-        }
+        await uploadService.DeleteFiles(ids);
 
-        [HttpDelete("{id}")]
-        [Authorize]
-        [PermissionActionFilter<Data.Models.File>]
-        [BanFilter]
-        public async Task<IActionResult> DeleteImage(int id)
-        {
-            await uploadService.DeleteImages([id]);
+        return Ok();
+    }
 
-            return Ok();
-        }
+    [HttpDelete("{id}")]
+    [Authorize]
+    [PermissionActionFilter<Data.Models.File>]
+    [BanFilter]
+    public async Task<IActionResult> DeleteImage(int id)
+    {
+        await uploadService.DeleteFiles([id]);
+
+        return Ok();
     }
 }

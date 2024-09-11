@@ -1,0 +1,72 @@
+<div class="collapse collapse-arrow bg-base-200">
+    <input type="checkbox" [name]="data.section.title" checked="checked" />
+    <div class="collapse-title">
+        <div class="text-xl font-medium text-accent">
+            {{ data.section.title }}
+        </div>
+    </div>
+    <div class="collapse-content">
+        <div class="flex flex-col">
+            <div class="flex flex-row" *ngIf="user && user?.role === roles.ADMIN">
+                <app-title-editor [title]="data.section.title" (onSave)="onEdit($event)">
+                    <div class="form-control w-fit">
+                        <input
+                            type="number"
+                            class="input-sm bg-neutral mt-2 input input-bordered"
+                            id="orderPosition"
+                            name="orderPosition"
+                            placeholder="{{ 'forms.order-position' | translate }}"
+                            required
+                            [(ngModel)]="data.section.orderPosition"
+                            min="0"
+                        />
+                        <label for="orderPosition" class="flex flex-col items-start label pt-0.5">
+                            <span class="label-text-alt">{{
+                                'labels.order-position-on-main-page' | translate
+                            }}</span>
+                            <span class="label-text-alt">{{
+                                'labels.0-on-the-top' | translate
+                            }}</span>
+                        </label>
+                    </div>
+
+                    <div class="flex flex-row">
+                        <input
+                            type="checkbox"
+                            class="toggle my-auto"
+                            id="isHidden"
+                            name="isHidden"
+                            #isHiddenModel="ngModel"
+                            [ngClass]="{
+                                'input-error': isHiddenModel.touched && isHiddenModel.invalid,
+                            }"
+                            [(ngModel)]="data.section.isHidden"
+                        />
+                        <label class="label" for="isHidden">
+                            {{ 'lables.hidden' | translate }}
+                        </label>
+                    </div>
+                </app-title-editor>
+                <div>
+                    <app-delete (confirmed)="onDelete()" />
+                </div>
+                <div class="grow"></div>
+                <div>
+                    <button
+                        class="btn btn-neutral w-fit min-h-fit h-8"
+                        [routerLink]="['/forum/section', data.section.id, 'new-forum']"
+                    >
+                        {{ 'lables.new-forum' | translate }}
+                    </button>
+                </div>
+            </div>
+            <div class="flex flex-row items-center text-secondary-content">
+                <div class="basis-8/12"></div>
+                <div class="basis-1/12 text-center">{{ 'forum.posts' | translate }}</div>
+                <div class="basis-1/12 text-center">{{ 'forum.topics' | translate }}</div>
+                <div class="basis-3/12"></div>
+            </div>
+            <app-forum-list [data]="data.forums"></app-forum-list>
+        </div>
+    </div>
+</div>

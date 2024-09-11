@@ -11,45 +11,44 @@ using ForumApi.Services.ForumS.Interfaces;
 using ForumApi.Services.Utils;
 using ForumApi.Services.Utils.Interfaces;
 
-namespace ForumApi.Utils.Extensions
+namespace ForumApi.Utils.Extensions;
+
+public static class ServicesExtension
 {
-    public static class ServicesExtension
+    public static IServiceCollection AddAppServices(this IServiceCollection services)
     {
-        public static IServiceCollection AddAppServices(this IServiceCollection services)
-        {
-            //auth services
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IAuthService, AuthService>();
+        //auth services
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IAuthService, AuthService>();
 
-            // forum services
-            services.AddScoped<ISectionService, SectionService>();
-            services.AddScoped<IForumService, ForumService>();
-            services.AddScoped<ITopicService, TopicService>();
-            services.AddScoped<IPostService, PostService>();
-            services.AddScoped<IBanService, BanService>();
-            services.AddScoped<ISearchService, SearchService>();
-            services.AddScoped<IImageService, ImageService>();
-            services.AddScoped<INamesService, NamesService>();
-            services.AddScoped<ILikeService, LikeService>();
+        // forum services
+        services.AddScoped<ISectionService, SectionService>();
+        services.AddScoped<IForumService, ForumService>();
+        services.AddScoped<ITopicService, TopicService>();
+        services.AddScoped<IPostService, PostService>();
+        services.AddScoped<IBanService, BanService>();
+        services.AddScoped<ISearchService, SearchService>();
+        services.AddScoped<IImageService, ImageService>();
+        services.AddScoped<INamesService, NamesService>();
+        services.AddScoped<ILikeService, LikeService>();
 
-            // work with files services
-            services.AddScoped<IFileService, FileService>();
-            services.AddScoped<IUploadService, UploadService>();
+        // work with files services
+        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IUploadService, UploadService>();
 
-            services.AddSingleton<ISessionStorage, SessionStorage>();
+        services.AddSingleton<ISessionStorage, SessionStorage>();
 
-            // chat
-            services.AddScoped<IChatService, ChatService>();
-            services.AddScoped<IMessageService, MessageService>();
+        // chat
+        services.AddScoped<IChatService, ChatService>();
+        services.AddScoped<IMessageService, MessageService>();
 
-            services.AddScoped<INotifyService, NotifyService>();
+        services.AddScoped<INotifyService, NotifyService>();
 
-            services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IConfirmService, ConfirmService>();
-            services.AddScoped<IPasswordRecoverService, PasswordRecoverService>();
+        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IConfirmService, ConfirmService>();
+        services.AddScoped<IPasswordRecoverService, PasswordRecoverService>();
 
-            return services;
-        }
+        return services;
     }
 }

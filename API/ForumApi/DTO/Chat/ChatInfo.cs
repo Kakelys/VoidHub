@@ -1,10 +1,9 @@
 using ForumApi.DTO.Auth;
 
-namespace ForumApi.DTO.DChat
+namespace ForumApi.DTO.DChat;
+
+public class ChatInfo
 {
-    public class ChatInfo
-    {
-        public ChatDto Chat { get; set; } = null!;
-        public List<User> Members { get; set; } = null!;        
-    }
+    public ChatDto Chat { get; set; }
+    public List<User> Members { get; set; }
 }

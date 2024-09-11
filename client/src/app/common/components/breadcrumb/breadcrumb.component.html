@@ -1,0 +1,26 @@
+<div *ngIf="links.length > 0" class="text-sm">
+    <div class="flex flex-row">
+        <div *ngFor="let link of links; last as isLast" class="before:content flex flex-row">
+            <div [ngSwitch]="link.type" class="max-w-[200px] truncate">
+                <a class="link no-underline" *ngSwitchCase="'section'" routerLink="/forum/sections">
+                    {{ link.data.title }}
+                </a>
+                <a
+                    class="link no-underline"
+                    *ngSwitchCase="'forum'"
+                    routerLink="/forum/{{ link.data.id }}"
+                >
+                    {{ link.data.title }}
+                </a>
+                <a
+                    class="link no-underline"
+                    *ngSwitchCase="'topic'"
+                    routerLink="/forum/topic/{{ link.data.id }}"
+                >
+                    {{ link.data.title }}
+                </a>
+            </div>
+            <div class="text-neutral-content mx-1" *ngIf="!isLast">></div>
+        </div>
+    </div>
+</div>
