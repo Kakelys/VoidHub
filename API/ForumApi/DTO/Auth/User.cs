@@ -1,18 +1,10 @@
-namespace ForumApi.DTO.Auth
-{
-    public class User
-    {
-        public User(int id, string role, DateTime createdAt)
-        {
-            this.Id = id;
-            this.Role = role;
-            this.CreatedAt = createdAt;
+namespace ForumApi.DTO.Auth;
 
-        }
-        public int Id { get; set; }
-        public string Username { get; set; } = null!;
-        public string Role { get; set; } = null!;
-        public string AvatarPath { get; set; } = null!;
-        public DateTime CreatedAt { get; set; }
-    }
+public class User
+{
+    public int Id { get; set; }
+    public string Username { get; set; } = null!;
+    public string Role { get; set; } = null!;
+    public string AvatarPath { get; set; } = null!;
+    public DateTime CreatedAt { get; set; }
 }

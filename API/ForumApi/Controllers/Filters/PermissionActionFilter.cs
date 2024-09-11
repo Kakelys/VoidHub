@@ -28,7 +28,7 @@ public class PermissionActionFilter<T> : ActionFilterAttribute where T : class
         var locale = context.HttpContext.RequestServices.GetService<IJsonStringLocalizer>()
             ?? throw new NoNullAllowedException("JsonStringLocalizer");
 
-        if (!context.ActionArguments.TryGetValue("id", out object? value))
+        if (!context.ActionArguments.TryGetValue("id", out object value))
             throw new BadRequestException(locale["errors.id-not-provided"]);
 
         if (!int.TryParse(value?.ToString(), out int entityId))

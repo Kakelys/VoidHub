@@ -26,7 +26,7 @@ public class Post
     [JsonIgnore]
     public virtual List<Post> Comments { get; set; } = [];
     [JsonIgnore]
-    public virtual Post? Ancestor { get; set; }
+    public virtual Post Ancestor { get; set; }
 
     [JsonIgnore]
     public virtual List<File> Files { get; set; } = [];
