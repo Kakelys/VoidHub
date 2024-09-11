@@ -1,13 +1,12 @@
 using ForumApi.DTO.DSearch.Sort;
 
-namespace ForumApi.DTO.DSearch
+namespace ForumApi.DTO.DSearch;
+
+public class SearchParams
 {
-    public class SearchParams
-    {
-        public SearchSortTypes Sort { get; set; } = SearchSortTypes.New;
-        public bool WithPostContent { get; set; } = false;
-        public bool PartialTitle { get; set; } = false;
-        public bool OnlyDeleted { get; set; } = false;
-        public int ForumId { get; set; }
-    }
+    public SearchSortTypes Sort { get; set; } = SearchSortTypes.New;
+    public bool WithPostContent { get; set; }
+    public bool PartialTitle { get; set; }
+    public bool OnlyDeleted { get; set; }
+    public int ForumId { get; set; }
 }

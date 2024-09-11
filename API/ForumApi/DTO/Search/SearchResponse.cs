@@ -1,8 +1,7 @@
-namespace ForumApi.DTO.DSearch
+namespace ForumApi.DTO.DSearch;
+
+public class SearchResponse<T>
 {
-    public class SearchResponse<T>
-    {
-        public int SearchCount { get; set; }
-        public List<T> Data { get; set; } = new();     
-    }
+    public int SearchCount { get; set; }
+    public List<T> Data { get; set; } = [];
 }

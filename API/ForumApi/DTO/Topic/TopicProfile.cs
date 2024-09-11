@@ -1,16 +1,15 @@
 using AutoMapper;
 using ForumApi.Data.Models;
 
-namespace ForumApi.DTO.DTopic
+namespace ForumApi.DTO.DTopic;
+
+public class TopicProfile : Profile
 {
-    public class TopicProfile : Profile
+    public TopicProfile()
     {
-        public TopicProfile()
-        {
-            CreateMap<TopicEdit, Topic>();
-            CreateMap<TopicNew, Topic>();
-            CreateMap<Topic, TopicEdit>();
-            CreateMap<Topic, TopicDto>();
-        }
+        CreateMap<TopicEdit, Topic>();
+        CreateMap<TopicNew, Topic>();
+        CreateMap<Topic, TopicEdit>();
+        CreateMap<Topic, TopicDto>();
     }
 }

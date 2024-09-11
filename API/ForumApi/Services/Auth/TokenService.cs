@@ -13,102 +13,101 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using AspNetCore.Localizer.Json.Localizer;
 
-namespace ForumApi.Services.Auth
+namespace ForumApi.Services.Auth;
+
+public class TokenService(
+    IRepositoryManager rep,
+    IOptions<JwtOptions> jwtOptions,
+    IJsonStringLocalizer locale) : ITokenService
 {
-    public class TokenService(
-        IRepositoryManager rep,
-        IOptions<JwtOptions> jwtOptions,
-        IJsonStringLocalizer locale) : ITokenService
+    private readonly JwtOptions _jwtOptions = jwtOptions.Value;
+
+    public string Create(List<Claim> claims, DateTime expiresAt, string secret)
     {
-        private readonly JwtOptions _jwtOptions = jwtOptions.Value;
+        var issuer = _jwtOptions.Issuer;
+        var audience = _jwtOptions.Audience;
+        var key = Encoding.ASCII.GetBytes(secret);
 
-        public string Create(List<Claim> claims, DateTime expiresAt, string secret)
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
-            var issuer = _jwtOptions.Issuer;
-            var audience = _jwtOptions.Audience;
-            var key = Encoding.ASCII.GetBytes(secret);
+            Subject = new ClaimsIdentity(claims),
+            Expires = expiresAt,
+            Issuer = issuer,
+            Audience = audience,
+            SigningCredentials = new SigningCredentials
+                (new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha512Signature)
+        };
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = expiresAt,
-                Issuer = issuer,
-                Audience = audience,
-                SigningCredentials = new SigningCredentials
-                    (new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha512Signature)
-            };
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var jwtToken = tokenHandler.WriteToken(token);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var jwtToken = tokenHandler.WriteToken(token);
+        return jwtToken;
+    }
 
-            return jwtToken;
-        }
-
-        public JwtPair CreatePair(Account account)
+    public JwtPair CreatePair(Account account)
+    {
+        var claims = new List<Claim>
         {
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, account.Id.ToString()),
-                new(ClaimTypes.Role, account.Role),
-            };
+            new(ClaimTypes.NameIdentifier, account.Id.ToString()),
+            new(ClaimTypes.Role, account.Role),
+        };
 
-            var accessToken = Create(claims, DateTime.UtcNow.AddMinutes(_jwtOptions.AccessLifetimeInMinutes), _jwtOptions.AccessSecret);
-            var refreshToken = Create(claims, DateTime.UtcNow.AddMinutes(_jwtOptions.RefreshLifetimeInMinutes), _jwtOptions.RefreshSecret);
+        var accessToken = Create(claims, DateTime.UtcNow.AddMinutes(_jwtOptions.AccessLifetimeInMinutes), _jwtOptions.AccessSecret);
+        var refreshToken = Create(claims, DateTime.UtcNow.AddMinutes(_jwtOptions.RefreshLifetimeInMinutes), _jwtOptions.RefreshSecret);
 
-            return new JwtPair
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
-            };
-        }
-
-        public async Task Revoke(string refreshToken)
+        return new JwtPair
         {
-            var tokenEntity = await rep.Token.Value.FindByToken(refreshToken, false)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-token"]);
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
+        };
+    }
 
-            rep.Token.Value.Delete(tokenEntity);
+    public async Task Revoke(string refreshToken)
+    {
+        var tokenEntity = await rep.Token.Value.FindByToken(refreshToken, false)
+            .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-token"]);
 
-            await rep.Save();
-        }
+        rep.Token.Value.Delete(tokenEntity);
 
-        public bool Validate(string token, string secret)
+        await rep.Save();
+    }
+
+    public bool Validate(string token, string secret)
+    {
+        var validator = new JwtSecurityTokenHandler();
+
+        var validationParams = new TokenValidationParameters
         {
-            var validator = new JwtSecurityTokenHandler();
+            ValidIssuer = _jwtOptions.Issuer,
+            ValidAudience = _jwtOptions.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(secret)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true
+        };
 
-            var validationParams = new TokenValidationParameters
+        if (validator.CanReadToken(token))
+        {
+            try
             {
-                ValidIssuer = _jwtOptions.Issuer,
-                ValidAudience = _jwtOptions.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(secret)),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true
-            };
-
-            if(validator.CanReadToken(token))
-            {
-                try
-                {
-                    validator.ValidateToken(token, validationParams, out var validatedToken);
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                validator.ValidateToken(token, validationParams, out var validatedToken);
+                return true;
             }
-
-            return false;
+            catch
+            {
+                return false;
+            }
         }
 
-        public JwtSecurityToken Decode(string token)
-        {
-            return new JwtSecurityTokenHandler().ReadJwtToken(token);
-        }
+        return false;
+    }
+
+    public JwtSecurityToken Decode(string token)
+    {
+        return new JwtSecurityTokenHandler().ReadJwtToken(token);
     }
 }

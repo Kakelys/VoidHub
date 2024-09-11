@@ -1,10 +1,9 @@
-namespace ForumApi.DTO.DTopic
+namespace ForumApi.DTO.DTopic;
+
+public class TopicEdit
 {
-    public class TopicEdit
-    {
-        public int ForumId { get; set; }
-        public string Title { get; set; } = null!;
-        public bool IsPinned { get; set; }
-        public bool IsClosed { get; set; }
-    }
+    public int ForumId { get; set; }
+    public string Title { get; set; }
+    public bool IsPinned { get; set; }
+    public bool IsClosed { get; set; }
 }

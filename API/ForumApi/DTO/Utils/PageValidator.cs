@@ -1,19 +1,18 @@
 using FluentValidation;
 
-namespace ForumApi.DTO.Utils
-{
-    public class PageValidator : AbstractValidator<Page>
-    {
-        public PageValidator()
-        {
-            RuleFor(p => p.PageNumber)
-                .GreaterThan(0)
-                .WithMessage("Page number must be greater than 0");
+namespace ForumApi.DTO.Utils;
 
-            RuleFor(p => p.PageSize)
-                .GreaterThan(0)
-                .LessThanOrEqualTo(100)
-                .WithMessage("Page size must be greater than 0 and less than or equal to 100");
-        }
+public class PageValidator : AbstractValidator<Page>
+{
+    public PageValidator()
+    {
+        RuleFor(p => p.PageNumber)
+            .GreaterThan(0)
+            .WithMessage("Page number must be greater than 0");
+
+        RuleFor(p => p.PageSize)
+            .GreaterThan(0)
+            .LessThanOrEqualTo(100)
+            .WithMessage("Page size must be greater than 0 and less than or equal to 100");
     }
 }

@@ -1,8 +1,7 @@
-namespace ForumApi.DTO.Utils
+namespace ForumApi.DTO.Utils;
+
+public class Page
 {
-    public class Page
-    {
-        public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 10;
-    }
+    public int PageNumber { get; set; } = 1;
+    public int PageSize { get; set; } = 10;
 }

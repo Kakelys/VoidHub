@@ -1,15 +1,14 @@
 using AutoMapper;
 using ForumApi.Data.Models;
 
-namespace ForumApi.DTO.DBan
+namespace ForumApi.DTO.DBan;
+
+public class BanProfile : Profile
 {
-    public class BanProfile : Profile
+    public BanProfile()
     {
-        public BanProfile()
-        {
-            CreateMap<BanEdit, Ban>();
-            CreateMap<Ban, BanEdit>();
-            CreateMap<Ban, BanResponse>();
-        }        
+        CreateMap<BanEdit, Ban>();
+        CreateMap<Ban, BanEdit>();
+        CreateMap<Ban, BanResponse>();
     }
 }

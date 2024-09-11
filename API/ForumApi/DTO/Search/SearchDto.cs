@@ -1,7 +1,6 @@
-namespace ForumApi.DTO.DSearch
+namespace ForumApi.DTO.DSearch;
+
+public class SearchDto
 {
-    public class SearchDto
-    {
-        public string Query { get; set; } = null!;
-    }
+    public string Query { get; set; }
 }

@@ -6,38 +6,38 @@ using ForumApi.DTO.Stats;
 using ForumApi.Services.Utils.Interfaces;
 using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace ForumApi.Controllers
+namespace ForumApi.Controllers;
+
+[ApiController]
+[Route("api/v1/stats")]
+public class StatsController(
+    ISessionStorage sessionStorage,
+    IRepositoryManager rep,
+    IMapper mapper) : ControllerBase
 {
-    [ApiController]
-    [Route("api/v1/stats")]
-    public class StatsController(
-        ISessionStorage sessionStorage, 
-        IRepositoryManager rep,
-        IMapper mapper) : ControllerBase
+    [HttpGet("online")]
+    public IActionResult GetOnlineUsers()
     {
-        [HttpGet("online")]
-        public IActionResult GetOnlineUsers()
-        {
-            return Ok(sessionStorage.GetOnlineStats());
-        }
+        return Ok(sessionStorage.GetOnlineStats());
+    }
 
-        [HttpGet("general")]
-        //[ResponseCache(Duration = 300)]
-        public async Task<IActionResult> GetGeneral()
+    [HttpGet("general")]
+    //[ResponseCache(Duration = 300)]
+    public async Task<IActionResult> GetGeneral()
+    {
+        var data = new GeneralStats
         {
-            var data = new GeneralStats 
-            {
-                TopicCount = rep.Topic.Value.FindAll().Count(),
-                PostCount = rep.Post.Value.FindAll().Count(),
-                UserCount = rep.Account.Value.FindAll().Count(),
-                LastUser = mapper.Map<User>(rep.Account.Value
-                    .FindByCondition(a => a.DeletedAt == null)
-                    .OrderByDescending(a => a.CreatedAt)
-                    .FirstOrDefault())
-            };
+            TopicCount = rep.Topic.Value.FindAll().Count(),
+            PostCount = rep.Post.Value.FindAll().Count(),
+            UserCount = rep.Account.Value.FindAll().Count(),
+            LastUser = mapper.Map<User>(await rep.Account.Value
+                .FindByCondition(a => a.DeletedAt == null)
+                .OrderByDescending(a => a.CreatedAt)
+                .FirstOrDefaultAsync())
+        };
 
-            return Ok(data);
-        }
+        return Ok(data);
     }
 }

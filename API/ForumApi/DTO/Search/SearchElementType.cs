@@ -1,9 +1,8 @@
-namespace ForumApi.DTO.DSearch
+namespace ForumApi.DTO.DSearch;
+
+public enum SearchElementType
 {
-    public enum SearchElementType
-    {
-        Topic,
-        User,
-        Post
-    }
+    Topic,
+    User,
+    Post
 }

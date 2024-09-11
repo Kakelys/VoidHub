@@ -1,19 +1,18 @@
 using System.ComponentModel;
 
-namespace ForumApi.Data.Models
-{
-    public static class Role
-    {
-        public const string Admin = "Admin";
-        public const string Moder = "Moder";
-        public const string User = "User";
-    }
+namespace ForumApi.Data.Models;
 
-    public enum RoleEnum
-    {
-        None,
-        Admin,
-        Moder,
-        User
-    }
+public static class Role
+{
+    public const string Admin = "Admin";
+    public const string Moder = "Moder";
+    public const string User = "User";
+}
+
+public enum RoleEnum
+{
+    None,
+    Admin,
+    Moder,
+    User
 }

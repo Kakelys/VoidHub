@@ -1,10 +1,9 @@
 using ForumApi.DTO.Auth;
 
-namespace ForumApi.DTO.Utils
+namespace ForumApi.DTO.Utils;
+
+public class ConnectedUser
 {
-    public class ConnectedUser
-    {
-        public User User { get; set; } = null!;
-        public List<string> ConnectionIds { get; set; } = new();
-    }
+    public User User { get; set; } = null!;
+    public List<string> ConnectionIds { get; set; }
 }

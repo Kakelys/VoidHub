@@ -1,14 +1,13 @@
 using ForumApi.DTO.DTopic;
 
-namespace ForumApi.DTO.DForum
+namespace ForumApi.DTO.DForum;
+
+public class ForumResponse
 {
-    public class ForumResponse
-    {
-        public ForumDto Forum { get; set; } = null!;
+    public ForumDto Forum { get; set; }
 
-        public int PostsCount { get; set; }
-        public int TopicsCount { get; set; }
+    public int PostsCount { get; set; }
+    public int TopicsCount { get; set; }
 
-        public TopicLast? LastTopic { get; set; }
-    }
+    public TopicLast LastTopic { get; set; }
 }

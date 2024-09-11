@@ -1,14 +1,13 @@
 using ForumApi.Data.Models;
 
-namespace ForumApi.DTO.DBan
-{
-    public class BanResponse : BanEdit
-    {
-        public int Id { get; set; }
-        public DateTime CreatedAt { get; set; }
+namespace ForumApi.DTO.DBan;
 
-        public Account Moderator { get; set; } = null!;
-        public Account Account { get; set; } = null!;
-        public Account UpdatedBy { get; set; } = null!;
-    }
+public class BanResponse : BanEdit
+{
+    public int Id { get; set; }
+    public DateTime CreatedAt { get; set; }
+
+    public Account Moderator { get; set; } = null!;
+    public Account Account { get; set; } = null!;
+    public Account UpdatedBy { get; set; } = null!;
 }

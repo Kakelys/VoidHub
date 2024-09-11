@@ -2,14 +2,13 @@ using AutoMapper;
 using ForumApi.Data.Models;
 using ForumApi.DTO.Auth;
 
-namespace ForumApi.DTO.Mapper
+namespace ForumApi.DTO.Mapper;
+
+public class UserProfile : Profile
 {
-    public class UserProfile : Profile
+    public UserProfile()
     {
-        public UserProfile()
-        {
-            CreateMap<Account, User>();
-            CreateMap<Account, AuthUser>();
-        }
+        CreateMap<Account, User>();
+        CreateMap<Account, AuthUser>();
     }
 }

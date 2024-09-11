@@ -9,7 +9,7 @@ using ForumApi.Utils.Background;
 //need to be checked before create builder
 if (!Directory.Exists("wwwroot"))
 {
-  Directory.CreateDirectory("wwwroot");
+    Directory.CreateDirectory("wwwroot");
 }
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,30 +19,30 @@ builder.Services.AddLogging();
 builder.Services.AddAppOptions(builder.Configuration);
 
 var imageSettings = builder.Configuration
-  .GetSection(ImageOptions.Image)
-  .Get<ImageOptions>() ?? throw new ArgumentNullException("ImageOptions");
+    .GetSection(ImageOptions.Image)
+    .Get<ImageOptions>() ?? throw new ArgumentNullException("ImageOptions");
 
 //check for folders
-if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.AvatarFolder}"))
+if (!Directory.Exists($"{imageSettings.Folder}/{imageSettings.AvatarFolder}"))
 {
-  Directory.CreateDirectory($"{imageSettings.Folder}/{imageSettings.AvatarFolder}");
+    Directory.CreateDirectory($"{imageSettings.Folder}/{imageSettings.AvatarFolder}");
 }
 
-if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.PostImageFolder}"))
+if (!Directory.Exists($"{imageSettings.Folder}/{imageSettings.PostImageFolder}"))
 {
-  Directory.CreateDirectory($"{imageSettings.Folder}/{imageSettings.PostImageFolder}");
+    Directory.CreateDirectory($"{imageSettings.Folder}/{imageSettings.PostImageFolder}");
 }
 
-if(!Directory.Exists($"{imageSettings.Folder}/{imageSettings.ForumFolder}"))
+if (!Directory.Exists($"{imageSettings.Folder}/{imageSettings.ForumFolder}"))
 {
-  Directory.CreateDirectory($"{imageSettings.Folder}/{imageSettings.ForumFolder}");
+    Directory.CreateDirectory($"{imageSettings.Folder}/{imageSettings.ForumFolder}");
 }
 
 builder.Services.AddRepository(builder.Configuration);
 builder.Services.AddAppServices();
 
 builder.Services.AddControllers()
-  .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddSwagger();
 
@@ -55,23 +55,23 @@ builder.Services.AddSignalR();
 var frontCorsPolicy = "frontCorsPolicy";
 builder.Services.AddCors(options =>
 {
-  options.AddPolicy(
-    name : frontCorsPolicy,
-    policy =>
-    {
-      var clients = builder.Configuration.GetSection("Clients").Get<List<string>>();
+    options.AddPolicy(
+        name: frontCorsPolicy,
+        policy =>
+        {
+            var clients = builder.Configuration.GetSection("Clients").Get<List<string>>();
 
-      if(clients?.Count != 0)
-      {
-        policy.WithOrigins([..clients]);
-      }
+            if (clients?.Count != 0)
+            {
+                policy.WithOrigins([.. clients]);
+            }
 
-      // TODO: strange origin works with tunnels
-      policy
-        .AllowAnyOrigin()
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
+            // TODO: strange origin works with tunnels
+            policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+        });
 });
 
 builder.Services.AddHostedService<GarbageFileService>();
@@ -87,15 +87,15 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<QueryTokenMiddleware>();
 
 //check for default avatar
-if(!File.Exists($"{imageSettings.Folder}/{imageSettings.AvatarDefault}"))
+if (!File.Exists($"{imageSettings.Folder}/{imageSettings.AvatarDefault}"))
 {
-  app.Logger.LogWarning($"Default avatar in {imageSettings.Folder}/{imageSettings.AvatarDefault} not found.");
+    app.Logger.LogWarning($"Default avatar in {imageSettings.Folder}/{imageSettings.AvatarDefault} not found.");
 }
 
 //check for default forum
-if(!File.Exists($"{imageSettings.Folder}/{imageSettings.ForumDefault}"))
+if (!File.Exists($"{imageSettings.Folder}/{imageSettings.ForumDefault}"))
 {
-  app.Logger.LogWarning($"Default forum in {imageSettings.Folder}/{imageSettings.ForumDefault} not found.");
+    app.Logger.LogWarning($"Default forum in {imageSettings.Folder}/{imageSettings.ForumDefault} not found.");
 }
 
 app.UseStaticFiles();
@@ -107,9 +107,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSwagger();
-app.UseSwaggerUI( options => {
-  options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-  options.RoutePrefix = "";
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = "";
 });
 
 app.MapControllers();

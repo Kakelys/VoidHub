@@ -4,19 +4,18 @@ using ForumApi.Services.Auth.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ForumApi.Controllers
+namespace ForumApi.Controllers;
+
+[ApiController]
+[Route("api/v1/tokens")]
+public class TokenController(ITokenService tokenService) : ControllerBase
 {
-    [ApiController]
-    [Route("api/v1/tokens")]
-    public class TokenController(ITokenService tokenService) : ControllerBase
+    [HttpDelete("{token}")]
+    [Authorize]
+    [PermissionActionFilter<Token>]
+    public async Task<IActionResult> Revoke(string token)
     {
-        [HttpDelete("{token}")]
-        [Authorize]
-        [PermissionActionFilter<Token>]
-        public async Task<IActionResult> Revoke(string token)
-        {
-            await tokenService.Revoke(token);
-            return Ok();
-        }
+        await tokenService.Revoke(token);
+        return Ok();
     }
 }

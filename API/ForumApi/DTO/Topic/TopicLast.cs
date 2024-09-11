@@ -1,13 +1,12 @@
 using ForumApi.DTO.Auth;
 
-namespace ForumApi.DTO.DTopic
-{
-    public class TopicLast
-    {        
-        public int Id { get; set; }
-        public string Title { get; set; } = null!;
-        public DateTime UpdatedAt { get; set; }
+namespace ForumApi.DTO.DTopic;
 
-        public User User { get; set; } = null!;
-    }
+public class TopicLast
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public DateTime UpdatedAt { get; set; }
+
+    public User User { get; set; }
 }

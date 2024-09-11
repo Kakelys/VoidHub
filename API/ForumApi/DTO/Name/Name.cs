@@ -1,9 +1,8 @@
-namespace ForumApi.DTO.DName
+namespace ForumApi.DTO.DName;
+
+public class Name
 {
-    public class Name
-    {
-        public int Id { get; set; }
-        public string? Title { get; set; }
-        public bool IsSelectable { get; set; }
-    }
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public bool IsSelectable { get; set; }
 }

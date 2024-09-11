@@ -1,16 +1,15 @@
-namespace ForumApi.Utils.Middlewares
-{
-    public class QueryTokenMiddleware(RequestDelegate next)
-    {
-        public async Task InvokeAsync(HttpContext context)
-        {
-            var token = context.Request.Query["access_token"];
-            if(!string.IsNullOrEmpty(token))
-            {
-                context.Request.Headers.Authorization = $"Bearer {token}";
-            }
+namespace ForumApi.Utils.Middlewares;
 
-            await next(context);
+public class QueryTokenMiddleware(RequestDelegate next)
+{
+    public async Task InvokeAsync(HttpContext context)
+    {
+        var token = context.Request.Query["access_token"];
+        if (!string.IsNullOrEmpty(token))
+        {
+            context.Request.Headers.Authorization = $"Bearer {token}";
         }
+
+        await next(context);
     }
 }

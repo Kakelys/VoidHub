@@ -1,8 +1,7 @@
-namespace ForumApi.DTO.Utils
+namespace ForumApi.DTO.Utils;
+
+public class Link
 {
-    public class Link
-    {
-        public string Type { get; set; } = null!;
-        public object Data { get; set; } = null!;
-    }
+    public string Type { get; set; }
+    public object Data { get; set; }
 }

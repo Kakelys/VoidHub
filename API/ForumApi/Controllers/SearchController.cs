@@ -6,108 +6,108 @@ using ForumApi.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ForumApi.Controllers
+namespace ForumApi.Controllers;
+
+[ApiController]
+[Route("api/v1/search")]
+public class SearchController(
+    ISearchService searchService,
+    ILikeService likeService
+) : ControllerBase
 {
-    [ApiController]
-    [Route("api/v1/search")]
-    public class SearchController(
-        ISearchService searchService,
-        ILikeService likeService) : ControllerBase
+    [Authorize]
+    [AllowAnonymous]
+    [HttpGet]
+    public async Task<IActionResult> Search([FromQuery] SearchDto search, [FromQuery] SearchParams searchParams, [FromQuery] Page page)
     {
-        [Authorize]
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> Search([FromQuery] SearchDto search, [FromQuery] SearchParams searchParams, [FromQuery] Page page)
+        var res = new SearchResponse<object>();
+        var prms = new SearchParams
         {
-            var res = new SearchResponse<object>();
-            var prms = new SearchParams
-            {
-                Sort = searchParams.Sort,
-                WithPostContent = searchParams.WithPostContent,
-                PartialTitle = searchParams.PartialTitle,
-                ForumId = searchParams.ForumId,
-            };
+            Sort = searchParams.Sort,
+            WithPostContent = searchParams.WithPostContent,
+            PartialTitle = searchParams.PartialTitle,
+            ForumId = searchParams.ForumId,
+        };
 
-            if(User.IsAdminOrModer())
-            {
-                prms.OnlyDeleted = searchParams.OnlyDeleted;
-            }
-
-            var forSwitch = search.Query[0..2].ToLower();
-            search.Query = search.Query.Trim();
-            switch(forSwitch)
-            {
-                case "t:":
-                    search.Query = search.Query[2..];
-                    await TopicSearch(res, search, prms, page);
-                    break;
-                case "u:":
-                    search.Query = search.Query[2..];
-                    await UserSearch(res, search, prms, page);
-                    break;
-                default:
-                    await TopicSearch(res, search, prms, page);
-                    UpdPage(res.SearchCount, res.Data.Count, page);
-                    await UserSearch(res, search, prms, page);
-                    break;
-            }
-
-            return Ok(res);
+        if (User.IsAdminOrModer())
+        {
+            prms.OnlyDeleted = searchParams.OnlyDeleted;
         }
 
-        private async Task TopicSearch(SearchResponse<object> res, SearchDto search, SearchParams prms, Page page)
+        var forSwitch = search.Query[0..2].ToLower();
+        search.Query = search.Query.Trim();
+        switch (forSwitch)
         {
-            search.Query = search.Query.Trim();
-            var topicRes = await searchService.SearchTopics(search.Query, prms, page);
-
-            if(User.IsAuthed())
-            {
-                var userId = User.GetId();
-                foreach(var post in topicRes.Data)
-                {
-                    await likeService.UpdateLikeStatus(userId, post.Post);
-                }
-            }
-
-            res.SearchCount += topicRes.SearchCount;
-            res.Data.AddRange(topicRes.Data.ConvertAll(t => new SearchElement
-            {
-                Type = SearchElementType.Topic,
-                Data = t
-            }));
+            case "t:":
+                search.Query = search.Query[2..];
+                await TopicSearch(res, search, prms, page);
+                break;
+            case "u:":
+                search.Query = search.Query[2..];
+                await UserSearch(res, search, prms, page);
+                break;
+            default:
+                await TopicSearch(res, search, prms, page);
+                UpdPage(res.SearchCount, res.Data.Count, page);
+                await UserSearch(res, search, prms, page);
+                break;
         }
 
-        private async Task UserSearch(SearchResponse<object> res, SearchDto search, SearchParams prms, Page page)
-        {
-            search.Query = search.Query.Trim();
-            var userRes = await searchService.SearchUsers(search.Query, prms, page);
+        return Ok(res);
+    }
 
-            res.SearchCount += userRes.SearchCount;
-            res.Data.AddRange(userRes.Data.ConvertAll(t => new SearchElement
+    private async Task TopicSearch(SearchResponse<object> res, SearchDto search, SearchParams prms, Page page)
+    {
+        search.Query = search.Query.Trim();
+        var topicRes = await searchService.SearchTopics(search.Query, prms, page);
+
+        if (User.IsAuthed())
+        {
+            var userId = User.GetId();
+            foreach (var post in topicRes.Data)
             {
-                Type = SearchElementType.User,
-                Data = t
-            }));
+                await likeService.UpdateLikeStatus(userId, post.Post);
+            }
         }
 
-        private static void UpdPage(int searchCount, int loaded, Page page)
+        res.SearchCount += topicRes.SearchCount;
+        res.Data.AddRange(topicRes.Data.ConvertAll(t => new SearchElement
         {
-            if(searchCount >= page.PageSize && searchCount != loaded)
-            {
-                page.PageNumber -= searchCount / page.PageSize;
-                if(searchCount % page.PageSize != 0)
-                    page.PageSize -= searchCount % page.PageSize;
-            }
-            else
-            {
-                page.PageSize -= loaded;
-            }
+            Type = SearchElementType.Topic,
+            Data = t
+        }));
+    }
 
-            if(page.PageNumber <= 0)
-            {
-                page.PageSize = 0;
-                page.PageNumber = 1;
-            }
+    private async Task UserSearch(SearchResponse<object> res, SearchDto search, SearchParams prms, Page page)
+    {
+        search.Query = search.Query.Trim();
+        var userRes = await searchService.SearchUsers(search.Query, prms, page);
+
+        res.SearchCount += userRes.SearchCount;
+        res.Data.AddRange(userRes.Data.ConvertAll(t => new SearchElement
+        {
+            Type = SearchElementType.User,
+            Data = t
+        }));
+    }
+
+    private static void UpdPage(int searchCount, int loaded, Page page)
+    {
+        if (searchCount >= page.PageSize && searchCount != loaded)
+        {
+            page.PageNumber -= searchCount / page.PageSize;
+            if (searchCount % page.PageSize != 0)
+                page.PageSize -= searchCount % page.PageSize;
+        }
+        else
+        {
+            page.PageSize -= loaded;
+        }
+
+        if (page.PageNumber <= 0)
+        {
+            page.PageSize = 0;
+            page.PageNumber = 1;
         }
     }
 }

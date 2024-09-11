@@ -1,13 +1,12 @@
 using ForumApi.DTO.Auth;
 using ForumApi.DTO.DPost;
 
-namespace ForumApi.DTO.DTopic
+namespace ForumApi.DTO.DTopic;
+
+public class TopicResponse
 {
-    public class TopicResponse
-    { 
-        public TopicDto Topic { get; set; }= null!;
-        public PostDto Post { get; set; } = null!;
-        public User Sender { get; set; }= null!;
-        public List<PostResponse> Posts { get; set; } = null!;
-    }
+    public TopicDto Topic { get; set; }
+    public PostDto Post { get; set; }
+    public User Sender { get; set; }
+    public List<PostResponse> Posts { get; set; }
 }

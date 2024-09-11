@@ -1,9 +1,8 @@
-namespace ForumApi.DTO.DSearch.Sort
+namespace ForumApi.DTO.DSearch.Sort;
+
+public enum SearchSortTypes
 {
-    public enum SearchSortTypes
-    {
-        New = 1,
-        Old,
-        MostLiked
-    }
+    New = 1,
+    Old,
+    MostLiked
 }

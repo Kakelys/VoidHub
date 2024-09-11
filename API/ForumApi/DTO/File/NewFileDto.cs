@@ -1,8 +1,7 @@
-namespace ForumApi.DTO.DFile
+namespace ForumApi.DTO.DFile;
+
+public class NewFileDto
 {
-    public class NewFileDto
-    {
-        public IFormFile? File { get; set; }
-        public int? PostId { get; set; } = null;
-    }
+    public IFormFile File { get; set; }
+    public int? PostId { get; set; } = null;
 }

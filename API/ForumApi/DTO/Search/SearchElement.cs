@@ -1,8 +1,7 @@
-namespace ForumApi.DTO.DSearch
+namespace ForumApi.DTO.DSearch;
+
+public class SearchElement
 {
-    public class SearchElement
-    {
-        public SearchElementType Type { get; set; }
-        public object Data { get; set; } = null!;
-    }
+    public SearchElementType Type { get; set; }
+    public object Data { get; set; } = null!;
 }

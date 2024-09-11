@@ -1,12 +1,11 @@
 using AutoMapper;
 
-namespace ForumApi.DTO.DFile
+namespace ForumApi.DTO.DFile;
+
+public class FileProfile : Profile
 {
-    public class FileProfile : Profile
+    public FileProfile()
     {
-        public FileProfile() 
-        {
-            CreateMap<FileDto, Data.Models.File>();
-        }        
+        CreateMap<FileDto, Data.Models.File>();
     }
 }
