@@ -8,7 +8,7 @@ public class Topic
     public int Id { get; set; }
     public int ForumId { get; set; }
     public int AccountId { get; set; }
-    public string Title { get; set; } = null!;
+    public string Title { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
     public bool IsPinned { get; set; }
@@ -16,13 +16,13 @@ public class Topic
     public int PostsCount { get; set; }
 
     [JsonIgnore]
-    public NpgsqlTsVector SearchVector { get; set; } = null!;
+    public NpgsqlTsVector SearchVector { get; set; }
 
     [JsonIgnore]
-    public virtual Forum Forum { get; set; } = null!;
+    public virtual Forum Forum { get; set; }
     [JsonIgnore]
     public virtual List<Post> Posts { get; set; } = [];
 
     [JsonIgnore]
-    public virtual Account Author { get; set; } = null!;
+    public virtual Account Author { get; set; }
 }

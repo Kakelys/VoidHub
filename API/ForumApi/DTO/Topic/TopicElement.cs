@@ -6,7 +6,7 @@ namespace ForumApi.DTO.DTopic;
 
 public class TopicElement : Topic
 {
-    public new User Author { get; set; } = null!;
+    public new User Author { get; set; }
     public LastPost LastPost { get; set; }
 
     public TopicElement() { }

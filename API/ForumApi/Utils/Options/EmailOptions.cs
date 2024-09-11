@@ -10,9 +10,9 @@ public class EmailOptions
     [Range(1, 65535)]
     public int Port { get; set; } = 0;
     [Required]
-    public string Host { get; set; } = null!;
+    public string Host { get; set; }
     [Required]
-    public string From { get; set; } = null!;
+    public string From { get; set; }
     [Required]
-    public string AuthKey { get; set; } = null!;
+    public string AuthKey { get; set; }
 }

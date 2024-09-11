@@ -5,17 +5,17 @@ namespace ForumApi.Data.Models;
 public class Account
 {
     public int Id { get; set; }
-    public string Username { get; set; } = null!;
-    public string LoginName { get; set; } = null!;
+    public string Username { get; set; }
+    public string LoginName { get; set; }
     [JsonIgnore]
-    public string Email { get; set; } = null!;
+    public string Email { get; set; }
     [JsonIgnore]
-    public string PasswordHash { get; set; } = null!;
-    public string Role { get; set; } = null!;
+    public string PasswordHash { get; set; }
+    public string Role { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime LastLoggedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
-    public string AvatarPath { get; set; } = null!;
+    public string AvatarPath { get; set; }
     public bool IsEmailConfirmed { get; set; }
 
     [JsonIgnore]

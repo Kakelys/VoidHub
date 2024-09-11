@@ -10,9 +10,9 @@ public class ChatMember
     public bool IsAdmin { get; set; }
 
     [JsonIgnore]
-    public virtual Account Account { get; set; } = null!;
+    public virtual Account Account { get; set; }
     [JsonIgnore]
-    public virtual Chat Chat { get; set; } = null!;
+    public virtual Chat Chat { get; set; }
 
     [JsonIgnore]
     public virtual List<ChatMessage> Messages { get; set; } = [];

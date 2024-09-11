@@ -6,8 +6,8 @@ namespace ForumApi.DTO.DPost;
 
 public class PostInfoResponse
 {
-    public PostDto Post { get; set; } = null!;
-    public User Sender { get; set; } = null!;
-    public TopicDto Topic { get; set; } = null!;
-    public ForumDto Forum { get; set; } = null!;
+    public PostDto Post { get; set; }
+    public User Sender { get; set; }
+    public TopicDto Topic { get; set; }
+    public ForumDto Forum { get; set; }
 }
