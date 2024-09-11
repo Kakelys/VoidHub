@@ -175,7 +175,7 @@
                 [ancestorId]="topic?.post.id"
                 [content]="newPostContent"
                 [cancelPlaceholder]="'forms.clear' | translate"
-                (onCreate)="onPostCreate($event)"
+                (created)="onPostCreate($event)"
             >
             </app-post-editor>
         </div>

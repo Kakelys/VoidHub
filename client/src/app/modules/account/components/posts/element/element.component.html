@@ -144,10 +144,9 @@
                 [topicId]="post.post.topicId"
                 [content]="post.post.content"
                 [submitPlaceholder]="'forms.save' | translate"
-                (onCreate)="onPostEdit($event)"
-                (onCancel)="setEditMode(false)"
-            >
-            </app-post-editor>
+                (created)="onPostEdit($event)"
+                (canceled)="setEditMode(false)"
+            />
         </div>
         <div *ngIf="commentsMode">
             <app-comments
@@ -157,9 +156,9 @@
                 [commentsCount]="post.post.commentsCount"
                 [depth]="depth + 1"
                 [isTopicClosed]="isTopicClosed"
-                (onCommentsCounterUpdated)="updateCommentsCounter($event)"
-                (onClose)="toggleCommentsMode()"
-            ></app-comments>
+                (commentsCounterUpdated)="updateCommentsCounter($event)"
+                (closed)="toggleCommentsMode()"
+            />
         </div>
     </div>
 </div>

@@ -5,13 +5,13 @@ import { ReplaySubject, takeUntil } from 'rxjs'
 import { Component, OnDestroy } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 
-import { Page, Roles } from 'src/shared'
+import { AuthService, User } from 'src/app/modules/auth'
 
 import { HttpException } from 'src/app/common/models'
 import { ToastrExtension } from 'src/app/common/utils'
-import { AuthService, User } from 'src/app/modules/auth'
 
 import { environment } from 'src/environments/environment'
+import { Page, Roles } from 'src/shared'
 
 import { ForumService, NameService } from '../../../services'
 import { ForumResponse, Name, Topic } from '../../../types'

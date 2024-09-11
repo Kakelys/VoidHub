@@ -133,8 +133,8 @@
             [topicId]="post.post.topicId"
             [content]="post.post.content"
             [submitPlaceholder]="'forms.save' | translate"
-            (onCreate)="onPostEdit($event)"
-            (onCancel)="setEditMode(false)"
+            (created)="onPostEdit($event)"
+            (canceled)="setEditMode(false)"
         >
         </app-post-editor>
     </div>
@@ -146,8 +146,8 @@
             [commentsCount]="post.post.commentsCount"
             [depth]="depth + 1"
             [isTopicClosed]="isTopicClosed"
-            (onCommentsCounterUpdated)="updateCommentsCounter($event)"
-            (onClose)="toggleCommentsMode()"
-        ></app-comments>
+            (commentsCounterUpdated)="updateCommentsCounter($event)"
+            (closed)="toggleCommentsMode()"
+        />
     </div>
 </div>

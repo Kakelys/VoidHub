@@ -22,9 +22,8 @@
             [submitPlaceholder]="'forms.answer' | translate"
             [cancelPlaceholder]="'forms.close' | translate"
             [content]="editorContent"
-            (onCreate)="onPostCreate($event)"
-            (onCancel)="onCloseClicked()"
-        >
-        </app-post-editor>
+            (created)="onPostCreate($event)"
+            (canceled)="onCloseClicked()"
+        />
     </div>
 </div>
