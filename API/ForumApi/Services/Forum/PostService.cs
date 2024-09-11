@@ -23,17 +23,19 @@ namespace ForumApi.Services.ForumS
     {
         public async Task<Post> Create(int accountId, PostEditDto postDto)
         {
-            if(!rep.IsInTransaction)
+            if (!rep.IsInTransaction)
+            {
                 throw new DatabaseException(locale["errors.out-of-transaction"]);
+            }
 
             var topicEntity = await rep.Topic.Value
                 .FindByCondition(t => t.Id == postDto.TopicId, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-topic"]);
 
-            if(topicEntity.IsClosed)
+            if (topicEntity.IsClosed)
                 throw new BadRequestException(locale["errors.topic-closed"]);
 
-            if(topicEntity.DeletedAt != null)
+            if (topicEntity.DeletedAt != null)
                 throw new BadRequestException($"{locale["errors.topic-deleted"]} {locale["errors.creating-post-unavailable"]}");
 
             var post = mapper.Map<Post>(postDto);
@@ -45,9 +47,11 @@ namespace ForumApi.Services.ForumS
             // update ancestors comments counter
             await rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, 1);
 
-            // upd topic posts counter, if it not comment
-            if(postDto.AncestorId != null && entity.Ancestor?.AncestorId == null)
+            // upd topic posts counter, if it's not a comment
+            if (postDto.AncestorId != null && entity.Ancestor?.AncestorId == null)
+            {
                 topicEntity.PostsCount++;
+            }
 
             await rep.Save();
 
@@ -58,20 +62,26 @@ namespace ForumApi.Services.ForumS
         {
             var entity = await rep.Post.Value
                 .FindByCondition(p => p.Id == postId && p.DeletedAt == null, true)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-post"]);
+                .FirstOrDefaultAsync()
+                    ?? throw new NotFoundException(locale["errors.no-post"]);
 
             var topicFirstPost = await rep.Post.Value
                 .FindByCondition(p => p.TopicId == entity.TopicId && p.DeletedAt == null)
                 .OrderBy(p => p.CreatedAt)
-                .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-post"]);
+                .FirstOrDefaultAsync()
+                    ?? throw new NotFoundException(locale["errors.no-post"]);
 
             var topic = entity.Topic;
 
             if (entity.Id == topicFirstPost.Id)
+            {
                 throw new BadRequestException(locale["errors.delete-main-post"]);
+            }
 
-            if(topic.DeletedAt != null)
+            if (topic.DeletedAt != null)
+            {
                 throw new BadRequestException($"{locale["errors.topic-deleted"]}; {locale["errors.deleting-post-inavailable"]}");
+            }
 
             await rep.BeginTransaction();
             try
@@ -83,7 +93,7 @@ namespace ForumApi.Services.ForumS
                 await rep.Post.Value.IncreaseAllAncestorsCommentsCount(entity.AncestorId, -deleted);
 
                 // upd topic posts counter, if it not comment
-                if(entity.AncestorId == topicFirstPost.Id)
+                if (entity.AncestorId == topicFirstPost.Id)
                 {
                     topic.PostsCount--;
                 }
@@ -101,11 +111,15 @@ namespace ForumApi.Services.ForumS
         public async Task<List<PostResponse>> GetPostComments(int? ancestorId, Offset page, Params prms)
         {
             var predicate = PredicateBuilder.New<Post>(p => p.AncestorId == ancestorId);
-            if(prms.BelowTime != null)
+            if (prms.BelowTime != null)
+            {
                 predicate.And(p => p.CreatedAt < prms.BelowTime.Value.ToUniversalTime());
+            }
 
-            if(prms.ByAccountId != 0)
+            if (prms.ByAccountId != 0)
+            {
                 predicate.And(p => p.AccountId == prms.ByAccountId);
+            }
 
             var posts = await rep.Post.Value
                 .FindByCondition(predicate)
@@ -127,29 +141,35 @@ namespace ForumApi.Services.ForumS
         {
             var predicate = PredicateBuilder.New<Post>(p => true);
 
-            if(prms.BelowTime != null)
+            if (prms.BelowTime != null)
+            {
                 predicate.And(t => t.CreatedAt < prms.BelowTime.Value.ToUniversalTime());
+            }
 
-            if(!prms.IncludeDeleted)
+            if (!prms.IncludeDeleted)
+            {
                 predicate.And(t => t.DeletedAt == null);
+            }
 
-            if(prms.ByAccountId != 0)
+            if (prms.ByAccountId != 0)
+            {
                 predicate.And(t => t.AccountId == prms.ByAccountId);
+            }
 
             return await rep.Post.Value
-            .FindByCondition(predicate)
-            .OrderBy(prms.OrderBy)
-            .Include(p => p.Author)
-            .Include(p => p.Topic)
-            .TakeOffset(offset)
-            .Select(p => new PostInfoResponse
-            {
-                Post = mapper.Map<PostDto>(p),
-                Topic = mapper.Map<TopicDto>(p.Topic),
-                Forum = mapper.Map<ForumDto>(p.Topic.Forum),
-                Sender = mapper.Map<User>(p.Author)
-            })
-            .ToListAsync();
+                .FindByCondition(predicate)
+                .OrderBy(prms.OrderBy)
+                .Include(p => p.Author)
+                .Include(p => p.Topic)
+                .TakeOffset(offset)
+                .Select(p => new PostInfoResponse
+                {
+                    Post = mapper.Map<PostDto>(p),
+                    Topic = mapper.Map<TopicDto>(p.Topic),
+                    Forum = mapper.Map<ForumDto>(p.Topic.Forum),
+                    Sender = mapper.Map<User>(p.Author)
+                })
+                .ToListAsync();
         }
 
         public async Task<Post> Update(int postId, PostEditDto postDto)
@@ -158,8 +178,10 @@ namespace ForumApi.Services.ForumS
                 .FindByCondition(p => p.Id == postId && p.DeletedAt == null, true)
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(locale["errors.no-post"]);
 
-            if(entity.Topic.DeletedAt != null)
+            if (entity.Topic.DeletedAt != null)
+            {
                 throw new BadRequestException($"{locale["errors.topic-deleted"]}; {locale["errors.updating-post-unavailable"]} ");
+            }
 
             entity.Content = postDto.Content;
             await rep.Save();
